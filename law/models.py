@@ -15,6 +15,17 @@ class Snapshot(models.Model):
     def __unicode__(self):
         return self.label
 
+    def is_most_recent_vetted(self):
+        s = public_snapshot()
+        return s.id == self.id
+
+    def cloneable(self):
+        return self.is_most_recent_vetted() and \
+            Snapshot.objects.exclude(status="vetted").count() == 0
+
+    def get_absolute_url(self):
+        return "/snapshots/%d/" % self.id
+
 def public_snapshot():
     return Snapshot.objects.filter(status='vetted').order_by("-modified")[0]
 

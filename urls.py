@@ -8,6 +8,9 @@ site_media_root = os.path.join(os.path.dirname(__file__),"media")
 
 urlpatterns = patterns('',
                        ('^$','ccdb.law.views.index'),
+                       ('^edit/$','ccdb.law.views.edit_index'),
+                       ('^edit/snapshots/(?P<id>\d+)/$','ccdb.law.views.edit_snapshot'),
+                       ('^edit/snapshots/(?P<id>\d+)/clone/$','ccdb.law.views.clone_snapshot'),
                        ('^accounts/',include('djangowind.urls')),
                        (r'^admin/(.*)', admin.site.root),
                        (r'^site_media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': site_media_root}),
