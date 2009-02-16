@@ -20,4 +20,5 @@ class rendered_with(object):
 
 @rendered_with('law/index.html')
 def index(request):
-    return dict(groups=Group.objects.all())
+    snapshot = public_snapshot()
+    return dict(groups=snapshot.group_set.all())

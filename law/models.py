@@ -12,6 +12,9 @@ class Snapshot(models.Model):
     created = models.DateTimeField(auto_now=True)
     modified = models.DateTimeField(auto_now=True)
 
+    def __unicode__(self):
+        return self.label
+
 def public_snapshot():
     return Snapshot.objects.filter(status='vetted').order_by("-modified")[0]
 
@@ -42,7 +45,6 @@ class Group(models.Model):
         return "/group/%s/" % self.name
 
 class Menu(models.Model):
-    snapshot = models.ForeignKey(Snapshot)
     label = models.CharField(max_length=256)
     penal_code = models.CharField(max_length=256)
     group = models.ForeignKey(Group)
@@ -56,7 +58,6 @@ class Menu(models.Model):
 
 
 class Charge(models.Model):
-    snapshot = models.ForeignKey(Snapshot)
     offense = models.CharField(max_length=256)
     penal_code = models.CharField(max_length=256)
     degree = models.IntegerField(default=0)
@@ -97,7 +98,6 @@ class Area(models.Model):
 
 
 class Consequence(models.Model):
-    snapshot = models.ForeignKey(Snapshot)
     label = models.CharField(max_length=256)
     description = models.TextField()
     area = models.ForeignKey(Area)
