@@ -31,3 +31,14 @@ class AreaAdmin(admin.ModelAdmin):
     prepopulated_fields = {"name": ("label",)}
 
 admin.site.register(Area,AreaAdmin)
+
+class SnapshotAdmin(admin.ModelAdmin):
+    pass
+
+admin.site.register(Snapshot,SnapshotAdmin)
+
+class EventAdmin(admin.ModelAdmin):
+    pass
+
+admin.site.register(Event,EventAdmin)
+
