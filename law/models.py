@@ -27,13 +27,18 @@ class Snapshot(models.Model):
         return "/snapshots/%d/" % self.id
 
     def clone_to(self,new_snapshot):
+        group_map = dict()
+        area_map = dict()
+        classification_map = dict()
         for group in self.group_set.all():
             ng = group.clone_to(new_snapshot)
+            group_map[group.id] = ng
         for area in self.area_set.all():
             na = area.clone_to(new_snapshot)
+            area_map[area.id] = na
         for classification in self.classification_set.all():
             nc = classification.clone_to(new_snapshot)
-
+            classification_map[classification.id] = nc
 
 def public_snapshot():
     return Snapshot.objects.filter(status='vetted').order_by("-modified")[0]
@@ -64,6 +69,11 @@ class Group(models.Model):
     def get_absolute_url(self):
         return "/group/%s/" % self.name
 
+    def clone_to(self,new_snapshot):
+        return Group.objects.create(snapshot=new_snapshot,
+                                    label=self.label,penal_code=self.penal_code,
+                                    name=self.name)
+
 class Menu(models.Model):
     label = models.CharField(max_length=256)
     penal_code = models.CharField(max_length=256)
@@ -75,6 +85,11 @@ class Menu(models.Model):
 
     def get_absolute_url(self):
         return "/menu/%s/" % self.name
+
+    def clone_to(self,new_group):
+        return Menu.objects.create(group=new_group,label=self.label,
+                                   penal_code=self.penal_code,
+                                   name=self.name)
 
 
 class Charge(models.Model):
@@ -91,6 +106,10 @@ class Charge(models.Model):
     def get_absolute_url(self):
         return "/charge/%s/" % self.name
 
+    def clone_to(self,new_menu):
+        return Charge.objects.create(menu=new_menu,offense=self.offense,
+                                     penal_code=self.penal_code,degree=self.degree,
+                                     paragraph=self.paragraph,name=self.name)
 
 class Classification(models.Model):
     snapshot = models.ForeignKey(Snapshot)
@@ -104,6 +123,11 @@ class Classification(models.Model):
     def get_absolute_url(self):
         return "/classification/%s/" % self.name
 
+    def clone_to(self,new_snapshot):
+        return Classification.objects.create(snapshot=new_snapshot,
+                                             label=self.label,name=self.name,
+                                             description=self.description)
+
 
 class Area(models.Model):
     snapshot = models.ForeignKey(Snapshot)
@@ -115,6 +139,10 @@ class Area(models.Model):
 
     def get_absolute_url(self):
         return "/area/%s/" % self.name
+
+    def clone_to(self,new_snapshot):
+        return Area.objects.create(snapshot=new_snapshot,label=self.label,
+                                   name=self.name)
 
 
 class Consequence(models.Model):
@@ -128,6 +156,11 @@ class Consequence(models.Model):
 
     def get_absolute_url(self):
         return "/consequence/%s/" % self.name
+
+    def clone_to(self,new_area):
+        return Consequence.objects.create(area=new_area,label=self.label,
+                                          description=self.description,
+                                          name=self.name)
 
 
 class ChargeClassification(models.Model):
