@@ -26,6 +26,15 @@ class Snapshot(models.Model):
     def get_absolute_url(self):
         return "/snapshots/%d/" % self.id
 
+    def clone_to(self,new_snapshot):
+        for group in self.group_set.all():
+            ng = group.clone_to(new_snapshot)
+        for area in self.area_set.all():
+            na = area.clone_to(new_snapshot)
+        for classification in self.classification_set.all():
+            nc = classification.clone_to(new_snapshot)
+
+
 def public_snapshot():
     return Snapshot.objects.filter(status='vetted').order_by("-modified")[0]
 
