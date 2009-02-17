@@ -53,6 +53,11 @@ class Snapshot(models.Model):
 
         return new_snapshot
 
+    def top_level_charges(self):
+        """ charges that don't have any parents """
+        all_children = [c.child for c in ChargeChildren.objects.all()]
+        return [c for c in self.charge_set.all().order_by("penal_code") if c.id not in all_children]
+
 def public_snapshot():
     return Snapshot.objects.filter(status='vetted').order_by("-modified")[0]
 

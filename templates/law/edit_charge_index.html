@@ -1,0 +1,23 @@
+{% extends "law/edit_base.html" %}
+
+{% block content %}
+{{ block.super }}
+
+<h2>Charges</h2>
+
+<form action="add_charge/" method="post">
+<fieldset><legend>add top level charge</legend>
+<table>
+{{ add_charge_form.as_table }}
+</table>
+<input type="submit" value="add charge" />
+</fieldset>
+</form>
+
+<ul>
+{% for charge in charges %}
+<li><a href="/edit{{charge.get_absolute_url}}">{{ charge.penal_code }} {{ charge.label }}</a></li>
+{% endfor %}
+</ul>
+
+{% endblock %}
