@@ -25,4 +25,22 @@
 </form>
 {% endif %}
 
+<h2>events</h2>
+<table>
+  <tr>
+    <th>event</th>
+    <th>user</th>
+    <th>date</th>
+    <th>user note</th>
+  </tr>
+
+  {% for event in snapshot.event_set.all %}
+  <tr>
+    <td>{{ event.description }}</td>
+    <td>{{ event.user }}</td>
+    <td>{{ event.created }}</td>
+    <td>{{ event.note }}</td>
+  </tr>
+  {% endfor %}
+
 {% endblock %}
