@@ -1,21 +1,15 @@
 {% extends "base.html" %}
-
 {% block content %}
 
-<table>
-  <tr>
-    <th>snapshot</th>
-    <th>status</th>
-    <th>last modified</th>
-  </tr>
+{% if working_snapshot %}
 
-  {% for snapshot in snapshots %}
-  <tr>
-    <td><a href="/edit{{ snapshot.get_absolute_url }}">{{ snapshot.label }}</a></td>
-    <td>{{ snapshot.status }}</td>
-    <td>{{ snapshot.modified }}</td>
-  </tr>
-  {% endfor %}
-</table>
+<p>The working snapshot: 
+  <a href="/edit{{ working_snapshot.get_absolute_url }}">{{ working_snapshot.label }}</a></p>
 
+{% else %}
+
+<p>There is currently no working snapshot. You will need to clone
+  <a href="/edit{{ public_snapshot.get_absolute_url }}">the most recent Vetted snapshot</a> before making any changes</p>
+
+{% endif %}
 {% endblock %}

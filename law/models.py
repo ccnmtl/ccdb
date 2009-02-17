@@ -19,6 +19,9 @@ class Snapshot(models.Model):
         s = public_snapshot()
         return s.id == self.id
 
+    def is_current_working(self):
+        return self.status == "in progress" 
+
     def cloneable(self):
         return self.is_most_recent_vetted() and \
             Snapshot.objects.exclude(status="vetted").count() == 0
@@ -26,13 +29,18 @@ class Snapshot(models.Model):
     def get_absolute_url(self):
         return "/snapshots/%d/" % self.id
 
-    def clone_to(self,new_snapshot):
-        group_map = dict()
+    def clone(self,label,user,description=""):
+
+        new_snapshot = Snapshot.objects.create(label=label,description=description)
+        e = Event.objects.create(snapshot=new_snapshot,user=user,
+                                 description="snapshot created")
+
+        charge_map = dict()
         area_map = dict()
         classification_map = dict()
-        for group in self.group_set.all():
-            ng = group.clone_to(new_snapshot)
-            group_map[group.id] = ng
+        for charge in self.charge_set.all():
+            nc = charge.clone_to(new_snapshot)
+            charge_map[charge.id] = nc
         for area in self.area_set.all():
             na = area.clone_to(new_snapshot)
             area_map[area.id] = na
@@ -40,12 +48,23 @@ class Snapshot(models.Model):
             nc = classification.clone_to(new_snapshot)
             classification_map[classification.id] = nc
 
+        # now go back and connect charges -> classifications
+        # and classifications -> consequences
+
+        return new_snapshot
+
 def public_snapshot():
     return Snapshot.objects.filter(status='vetted').order_by("-modified")[0]
 
-def student_snapshot():
+def working_snapshot():
     # should only ever be one in progress
-    return Snapshot.objects.filter(status="in progress")[0]
+    try:
+        return Snapshot.objects.filter(status="in progress")[0]
+    except Snapshot.DoesNotExist:
+        return None
+
+def is_working_snapshot():
+    return Snapshot.objects.filter(status="in progress").count() == 1
 
 def qa_snapshot():
     return Snapshot.objects.filter(status="qa")[0]
@@ -57,47 +76,11 @@ class Event(models.Model):
     created = models.DateTimeField(auto_now=True)
     note = models.TextField(default="",blank=True)
 
-class Group(models.Model):
-    snapshot = models.ForeignKey(Snapshot)
-    label = models.CharField(max_length=256)
-    penal_code = models.CharField(max_length=256)
-    name = models.SlugField()
-
-    def __unicode__(self):
-        return self.label
-
-    def get_absolute_url(self):
-        return "/group/%s/" % self.name
-
-    def clone_to(self,new_snapshot):
-        return Group.objects.create(snapshot=new_snapshot,
-                                    label=self.label,penal_code=self.penal_code,
-                                    name=self.name)
-
-class Menu(models.Model):
-    label = models.CharField(max_length=256)
-    penal_code = models.CharField(max_length=256)
-    group = models.ForeignKey(Group)
-    name = models.SlugField()
-
-    def __unicode__(self):
-        return self.label
-
-    def get_absolute_url(self):
-        return "/menu/%s/" % self.name
-
-    def clone_to(self,new_group):
-        return Menu.objects.create(group=new_group,label=self.label,
-                                   penal_code=self.penal_code,
-                                   name=self.name)
-
-
 class Charge(models.Model):
-    offense = models.CharField(max_length=256)
+    label = models.CharField(max_length=256)
+    # maybe rename this, as some charges will be non penal code:
     penal_code = models.CharField(max_length=256)
-    degree = models.IntegerField(default=0)
-    paragraph = models.IntegerField(default=0)
-    menu = models.ForeignKey(Menu)
+    snapshot = models.ForeignKey(Snapshot)
     name = models.SlugField()
 
     def __unicode__(self):
@@ -106,10 +89,14 @@ class Charge(models.Model):
     def get_absolute_url(self):
         return "/charge/%s/" % self.name
 
-    def clone_to(self,new_menu):
-        return Charge.objects.create(menu=new_menu,offense=self.offense,
-                                     penal_code=self.penal_code,degree=self.degree,
-                                     paragraph=self.paragraph,name=self.name)
+    def clone_to(self,new_snapshot):
+        return Charge.objects.create(snapshot=new_snapshot,label=self.label,
+                                     penal_code=self.penal_code,name=self.name)
+
+class ChargeChildren(models.Model):
+    parent = models.ForeignKey(Charge,related_name="parent")
+    child = models.ForeignKey(Charge,related_name="child")
+    # ordering is always by penal_code
 
 class Classification(models.Model):
     snapshot = models.ForeignKey(Snapshot)

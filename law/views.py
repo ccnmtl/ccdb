@@ -21,13 +21,21 @@ class rendered_with(object):
 @rendered_with('law/index.html')
 def index(request):
     snapshot = public_snapshot()
-    return dict(groups=snapshot.group_set.all())
+    return dict(charges=snapshot.charge_set.all())
 
 
 @rendered_with('law/edit_index.html')
 @login_required
 def edit_index(request):
+    return dict(snapshots=Snapshot.objects.all(),
+                working_snapshot=working_snapshot(),
+                public_snapshot=public_snapshot())
+
+@rendered_with('law/edit_snapshots_index.html')
+@login_required
+def edit_snapshots(request):
     return dict(snapshots=Snapshot.objects.all())
+
 
 @rendered_with('law/edit_snapshot.html')
 @login_required
@@ -37,11 +45,8 @@ def edit_snapshot(request,id):
 @login_required
 def clone_snapshot(request,id):
     snapshot = get_object_or_404(Snapshot,id=id)
-    new_snapshot = Snapshot.objects.create(label=request.POST.get('label','new snapshot'),
-                                           description=request.POST.get('description',''))
-    e = Event.objects.create(snapshot=new_snapshot,
-                             user=request.user,
-                             description="snapshot created")
-    snapshot.clone_to(new_snapshot)
+    new_snapshot = snapshot.clone(label=request.POST.get('label','new snapshot'),
+                                  user=request.user,
+                                  description=request.POST.get('description',''))
     return HttpResponseRedirect("/edit/")
                                            
