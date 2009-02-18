@@ -93,6 +93,23 @@ def add_charge(request,slugs=""):
                              description=description)
     return HttpResponseRedirect("/edit/charge/")
 
+@login_required
+def add_charge_classification(request,slugs=""):
+    if slugs[-1] == "/":
+        slugs = slugs[:-1]
+    slugs = slugs.split("/")
+    snapshot = working_snapshot()
+    charge = snapshot.get_charge_by_slugs(slugs)    
+    classification = get_object_or_404(Classification,id=request.POST['classification_id'])
+    cc = ChargeClassification.objects.create(charge=charge,classification=classification,
+                                             certainty=request.POST['certainty'])
+    e = Event.objects.create(snapshot=snapshot,
+                             user=request.user,
+                             description="charge %s classified as (%s) %s" % (cc.charge.label,cc.certainty,cc.classification.label),
+                             note=request.POST.get('comment',''))
+    return HttpResponseRedirect("/edit" + charge.get_absolute_url())
+
+
 @rendered_with('law/edit_charge.html')
 @login_required
 def edit_charge(request,slugs):
@@ -129,3 +146,5 @@ def edit_classification(request,slug):
     snapshot = working_snapshot()
     classification = get_object_or_404(Classification,snapshot=snapshot,name=slug)
     return dict(classification=classification)
+
+

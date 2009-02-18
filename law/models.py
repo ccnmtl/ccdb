@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.http import Http404
 from django.shortcuts import get_object_or_404
+from django import forms
 
 class Snapshot(models.Model):
     label = models.CharField(max_length=256)
@@ -58,7 +59,18 @@ class Snapshot(models.Model):
                 ncc = ChargeChildren.objects.create(parent=newparent,
                                                     child=newchild)
 
-        # now go back and connect charges -> classifications
+        # clone charges -> classifications
+
+        for charge in self.charge_set.all():
+            newcharge = charge_map[charge.id]
+            for cc in charge.chargeclassification_set.all():
+                newclassification = classification_map[cc.classification.id]
+                ncc = ChargeClassification.objects.create(
+                    charge=newcharge,
+                    classification=newclassification,
+                    certainty=cc.certainty,
+                    )
+
         # and classifications -> consequences
 
         return new_snapshot
@@ -144,6 +156,36 @@ class Charge(models.Model):
             acc.reverse()
             return acc
 
+    def add_classification_form(self):
+        class AddClassificationForm(forms.Form):
+            classification_id = forms.IntegerField(
+                widget=forms.Select(choices=[(c.id,c.label) for c in self.no()])
+                )
+            certainty = forms.CharField(
+                widget=forms.Select(choices=[('yes','Yes'),
+                                             ('probably','Probably'),
+                                             ('maybe','Maybe')]))
+            comment = forms.CharField(widget=forms.Textarea)
+        f = AddClassificationForm()
+        return f
+
+    def yes(self):
+        return self.chargeclassification_set.filter(certainty="yes")
+
+    def probably(self):
+        return self.chargeclassification_set.filter(certainty="probably")
+
+    def maybe(self):
+        return self.chargeclassification_set.filter(certainty="maybe")
+
+    def no(self):
+        """ return all classifications that this charge is not attached to at all """
+        all_classifications = self.all_classifications()
+        return [c for c in self.snapshot.classification_set.all() if c not in all_classifications]
+
+    def all_classifications(self):
+        return [cc.classification for cc in self.chargeclassification_set.all()]
+
 class ChargeChildren(models.Model):
     parent = models.ForeignKey(Charge,related_name="parent")
     child = models.ForeignKey(Charge,related_name="child")
@@ -165,6 +207,24 @@ class Classification(models.Model):
         return Classification.objects.create(snapshot=new_snapshot,
                                              label=self.label,name=self.name,
                                              description=self.description)
+
+
+    def yes(self):
+        return self.chargeclassification_set.filter(certainty="yes")
+
+    def probably(self):
+        return self.chargeclassification_set.filter(certainty="probably")
+
+    def maybe(self):
+        return self.chargeclassification_set.filter(certainty="maybe")
+
+    def no(self):
+        """ return all charges that this classification is not attached to at all """
+        all_charges = self.all_charges()
+        return [c for c in self.snapshot.charge_set.all() if c not in all_charges]
+
+    def all_charges(self):
+        return [cc.charge for cc in self.chargeclassification_set.all()]
 
 
 class Area(models.Model):

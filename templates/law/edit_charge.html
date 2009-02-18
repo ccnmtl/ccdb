@@ -23,4 +23,41 @@
 {% endfor %}
 </ul>
 
+<h3>classifications</h3>
+<table>
+  <tr><th>yes</th><th>probably</th><th>maybe</th></tr>
+  <tr>
+    <td>
+      <ul>
+	{% for cc in charge.yes %}
+	<li><a href="/edit{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a></li>
+	{% endfor %}
+      </ul>
+    </td>
+
+    <td>
+      <ul>
+	{% for cc in charge.probably %}
+	<li><a href="/edit{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a></li>
+	{% endfor %}
+      </ul>
+    </td>
+
+    <td>
+      <ul>
+	{% for cc in charge.maybe %}
+	<li><a href="/edit{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a></li>
+	{% endfor %}
+      </ul>
+    </td>
+  </tr>
+</table>
+
+<form action="add_classification/" method="post">
+<table>
+{{ charge.add_classification_form.as_table }}
+</table>
+<input type="submit" value="add" />
+</form>
+
 {% endblock %}

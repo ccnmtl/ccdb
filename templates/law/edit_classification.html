@@ -3,7 +3,38 @@
 {% block content %}
 {{ block.super }}
 
-<h2>{{ classification.label }}</h2>
+<h2>Classification: {{ classification.label }}</h2>
 <p>{{ classification.description }}</p>
+
+<h3>charges</h3>
+<table>
+  <tr><th>yes</th><th>probably</th><th>maybe</th></tr>
+  <tr>
+    <td>
+      <ul>
+	{% for cc in classification.yes %}
+	<li><a href="/edit{{cc.charge.get_absolute_url}}">{{ cc.charge.label }}</a></li>
+	{% endfor %}
+      </ul>
+    </td>
+
+    <td>
+      <ul>
+	{% for cc in classification.probably %}
+	<li><a href="/edit{{cc.charge.get_absolute_url}}">{{ cc.charge.label }}</a></li>
+	{% endfor %}
+      </ul>
+    </td>
+
+    <td>
+      <ul>
+	{% for cc in classification.maybe %}
+	<li><a href="/edit{{cc.charge.get_absolute_url}}">{{ cc.charge.label }}</a></li>
+	{% endfor %}
+      </ul>
+    </td>
+  </tr>
+</table>
+
 
 {% endblock %}
