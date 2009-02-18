@@ -51,6 +51,17 @@ def clone_snapshot(request,id):
                                   user=request.user,
                                   description=request.POST.get('description',''))
     return HttpResponseRedirect("/edit/")
+
+
+@login_required
+def approve_snapshot(request,id):
+    snapshot = get_object_or_404(Snapshot,id=id)
+    snapshot.status = 'vetted'
+    snapshot.save()
+    e = Event.objects.create(snapshot=snapshot,
+                             user=request.user,
+                             description="snapshot approved for production")
+    return HttpResponseRedirect("/edit/snapshots/")
                                            
 
 @rendered_with('law/edit_charge_index.html')

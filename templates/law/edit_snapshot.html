@@ -1,9 +1,10 @@
 {% extends "law/edit_base.html" %}
+{% load markup %}
 
 {% block content %}
 {{ block.super }}
 <h2>Snapshot: {{ snapshot.label }}</h2>
-<p>{{ snapshot.description }}
+<p>{{ snapshot.description }}</p>
 
 {% if snapshot.cloneable %}
 <form action="clone/" method="post">
@@ -25,22 +26,22 @@
 </form>
 {% endif %}
 
+{% ifequal snapshot.status "in progress" %}
+<form action="approve/" method="post">
+<input type="submit" value="promote this snapshot to production" />
+</form>
+{% endifequal %}
+
 <h2>events</h2>
-<table>
-  <tr>
-    <th>event</th>
-    <th>user</th>
-    <th>date</th>
-    <th>user note</th>
-  </tr>
 
   {% for event in snapshot.event_set.all %}
-  <tr>
-    <td>{{ event.description }}</td>
-    <td>{{ event.user }}</td>
-    <td>{{ event.created }}</td>
-    <td>{{ event.note }}</td>
-  </tr>
+  <div class="event">
+    <div class="byline">
+      {{ event.created }} by {{ event.user.first_name }} {{ event.user.last_name }}
+    </div>
+    <div class="description">{{ event.description|markdown }}</div>
+    <div class="note">{{ event.note|markdown }}</div>
+  </div>
   {% endfor %}
 
 {% endblock %}

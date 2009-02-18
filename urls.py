@@ -12,6 +12,7 @@ urlpatterns = patterns('',
                        ('^edit/snapshots/$','ccdb.law.views.edit_snapshots'),
                        ('^edit/snapshots/(?P<id>\d+)/$','ccdb.law.views.edit_snapshot'),
                        ('^edit/snapshots/(?P<id>\d+)/clone/$','ccdb.law.views.clone_snapshot'),
+                       ('^edit/snapshots/(?P<id>\d+)/approve/$','ccdb.law.views.approve_snapshot'),
 
                        ('^edit/charge/$','ccdb.law.views.edit_charge_index'),
                        ('^edit/charge/(?P<slugs>.*)add_charge/$','ccdb.law.views.add_charge'),

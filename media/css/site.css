@@ -1,4 +1,7 @@
 
+.event { border-top: #000 solid 1px; max-width: 500px; background-color: #eee;}
+.event .byline { color: #666;}
+.event .note { color: #444;}
 
 /* resizable textarea styles */
 textarea.resizable {width: 90%; height: 90%;}

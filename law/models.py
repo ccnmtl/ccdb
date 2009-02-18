@@ -50,6 +50,14 @@ class Snapshot(models.Model):
             nc = classification.clone_to(new_snapshot)
             classification_map[classification.id] = nc
 
+        # clone parent-child relationships
+        for charge in self.charge_set.all():
+            newparent = charge_map[charge.id]
+            for cc in ChargeChildren.objects.filter(parent=charge):
+                newchild = charge_map[cc.child.id]
+                ncc = ChargeChildren.objects.create(parent=newparent,
+                                                    child=newchild)
+
         # now go back and connect charges -> classifications
         # and classifications -> consequences
 
