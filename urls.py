@@ -18,6 +18,9 @@ urlpatterns = patterns('',
                        ('^edit/charge/(?P<slugs>.*)add_charge/$','ccdb.law.views.add_charge'),
                        ('^edit/charge/(?P<slugs>.+)/$','ccdb.law.views.edit_charge'),
 
+                       ('^edit/classification/$','ccdb.law.views.edit_classification_index'),
+                       ('^edit/classification/add/$','ccdb.law.views.add_classification'),
+                       ('^edit/classification/(?P<slug>[^\/]+)/$','ccdb.law.views.edit_classification'),
 
                        ('^accounts/',include('djangowind.urls')),
                        (r'^admin/(.*)', admin.site.root),

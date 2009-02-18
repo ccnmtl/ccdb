@@ -100,3 +100,32 @@ def edit_charge(request,slugs):
     snapshot = working_snapshot()
     charge = snapshot.get_charge_by_slugs(slugs)
     return dict(charge=charge,add_charge_form=AddChargeForm())
+
+@rendered_with('law/edit_classification_index.html')
+@login_required
+def edit_classification_index(request):
+    snapshot = working_snapshot()
+    return dict(classifications=Classification.objects.filter(snapshot=snapshot),
+                add_classification_form=AddClassificationForm())
+
+@login_required
+def add_classification(request):
+    f = AddClassificationForm(request.POST)
+    snapshot = working_snapshot()
+    c = Classification.objects.create(snapshot=snapshot,
+                                      label=request.POST['label'],
+                                      description=request.POST['description'],
+                                      name=slugify(request.POST['label']),
+                                      )
+    e = Event.objects.create(snapshot=snapshot,
+                             user=request.user,
+                             description="added classification %s" % c.label)
+
+    return HttpResponseRedirect("/edit/classification/")
+
+@rendered_with('law/edit_classification.html')
+@login_required
+def edit_classification(request,slug):
+    snapshot = working_snapshot()
+    classification = get_object_or_404(Classification,snapshot=snapshot,name=slug)
+    return dict(classification=classification)

@@ -1,0 +1,9 @@
+{% extends "law/edit_base.html" %}
+
+{% block content %}
+{{ block.super }}
+
+<h2>{{ classification.label }}</h2>
+<p>{{ classification.description }}</p>
+
+{% endblock %}
