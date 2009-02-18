@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.http import Http404
+from django.shortcuts import get_object_or_404
 
 class Snapshot(models.Model):
     label = models.CharField(max_length=256)
@@ -56,7 +58,26 @@ class Snapshot(models.Model):
     def top_level_charges(self):
         """ charges that don't have any parents """
         all_children = [c.child for c in ChargeChildren.objects.all()]
-        return [c for c in self.charge_set.all().order_by("penal_code") if c.id not in all_children]
+        return [c for c in self.charge_set.all().order_by("penal_code") if c not in all_children]
+
+    def get_charge_by_slugs(self,slugs,acc=None):
+        if acc is None: acc = []
+        if len(acc) > 0:
+            parent = acc[-1]
+            children = parent.children()
+            current = None
+            for child in children:
+                if child.name == slugs[0]:
+                    current = child
+            if current is None:
+                raise Http404
+        else:
+            current = get_object_or_404(Charge,snapshot=self,name=slugs[0])
+
+        if len(slugs) == 1:
+            return current
+        else:
+            return self.get_charge_by_slugs(slugs[1:],acc.append(current))
 
 def public_snapshot():
     return Snapshot.objects.filter(status='vetted').order_by("-modified")[0]
@@ -92,11 +113,28 @@ class Charge(models.Model):
         return self.label
 
     def get_absolute_url(self):
-        return "/charge/%s/" % self.name
+        parents = self.parents()
+        if len(parents) == 0:
+            return "/charge/%s/" % self.name
+        else:
+            return "/charge/" + "/".join([p.name for p in parents]) + "/" + self.name + "/"
 
     def clone_to(self,new_snapshot):
         return Charge.objects.create(snapshot=new_snapshot,label=self.label,
                                      penal_code=self.penal_code,name=self.name)
+
+    def children(self):
+        return [cc.child for cc in ChargeChildren.objects.filter(parent=self)]
+
+    def parents(self,acc=None):
+        if acc is None: acc = []
+        try:
+            ps = ChargeChildren.objects.get(child=self).parent
+            acc.append(ps)
+            return ps.parents(acc)
+        except ChargeChildren.DoesNotExist:
+            acc.reverse()
+            return acc
 
 class ChargeChildren(models.Model):
     parent = models.ForeignKey(Charge,related_name="parent")

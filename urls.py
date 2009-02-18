@@ -12,8 +12,12 @@ urlpatterns = patterns('',
                        ('^edit/snapshots/$','ccdb.law.views.edit_snapshots'),
                        ('^edit/snapshots/(?P<id>\d+)/$','ccdb.law.views.edit_snapshot'),
                        ('^edit/snapshots/(?P<id>\d+)/clone/$','ccdb.law.views.clone_snapshot'),
+
                        ('^edit/charge/$','ccdb.law.views.edit_charge_index'),
-                       ('^edit/charge/add_charge/$','ccdb.law.views.add_charge'),
+                       ('^edit/charge/(?P<slugs>.*)add_charge/$','ccdb.law.views.add_charge'),
+                       ('^edit/charge/(?P<slugs>.+)/$','ccdb.law.views.edit_charge'),
+
+
                        ('^accounts/',include('djangowind.urls')),
                        (r'^admin/(.*)', admin.site.root),
                        (r'^site_media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': site_media_root}),

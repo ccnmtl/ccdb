@@ -1,0 +1,26 @@
+{% extends "law/edit_base.html" %}
+
+{% block content %}
+{{ block.super }}
+
+<div>
+{% for p in charge.parents %}<a href="/edit{{p.get_absolute_url}}">{{ p.label }}</a>/{% endfor %}
+</div>
+<h2>{{ charge.penal_code }} {{ charge.label }}</h2>
+
+<form action="add_charge/" method="post">
+<fieldset><legend>add sub-charge</legend>
+<table>
+{{ add_charge_form.as_table }}
+</table>
+<input type="submit" value="add charge" />
+</fieldset>
+</form>
+
+<ul>
+{% for charge in charge.children %}
+<li><a href="/edit{{charge.get_absolute_url}}">{{ charge.penal_code }} {{ charge.label }}</a></li>
+{% endfor %}
+</ul>
+
+{% endblock %}

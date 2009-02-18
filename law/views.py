@@ -62,14 +62,30 @@ def edit_charge_index(request):
                 add_charge_form=AddChargeForm())
                 
 @login_required
-def add_charge(request):
+def add_charge(request,slugs=""):
+    if slugs[-1] == "/":
+        slugs = slugs[:-1]
     f = AddChargeForm(request.POST)
     snapshot = working_snapshot()
     c = Charge.objects.create(snapshot=snapshot,
                               label=request.POST['label'],
                               penal_code=request.POST['penal_code'],
-                              name=slugify(request.POST['label']))
+                              name=slugify(request.POST['penal_code'] + " " + request.POST['label']))
+    slugs = slugs.split("/")
+    description = "charge %s added" % str(c)
+    if len(slugs) > 0:
+        parent = snapshot.get_charge_by_slugs(slugs)
+        cc = ChargeChildren.objects.create(parent=parent,child=c)
+        description = "charge %s added as child of %s" % (str(c),str(parent))
     e = Event.objects.create(snapshot=snapshot,
                              user=request.user,
-                             description="charge %s added" % str(c))
+                             description=description)
     return HttpResponseRedirect("/edit/charge/")
+
+@rendered_with('law/edit_charge.html')
+@login_required
+def edit_charge(request,slugs):
+    slugs = slugs.split("/")
+    snapshot = working_snapshot()
+    charge = snapshot.get_charge_by_slugs(slugs)
+    return dict(charge=charge,add_charge_form=AddChargeForm())
