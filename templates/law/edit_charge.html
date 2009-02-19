@@ -33,7 +33,13 @@
     <td>
       <ul>
 	{% for cc in charge.yes %}
-	<li><a href="/edit{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a> (<a href="remove_classification/{{cc.classification.id}}/">X</a>)</li>
+	<li><a href="/edit{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a> (<a href="remove_classification/{{cc.classification.id}}/">X</a>)
+	  <ul>
+	    {% for clco in cc.classification.classificationconsequence_set.all %}
+	    <li><a href="/edit{{clco.consequence.area.get_absolute_url}}">{{ clco.consequence.area.label }}</a>: <a href="/edit{{clco.consequence.get_absolute_url}}">{{ clco.consequence.label }}</a></li>
+	    {% endfor %}
+	  </ul>
+	</li>
 	{% endfor %}
       </ul>
     </td>
@@ -41,7 +47,13 @@
     <td>
       <ul>
 	{% for cc in charge.probably %}
-	<li><a href="/edit{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a> (<a href="remove_classification/{{cc.classification.id}}/">X</a>)</li>
+	<li><a href="/edit{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a> (<a href="remove_classification/{{cc.classification.id}}/">X</a>)
+	  <ul>
+	    {% for clco in cc.classification.classificationconsequence_set.all %}
+	    <li><a href="/edit{{clco.consequence.area.get_absolute_url}}">{{ clco.consequence.area.label }}</a>: <a href="/edit{{clco.consequence.get_absolute_url}}">{{ clco.consequence.label }}</a></li>
+	    {% endfor %}
+	  </ul>
+	</li>
 	{% endfor %}
       </ul>
     </td>
@@ -49,7 +61,14 @@
     <td>
       <ul>
 	{% for cc in charge.maybe %}
-	<li><a href="/edit{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a> (<a href="remove_classification/{{cc.classification.id}}/">X</a>)</li>
+	<li><a href="/edit{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a> 
+	  (<a href="remove_classification/{{cc.classification.id}}/">X</a>)
+	  <ul>
+	    {% for clco in cc.classification.classificationconsequence_set.all %}
+	    <li><a href="/edit{{clco.consequence.area.get_absolute_url}}">{{ clco.consequence.area.label }}</a>: <a href="/edit{{clco.consequence.get_absolute_url}}">{{ clco.consequence.label }}</a></li>
+	    {% endfor %}
+	  </ul>
+	</li>
 	{% endfor %}
       </ul>
     </td>
