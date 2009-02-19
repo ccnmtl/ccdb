@@ -16,6 +16,7 @@ urlpatterns = patterns('',
 
                        ('^edit/charge/$','ccdb.law.views.edit_charge_index'),
                        ('^edit/charge/(?P<slugs>.*)add_charge/$','ccdb.law.views.add_charge'),
+                       ('^edit/charge/(?P<slugs>.*)remove_classification/(?P<classification_id>\d+)/$','ccdb.law.views.remove_charge_classification'),
                        ('^edit/charge/(?P<slugs>.*)add_classification/$','ccdb.law.views.add_charge_classification'),
                        ('^edit/charge/(?P<slugs>.+)/$','ccdb.law.views.edit_charge'),
 

@@ -3,8 +3,8 @@
 {% block content %}
 {{ block.super }}
 
-<div>
-{% for p in charge.parents %}<a href="/edit{{p.get_absolute_url}}">{{ p.label }}</a>/{% endfor %}
+<div id="path">
+{% for p in charge.parents %}&raquo;<a href="/edit{{p.get_absolute_url}}">{{ p.penal_code }} {{ p.label }}</a>{% endfor %}
 </div>
 <h2>{{ charge.penal_code }} {{ charge.label }}</h2>
 
@@ -24,13 +24,16 @@
 </ul>
 
 <h3>classifications</h3>
-<table>
-  <tr><th>yes</th><th>probably</th><th>maybe</th></tr>
+<table class="categories">
+  <tr>
+    <th class="yes">yes</th>
+    <th class="probably">probably</th>
+    <th class="maybe">maybe</th></tr>
   <tr>
     <td>
       <ul>
 	{% for cc in charge.yes %}
-	<li><a href="/edit{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a></li>
+	<li><a href="/edit{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a> (<a href="remove_classification/{{cc.classification.id}}/">X</a>)</li>
 	{% endfor %}
       </ul>
     </td>
@@ -38,7 +41,7 @@
     <td>
       <ul>
 	{% for cc in charge.probably %}
-	<li><a href="/edit{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a></li>
+	<li><a href="/edit{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a> (<a href="remove_classification/{{cc.classification.id}}/">X</a>)</li>
 	{% endfor %}
       </ul>
     </td>
@@ -46,7 +49,7 @@
     <td>
       <ul>
 	{% for cc in charge.maybe %}
-	<li><a href="/edit{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a></li>
+	<li><a href="/edit{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a> (<a href="remove_classification/{{cc.classification.id}}/">X</a>)</li>
 	{% endfor %}
       </ul>
     </td>

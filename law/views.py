@@ -110,6 +110,27 @@ def add_charge_classification(request,slugs=""):
     return HttpResponseRedirect("/edit" + charge.get_absolute_url())
 
 
+@login_required
+def remove_charge_classification(request,slugs="",classification_id=""):
+    if slugs[-1] == "/":
+        slugs = slugs[:-1]
+    slugs = slugs.split("/")
+    snapshot = working_snapshot()
+    charge = snapshot.get_charge_by_slugs(slugs)    
+    classification = get_object_or_404(Classification,id=classification_id)
+
+    cc = ChargeClassification.objects.get(charge=charge,classification=classification)
+
+    if request.POST:
+        cc.delete()
+        e = Event.objects.create(snapshot=snapshot,
+                                 user=request.user,
+                                 description="charge %s removed classification (%s) %s" % (cc.charge.label,cc.certainty,cc.classification.label),
+                                 note=request.POST.get('comment',''))
+        return HttpResponseRedirect("/edit" + charge.get_absolute_url())
+    return render_to_response("law/remove_charge_classification.html",dict(charge=charge,classification=classification))
+
+
 @rendered_with('law/edit_charge.html')
 @login_required
 def edit_charge(request,slugs):
