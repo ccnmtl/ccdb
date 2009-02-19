@@ -8,10 +8,21 @@
 
 <h3>classifications</h3>
 
+<form action="add_classification/" method="post">
+<table>
+{{ consequence.add_classification_form.as_table }}
+</table>
+<input type="submit" value="associate this consequence with classification" />
+</form>
+
+
 <ul>
 {% for cc in consequence.classificationconsequence_set.all %}
-<li>{{ cc.classification.label }}</li>
+<li><a href="/edit{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a></li>
 {% endfor %}
 </ul>
+
+
+
 
 {% endblock %}

@@ -36,5 +36,12 @@
   </tr>
 </table>
 
+<h3>consequences</h3>
+
+<ul>
+{% for cc in classification.classificationconsequence_set.all %}
+<li><a href="/edit{{cc.consequence.area.get_absolute_url}}">{{ cc.consequence.area.label }}</a>: <a href="/edit{{cc.consequence.get_absolute_url}}">{{ cc.consequence.label }}</a></li>
+{% endfor %}
+</ul>
 
 {% endblock %}

@@ -218,3 +218,17 @@ def edit_consequence(request,slug,cslug):
     area = get_object_or_404(Area,snapshot=snapshot,name=slug)
     consequence = get_object_or_404(Consequence,area=area,name=cslug)
     return dict(consequence=consequence)
+
+
+@login_required
+def add_classification_to_consequence(request,slug,cslug):
+    snapshot = working_snapshot()
+    area = get_object_or_404(Area,snapshot=snapshot,name=slug)
+    consequence = get_object_or_404(Consequence,area=area,name=cslug)
+    classification = get_object_or_404(Classification,id=request.POST['classification_id'])
+    cc = ClassificationConsequence.objects.create(consequence=consequence,
+                                                  classification=classification)
+    e = Event.objects.create(snapshot=snapshot,user=request.user,
+                             description="consequence %s associated with classification %s" % (consequence.label,classification.label),
+                             note=request.POST.get('comment',''))
+    return HttpResponseRedirect("/edit" + consequence.get_absolute_url())

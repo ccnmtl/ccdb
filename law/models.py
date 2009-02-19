@@ -79,6 +79,13 @@ class Snapshot(models.Model):
 
         # and classifications -> consequences
 
+        for classification in self.classification_set.all():
+            newclassification = classification_map[classification.id]
+            for cc in classification.classificationconsequence_set.all():
+                newconsequence = consequence_map[cc.consequence.id]
+                newcc = ClassificationConsequence.objects.create(classification=newclassification,
+                                                                 consequence=newconsequence)
+
         return new_snapshot
 
     def top_level_charges(self):
@@ -232,6 +239,9 @@ class Classification(models.Model):
     def all_charges(self):
         return [cc.charge for cc in self.chargeclassification_set.all()]
 
+    def consequences(self):
+        return [cc.consequence for cc in self.classificationconsequence_set.all()]
+
 
 class Area(models.Model):
     snapshot = models.ForeignKey(Snapshot)
@@ -264,6 +274,21 @@ class Consequence(models.Model):
         return Consequence.objects.create(area=new_area,label=self.label,
                                           description=self.description,
                                           name=self.name)
+
+    def add_classification_form(self):
+        class AddClassificationForm(forms.Form):
+            classification_id = forms.IntegerField(
+                widget=forms.Select(choices=[(c.id,c.label) for c in self.no()])
+                )
+            comment = forms.CharField(widget=forms.Textarea)
+        f = AddClassificationForm()
+        return f
+
+    def no(self):
+        """ return list of classifications that are *not* 
+        associated with this consequence """
+        allclassifications = [cc.classification for cc in self.classificationconsequence_set.all()]
+        return [c for c in Classification.objects.filter(snapshot=self.area.snapshot) if c not in allclassifications]
 
 
 class ChargeClassification(models.Model):
