@@ -195,6 +195,26 @@ def add_area(request):
 def edit_area(request,slug):
     snapshot = working_snapshot()
     area = get_object_or_404(Area,snapshot=snapshot,name=slug)
-    return dict(area=area)
+    return dict(area=area,add_consequence_form=AddConsequenceForm())
+
+@login_required
+def add_consequence(request,slug):
+    snapshot = working_snapshot()
+    area = get_object_or_404(Area,snapshot=snapshot,name=slug)
+    consequence = Consequence.objects.create(area=area,
+                                             label=request.POST['label'],
+                                             description=request.POST.get('description',''),
+                                             name=slugify(request.POST['label']))
+    e = Event.objects.create(snapshot=snapshot,
+                             user=request.user,
+                             description="consequence %s added to %s" % (consequence.label,area.label))
+    return HttpResponseRedirect("/edit" + area.get_absolute_url())
 
 
+@rendered_with('law/edit_consequence.html')
+@login_required
+def edit_consequence(request,slug,cslug):
+    snapshot = working_snapshot()
+    area = get_object_or_404(Area,snapshot=snapshot,name=slug)
+    consequence = get_object_or_404(Consequence,area=area,name=cslug)
+    return dict(consequence=consequence)

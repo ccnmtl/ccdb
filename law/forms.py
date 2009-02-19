@@ -12,3 +12,8 @@ class AddClassificationForm(forms.Form):
 
 class AddAreaForm(forms.Form):
     label = forms.CharField()
+
+class AddConsequenceForm(forms.Form):
+    label = forms.CharField()
+    description = forms.CharField(widget=forms.Textarea)
+

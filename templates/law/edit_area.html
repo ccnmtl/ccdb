@@ -5,4 +5,19 @@
 
 <h2>Area: {{ area.label }}</h2>
 
+<form action="add_consequence/" method="post">
+<table>
+{{ add_consequence_form.as_table }}
+</table>
+<input type="submit" value="add consequence" />
+</form>
+
+<h3>Consequences</h3>
+
+<ul>
+{% for consequence in area.consequence_set.all %}
+<li><a href="/edit{{consequence.get_absolute_url}}">{{ consequence.label }}</a></li>
+{% endfor %}
+</ul>
+
 {% endblock %}

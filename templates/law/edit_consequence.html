@@ -1,0 +1,17 @@
+{% extends "law/edit_base.html" %}
+
+{% block content %}
+{{ block.super }}
+
+<h2><a href="../">{{consequence.area.label}}</a>/ {{ consequence.label }}</h2>
+<p>{{ consequence.description }}</p>
+
+<h3>classifications</h3>
+
+<ul>
+{% for cc in consequence.classificationconsequence_set.all %}
+<li>{{ cc.classification.label }}</li>
+{% endfor %}
+</ul>
+
+{% endblock %}

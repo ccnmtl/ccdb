@@ -41,12 +41,18 @@ class Snapshot(models.Model):
         charge_map = dict()
         area_map = dict()
         classification_map = dict()
+        consequence_map = dict()
+
         for charge in self.charge_set.all():
             nc = charge.clone_to(new_snapshot)
             charge_map[charge.id] = nc
         for area in self.area_set.all():
             na = area.clone_to(new_snapshot)
             area_map[area.id] = na
+            for consequence in area.consequence_set.all():
+                new_consequence = consequence.clone_to(na)
+                consequence_map[consequence.id] = new_consequence
+
         for classification in self.classification_set.all():
             nc = classification.clone_to(new_snapshot)
             classification_map[classification.id] = nc
@@ -242,7 +248,6 @@ class Area(models.Model):
         return Area.objects.create(snapshot=new_snapshot,label=self.label,
                                    name=self.name)
 
-
 class Consequence(models.Model):
     label = models.CharField(max_length=256)
     description = models.TextField()
@@ -253,7 +258,7 @@ class Consequence(models.Model):
         return self.label
 
     def get_absolute_url(self):
-        return "/consequence/%s/" % self.name
+        return self.area.get_absolute_url() + self.name + "/"
 
     def clone_to(self,new_area):
         return Consequence.objects.create(area=new_area,label=self.label,
