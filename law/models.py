@@ -242,6 +242,22 @@ class Classification(models.Model):
     def consequences(self):
         return [cc.consequence for cc in self.classificationconsequence_set.all()]
 
+    def add_consequence_form(self):
+        class AddConsequenceForm(forms.Form):
+            consequence_id = forms.IntegerField(
+                widget=forms.Select(choices=[(c.id,"%s: %s" % (c.area.label,c.label)) for c in self.no_consequences()])
+                )
+            comment = forms.CharField(widget=forms.Textarea)
+        f = AddConsequenceForm()
+        return f
+    
+    def no_consequences(self):
+        """ return list of consequences that are *not* 
+        associated with this classification """
+        allconsequences = [cc.consequence for cc in self.classificationconsequence_set.all()]
+        return [c for c in Consequence.objects.filter(area__snapshot=self.snapshot) if c not in allconsequences]
+        
+
 
 class Area(models.Model):
     snapshot = models.ForeignKey(Snapshot)

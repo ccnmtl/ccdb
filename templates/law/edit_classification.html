@@ -38,6 +38,13 @@
 
 <h3>consequences</h3>
 
+<form action="add_consequence/" method="post">
+<table>
+{{ classification.add_consequence_form.as_table }}
+</table>
+<input type="submit" value="add consequence" />
+</form>
+
 <ul>
 {% for cc in classification.classificationconsequence_set.all %}
 <li><a href="/edit{{cc.consequence.area.get_absolute_url}}">{{ cc.consequence.area.label }}</a>: <a href="/edit{{cc.consequence.get_absolute_url}}">{{ cc.consequence.label }}</a></li>

@@ -232,3 +232,15 @@ def add_classification_to_consequence(request,slug,cslug):
                              description="consequence %s associated with classification %s" % (consequence.label,classification.label),
                              note=request.POST.get('comment',''))
     return HttpResponseRedirect("/edit" + consequence.get_absolute_url())
+
+@login_required
+def add_consequence_to_classification(request,slug):
+    snapshot = working_snapshot()
+    consequence = get_object_or_404(Consequence,id=request.POST['consequence_id'])
+    classification = get_object_or_404(Classification,snapshot=snapshot,name=slug)
+    cc = ClassificationConsequence.objects.create(consequence=consequence,
+                                                  classification=classification)
+    e = Event.objects.create(snapshot=snapshot,user=request.user,
+                             description="consequence %s associated with classification %s" % (consequence.label,classification.label),
+                             note=request.POST.get('comment',''))
+    return HttpResponseRedirect("/edit" + classification.get_absolute_url())
