@@ -9,3 +9,6 @@ class AddChargeForm(forms.Form):
 class AddClassificationForm(forms.Form):
     label = forms.CharField()
     description = forms.CharField(widget=forms.Textarea)
+
+class AddAreaForm(forms.Form):
+    label = forms.CharField()

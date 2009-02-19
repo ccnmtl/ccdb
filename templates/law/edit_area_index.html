@@ -1,0 +1,23 @@
+{% extends "law/edit_base.html" %}
+
+{% block content %}
+{{ block.super }}
+
+<h2>Areas</h2>
+
+<form action="add/" method="post">
+<fieldset><legend>add area</legend>
+<table>
+{{ add_area_form.as_table }}
+</table>
+<input type="submit" value="add" />
+</fieldset>
+</form>
+
+<ul>
+{% for area in areas %}
+<li><a href="/edit{{ area.get_absolute_url}}">{{ area.label }}</a></li>
+{% endfor %}
+</ul>
+
+{% endblock %}

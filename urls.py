@@ -24,6 +24,11 @@ urlpatterns = patterns('',
                        ('^edit/classification/add/$','ccdb.law.views.add_classification'),
                        ('^edit/classification/(?P<slug>[^\/]+)/$','ccdb.law.views.edit_classification'),
 
+                       ('^edit/area/$','ccdb.law.views.edit_area_index'),
+                       ('^edit/area/add/$','ccdb.law.views.add_area'),
+                       ('^edit/area/(?P<slug>[^\/]+)/$','ccdb.law.views.edit_area'),
+
+
                        ('^accounts/',include('djangowind.urls')),
                        (r'^admin/(.*)', admin.site.root),
                        (r'^site_media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': site_media_root}),

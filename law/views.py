@@ -169,3 +169,32 @@ def edit_classification(request,slug):
     return dict(classification=classification)
 
 
+@rendered_with('law/edit_area_index.html')
+@login_required
+def edit_area_index(request):
+    snapshot = working_snapshot()
+    return dict(areas=Area.objects.filter(snapshot=snapshot),
+                add_area_form=AddAreaForm())
+
+@login_required
+def add_area(request):
+    f = AddAreaForm(request.POST)
+    snapshot = working_snapshot()
+    a = Area.objects.create(snapshot=snapshot,
+                            label=request.POST['label'],
+                            name=slugify(request.POST['label']),
+                            )
+    e = Event.objects.create(snapshot=snapshot,
+                             user=request.user,
+                             description="added area %s" % a.label)
+
+    return HttpResponseRedirect("/edit/area/")
+
+@rendered_with('law/edit_area.html')
+@login_required
+def edit_area(request,slug):
+    snapshot = working_snapshot()
+    area = get_object_or_404(Area,snapshot=snapshot,name=slug)
+    return dict(area=area)
+
+
