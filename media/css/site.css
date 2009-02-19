@@ -7,9 +7,9 @@ body {margin: 0px; padding: 0px;}
 #path { font-size: .8em; margin: 0; padding-top: .5em; background-color: #ddd; border-bottom: #000 solid 1px;}
 
 table.categories {width: 100%;}
-th.yes {background-color: #c00; color: #fff;}
-th.probably {background-color: #c66; color: #fff;}
-th.maybe {background-color: #f99; color: #fff;}
+th.yes {background-color: #c00; color: #fff; width: 33%;}
+th.probably {background-color: #c66; color: #fff; width: 33%;}
+th.maybe {background-color: #f99; color: #fff; width: 33%;}
 
 
 /* resizable textarea styles */

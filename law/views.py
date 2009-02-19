@@ -74,24 +74,28 @@ def edit_charge_index(request):
                 
 @login_required
 def add_charge(request,slugs=""):
-    if slugs[-1] == "/":
+    if slugs != "" and slugs[-1] == "/":
         slugs = slugs[:-1]
     f = AddChargeForm(request.POST)
     snapshot = working_snapshot()
     c = Charge.objects.create(snapshot=snapshot,
                               label=request.POST['label'],
                               penal_code=request.POST['penal_code'],
-                              name=slugify(request.POST['penal_code'] + " " + request.POST['label']))
+                              name=slugify(request.POST['penal_code'] + " " + request.POST['label'])[:50])
     slugs = slugs.split("/")
     description = "charge %s added" % str(c)
-    if len(slugs) > 0:
+    if len(slugs) > 0 and slugs != ['']:
         parent = snapshot.get_charge_by_slugs(slugs)
         cc = ChargeChildren.objects.create(parent=parent,child=c)
         description = "charge %s added as child of %s" % (str(c),str(parent))
     e = Event.objects.create(snapshot=snapshot,
                              user=request.user,
                              description=description)
-    return HttpResponseRedirect("/edit/charge/")
+    if len(slugs) > 0 and slugs != ['']:
+        parent = snapshot.get_charge_by_slugs(slugs)
+        return HttpResponseRedirect("/edit" + parent.get_absolute_url())
+    else:
+        return HttpResponseRedirect("/edit/charge/")
 
 @login_required
 def add_charge_classification(request,slugs=""):
