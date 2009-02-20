@@ -126,6 +126,17 @@ def reparent_charge(request,slugs=""):
     ncc = ChargeChildren.objects.create(child=charge,parent=new_parent)
     return HttpResponseRedirect("/edit" + charge.get_absolute_url())
 
+@login_required
+def delete_charge(request,slugs=""):
+    if slugs[-1] == "/":
+        slugs = slugs[:-1]
+    slugs = slugs.split("/")
+    snapshot = working_snapshot()
+    charge = snapshot.get_charge_by_slugs(slugs)    
+    parent = charge.parents()[-1]
+    charge.delete_self()
+    return HttpResponseRedirect("/edit" + parent.get_absolute_url())
+
 
 @login_required
 def remove_charge_classification(request,slugs="",classification_id=""):

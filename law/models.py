@@ -251,6 +251,11 @@ class Charge(models.Model):
     def all_classifications(self):
         return [cc.classification for cc in self.chargeclassification_set.all()]
 
+    def delete_self(self):
+        for child in self.children():
+            child.delete_self()
+        self.delete()
+
 class ChargeChildren(models.Model):
     parent = models.ForeignKey(Charge,related_name="parent")
     child = models.ForeignKey(Charge,related_name="child")
