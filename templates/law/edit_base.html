@@ -13,11 +13,19 @@
 {% block content %}
 
 <div id="editnav">
-<a href="/edit/">/</a>
-<a href="/edit/snapshots/">snapshots</a>
-<a href="/edit/charge/">charges</a>
-<a href="/edit/classification/">classifications</a>
+<a href="/edit/">/</a> |
+<a href="/edit/snapshots/">snapshots</a> |
+<a href="/edit/charge/">charges</a> |
+<a href="/edit/classification/">classifications</a> |
 <a href="/edit/area/">areas</a>
+
+<div id="search">
+  <form action="/edit/search/" method="get">
+    <input type="text" name="q" />
+    <input type="submit" value="search" />
+  </form>
+</div>
+
 </div>
 
 

@@ -138,6 +138,13 @@ def delete_charge(request,slugs=""):
     return HttpResponseRedirect("/edit" + parent.get_absolute_url())
 
 
+@rendered_with('law/edit_search.html')
+@login_required
+def edit_search(request):
+    q = request.GET['q']
+    return dict(charges=Charge.objects.filter(label__icontains=q))
+
+
 @login_required
 def remove_charge_classification(request,slugs="",classification_id=""):
     if slugs[-1] == "/":

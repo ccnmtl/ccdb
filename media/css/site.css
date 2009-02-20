@@ -17,6 +17,18 @@ tr.even td {background-color: #eef;}
 tr.even th {font-size: .8em;}
 tr.odd th {font-size: .8em;}
 
+#search {
+    font-size: .8em;
+    display: inline;
+  float: right;
+  margin-top: -1.5em;
+}
+
+#search input {font-size: .7em;}
+#search input[type="text"] { border: #666 solid 1px;}
+
+#search form { display: inline; margin-top: -1em;}
+
 /* resizable textarea styles */
 textarea.resizable {width: 90%; height: 90%;}
 

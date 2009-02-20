@@ -36,6 +36,8 @@ urlpatterns = patterns('',
 
                        ('^edit/bootstrap/','ccdb.law.views.bootstrap'),
 
+                       ('^edit/search/$','ccdb.law.views.edit_search'),
+
                        ('^accounts/',include('djangowind.urls')),
                        (r'^admin/(.*)', admin.site.root),
                        (r'^site_media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': site_media_root}),

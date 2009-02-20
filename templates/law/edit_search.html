@@ -1,0 +1,16 @@
+{% extends "law/edit_base.html" %}
+
+{% block content %}
+{{ block.super }}
+
+<h2>Search Results</h2>
+
+
+<ul>
+{% for charge in charges %}
+<li><a href="/edit{{charge.get_absolute_url}}">{{ charge.penal_code }} {{ charge.label }}</a></li>
+{% endfor %}
+</ul>
+
+
+{% endblock %}
