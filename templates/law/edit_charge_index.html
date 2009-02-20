@@ -5,6 +5,19 @@
 
 <h2>Charges</h2>
 
+
+<div class="tabber">
+<div id="list" class="tabbertab" title="charges">
+
+<ul>
+{% for charge in charges %}
+<li><a href="/edit{{charge.get_absolute_url}}">{{ charge.penal_code }} {{ charge.label }}</a></li>
+{% endfor %}
+</ul>
+
+</div>
+
+<div id="add" class="tabbertab" title="add top level charge">
 <form action="add_charge/" method="post">
 <fieldset><legend>add top level charge</legend>
 <table>
@@ -13,11 +26,7 @@
 <input type="submit" value="add charge" />
 </fieldset>
 </form>
-
-<ul>
-{% for charge in charges %}
-<li><a href="/edit{{charge.get_absolute_url}}">{{ charge.penal_code }} {{ charge.label }}</a></li>
-{% endfor %}
-</ul>
+</div>
+</div>
 
 {% endblock %}

@@ -6,6 +6,9 @@
 <h2>Classification: {{ classification.label }}</h2>
 <p>{{ classification.description }}</p>
 
+<div class="tabber">
+{% if classification.all_charges %}
+<div id="charges" class="tabbertab" title="charges">
 <h3>charges</h3>
 <table class="categories">
   <tr><th class="yes">yes</th><th class="probably">probably</th><th class="maybe">maybe</th></tr>
@@ -35,7 +38,11 @@
     </td>
   </tr>
 </table>
+</div>
+{% endif %}
 
+{% if classification.consequences %}
+<div id="consequences" class="tabbertab" title="consequences">
 <h3>consequences</h3>
 
 
@@ -67,13 +74,17 @@
     </td>
   </tr>
 </table>
+</div>
+{% endif %}
 
+<div id="add-consequence" class="tabbertab" title="add consequence" />
 <form action="add_consequence/" method="post">
 <table>
 {{ classification.add_consequence_form.as_table }}
 </table>
 <input type="submit" value="add consequence" />
 </form>
-
+</div>
+</div>
 
 {% endblock %}

@@ -113,6 +113,19 @@ def add_charge_classification(request,slugs=""):
                              note=request.POST.get('comment',''))
     return HttpResponseRedirect("/edit" + charge.get_absolute_url())
 
+@login_required
+def reparent_charge(request,slugs=""):
+    if slugs[-1] == "/":
+        slugs = slugs[:-1]
+    slugs = slugs.split("/")
+    snapshot = working_snapshot()
+    charge = snapshot.get_charge_by_slugs(slugs)    
+    new_parent = Charge.objects.get(id=request.POST['sibling_id'])
+    cc = ChargeChildren.objects.filter(child=charge)
+    cc.delete()
+    ncc = ChargeChildren.objects.create(child=charge,parent=new_parent)
+    return HttpResponseRedirect("/edit" + charge.get_absolute_url())
+
 
 @login_required
 def remove_charge_classification(request,slugs="",classification_id=""):

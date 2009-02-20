@@ -5,6 +5,15 @@
 
 <h2>Areas</h2>
 
+<div class="tabber">
+<div id="list" class="tabbertab" title="areas">
+<ul>
+{% for area in areas %}
+<li><a href="/edit{{ area.get_absolute_url}}">{{ area.label }}</a></li>
+{% endfor %}
+</ul>
+</div>
+<div id="add" class="tabbertab" title="add area">
 <form action="add/" method="post">
 <fieldset><legend>add area</legend>
 <table>
@@ -13,11 +22,7 @@
 <input type="submit" value="add" />
 </fieldset>
 </form>
-
-<ul>
-{% for area in areas %}
-<li><a href="/edit{{ area.get_absolute_url}}">{{ area.label }}</a></li>
-{% endfor %}
-</ul>
+</div>
+</div>
 
 {% endblock %}

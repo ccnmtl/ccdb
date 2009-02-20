@@ -6,23 +6,25 @@
 <h2><a href="../">{{consequence.area.label}}</a>/ {{ consequence.label }}</h2>
 <p>{{ consequence.description }}</p>
 
-<h3>classifications</h3>
+<div class="tabber">
+<div id="classifications" class="tabbertab" title="classifications">
 
+<ul>
+{% for cc in consequence.classificationconsequence_set.all %}
+<li>({{cc.certainty}}) <a href="/edit{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a></li>
+{% endfor %}
+</ul>
+</div>
+
+<div id="add" class="tabbertab" title="add classification">
 <form action="add_classification/" method="post">
 <table>
 {{ consequence.add_classification_form.as_table }}
 </table>
 <input type="submit" value="associate this consequence with classification" />
 </form>
-
-
-<ul>
-{% for cc in consequence.classificationconsequence_set.all %}
-<li><a href="/edit{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a></li>
-{% endfor %}
-</ul>
-
-
+</div>
+</div>
 
 
 {% endblock %}

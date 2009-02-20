@@ -8,6 +8,20 @@
 </div>
 <h2>{{ charge.penal_code }} {{ charge.label }}</h2>
 
+
+<div class="tabber">
+  {% if charge.children %}
+  <div id="view" class="tabbertab" title="sub-charges">
+
+<ul>
+{% for charge in charge.children %}
+<li><a href="/edit{{charge.get_absolute_url}}">{{ charge.penal_code }} {{ charge.label }}</a></li>
+{% endfor %}
+</ul>
+</div>
+{% endif %}
+
+<div id="add-charge" class="tabbertab" title="add sub-charge">
 <form action="add_charge/" method="post">
 <fieldset><legend>add sub-charge</legend>
 <table>
@@ -16,14 +30,33 @@
 <input type="submit" value="add charge" />
 </fieldset>
 </form>
+</div>
 
-<ul>
-{% for charge in charge.children %}
-<li><a href="/edit{{charge.get_absolute_url}}">{{ charge.penal_code }} {{ charge.label }}</a></li>
+{% if charge.siblings %}
+<div id="reparent" class="tabbertab" title="reparent">
+<form action="reparent/" method="post">
+reparent to: <select name="sibling_id">
+{% for sibling in charge.siblings %}
+<option value="{{ sibling.id }}">{{ sibling.penal_code }} {{ sibling.label }}</option>
 {% endfor %}
-</ul>
+</select> 
+<input type="submit" value="reparent" />
+</form>
+</div>
+{% endif %}
+
+
+</div>
+
+
 
 <h3>classifications</h3>
+
+<div class="tabber">
+
+  {% if charge.all_classifications %}
+  <div id="view-categories" class="tabbertab" title="view">
+
 <table class="categories">
   <tr>
     <th></th>
@@ -127,6 +160,11 @@
 
 </table>
 
+</div>
+{% endif %}
+
+<div id="add-classification" class="tabbertab" title="add classification" />
+
 <form action="add_classification/" method="post">
 <table>
 {{ charge.add_classification_form.as_table }}
@@ -134,8 +172,8 @@
 <input type="submit" value="add" />
 </form>
 
-{% if charge.siblings %}
-there are siblings
-{% endif %}
+</div>
+</div>
+
 
 {% endblock %}

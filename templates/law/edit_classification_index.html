@@ -5,6 +5,16 @@
 
 <h2>Classifications</h2>
 
+<div class="tabber">
+<div id="view" class="tabbertab" title="list">
+<ul>
+{% for classification in classifications %}
+<li><a href="/edit{{ classification.get_absolute_url}}">{{ classification.label }}</a></li>
+{% endfor %}
+</ul>
+</div>
+
+<div id="add" class="tabbertab" title="add">
 <form action="add/" method="post">
 <fieldset><legend>add classification</legend>
 <table>
@@ -13,11 +23,8 @@
 <input type="submit" value="add" />
 </fieldset>
 </form>
+</div>
+</div>
 
-<ul>
-{% for classification in classifications %}
-<li><a href="/edit{{ classification.get_absolute_url}}">{{ classification.label }}</a></li>
-{% endfor %}
-</ul>
 
 {% endblock %}
