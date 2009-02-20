@@ -37,7 +37,7 @@
   {% for event in snapshot.event_set.all %}
   <div class="event">
     <div class="byline">
-      {{ event.created }} by {{ event.user.first_name }} {{ event.user.last_name }}
+      {{ event.created|date:"D, d M Y H:i:s" }} by {{ event.user.first_name }} {{ event.user.last_name }}
     </div>
     <div class="description">{{ event.description|markdown }}</div>
     <div class="note">{{ event.note|markdown }}</div>
