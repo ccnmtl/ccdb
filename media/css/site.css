@@ -6,11 +6,16 @@ body {margin: 0px; padding: 0px;}
 #editnav { margin: 0; background-color: #ccc; border-bottom: #000 solid 1px;}
 #path { font-size: .8em; margin: 0; padding-top: .5em; background-color: #ddd; border-bottom: #000 solid 1px;}
 
-table.categories {width: 100%;}
-th.yes {background-color: #c00; color: #fff; width: 33%;}
-th.probably {background-color: #c66; color: #fff; width: 33%;}
-th.maybe {background-color: #f99; color: #fff; width: 33%;}
+table.categories {width: 100%; border: #ccc solid 1px; border-collapse: collapse;}
+table.categories td {border: #ccc solid 1px; }
+table.categories th {border: #ccc solid 1px; }
+th.yes {background-color: #c00; color: #fff; width: 30%;}
+th.probably {background-color: #c66; color: #fff; width: 30%;}
+th.maybe {background-color: #f99; color: #fff; width: 30%;}
 
+tr.even td {background-color: #eef;}
+tr.even th {font-size: .8em;}
+tr.odd th {font-size: .8em;}
 
 /* resizable textarea styles */
 textarea.resizable {width: 90%; height: 90%;}

@@ -32,6 +32,16 @@ class Snapshot(models.Model):
     def get_absolute_url(self):
         return "/snapshots/%d/" % self.id
 
+    def clear(self):
+        for charge in self.charge_set.all():
+            charge.delete()
+        for classification in self.classification_set.all():
+            classification.delete()
+        for area in self.area_set.all():
+            area.delete()
+        for event in self.event_set.all():
+            event.delete()
+
     def clone(self,label,user,description=""):
 
         new_snapshot = Snapshot.objects.create(label=label,description=description)
@@ -84,7 +94,8 @@ class Snapshot(models.Model):
             for cc in classification.classificationconsequence_set.all():
                 newconsequence = consequence_map[cc.consequence.id]
                 newcc = ClassificationConsequence.objects.create(classification=newclassification,
-                                                                 consequence=newconsequence)
+                                                                 consequence=newconsequence,
+                                                                 certainty=cc.certainty)
 
         return new_snapshot
 
@@ -169,6 +180,13 @@ class Charge(models.Model):
             acc.reverse()
             return acc
 
+    def siblings(self):
+        try:
+            ps = ChargeChildren.objects.get(child=self).parent
+            return [c for c in ps.children() if c.id != self.id]
+        except ChargeChildren.DoesNotExist:
+            return []
+
     def add_classification_form(self):
         class AddClassificationForm(forms.Form):
             classification_id = forms.IntegerField(
@@ -190,6 +208,40 @@ class Charge(models.Model):
 
     def maybe(self):
         return self.chargeclassification_set.filter(certainty="maybe")
+
+    def all_yes(self):
+        """ include parents """
+        results = self.yes()
+        classifications = [cc.classification for cc in results]
+        for p in self.parents():
+            for cc in p.yes():
+                if cc.classification not in classifications:
+                    results.append(cc)
+                    classifications.append(cc.classification)
+        return results
+
+    def all_probably(self):
+        """ include parents """
+        results = self.probably()
+        classifications = [cc.classification for cc in results]
+        for p in self.parents():
+            for cc in p.probably():
+                if cc.classification not in classifications:
+                    results.append(cc)
+                    classifications.append(cc.classification)
+        return results
+
+    def all_maybe(self):
+        """ include parents """
+        results = self.maybe()
+        classifications = [cc.classification for cc in results]
+        for p in self.parents():
+            for cc in p.maybe():
+                if cc.classification not in classifications:
+                    results.append(cc)
+                    classifications.append(cc.classification)
+        return results
+
 
     def no(self):
         """ return all classifications that this charge is not attached to at all """
@@ -247,9 +299,24 @@ class Classification(models.Model):
             consequence_id = forms.IntegerField(
                 widget=forms.Select(choices=[(c.id,"%s: %s" % (c.area.label,c.label)) for c in self.no_consequences()])
                 )
+            certainty = forms.CharField(
+                widget=forms.Select(choices=[('yes','Yes'),
+                                             ('probably','Probably'),
+                                             ('maybe','Maybe')])
+                )
             comment = forms.CharField(widget=forms.Textarea)
         f = AddConsequenceForm()
         return f
+
+    def yes_consequences(self):
+        return self.classificationconsequence_set.filter(certainty="yes")
+
+    def probably_consequences(self):
+        return self.classificationconsequence_set.filter(certainty="probably")
+
+    def maybe_consequences(self):
+        return self.classificationconsequence_set.filter(certainty="maybe")
+
     
     def no_consequences(self):
         """ return list of consequences that are *not* 
@@ -296,6 +363,11 @@ class Consequence(models.Model):
             classification_id = forms.IntegerField(
                 widget=forms.Select(choices=[(c.id,c.label) for c in self.no()])
                 )
+            certainty = forms.CharField(
+                widget=forms.Select(choices=[('yes','Yes'),
+                                             ('probably','Probably'),
+                                             ('maybe','Maybe')])
+                )
             comment = forms.CharField(widget=forms.Textarea)
         f = AddClassificationForm()
         return f
@@ -324,5 +396,10 @@ class ClassificationConsequence(models.Model):
     classification = models.ForeignKey(Classification)
     consequence = models.ForeignKey(Consequence)
     ordinality = models.IntegerField(default=1)
+    certainty = models.CharField(max_length=16,
+                                 choices=(('yes','Yes'),
+                                          ('probably','Probably'),
+                                          ('maybe','Maybe')),
+                                 default="yes")
 
 

@@ -38,6 +38,36 @@
 
 <h3>consequences</h3>
 
+
+<table class="categories">
+  <tr><th class="yes">yes</th><th class="probably">probably</th><th class="maybe">maybe</th></tr>
+  <tr>
+    <td>
+      <ul>
+	{% for cc in classification.yes_consequences %}
+	<li><a href="/edit{{cc.consequence.area.get_absolute_url}}">{{ cc.consequence.area.label }}</a>: <a href="/edit{{cc.consequence.get_absolute_url}}">{{ cc.consequence.label }}</a></li>
+	{% endfor %}
+      </ul>
+    </td>
+
+    <td>
+      <ul>
+	{% for cc in classification.probably_consequences %}
+	<li><a href="/edit{{cc.consequence.area.get_absolute_url}}">{{ cc.consequence.area.label }}</a>: <a href="/edit{{cc.consequence.get_absolute_url}}">{{ cc.consequence.label }}</a></li>
+	{% endfor %}
+      </ul>
+    </td>
+
+    <td>
+      <ul>
+	{% for cc in classification.maybe_consequences %}
+	<li><a href="/edit{{cc.consequence.area.get_absolute_url}}">{{ cc.consequence.area.label }}</a>: <a href="/edit{{cc.consequence.get_absolute_url}}">{{ cc.consequence.label }}</a></li>
+	{% endfor %}
+      </ul>
+    </td>
+  </tr>
+</table>
+
 <form action="add_consequence/" method="post">
 <table>
 {{ classification.add_consequence_form.as_table }}
@@ -45,10 +75,5 @@
 <input type="submit" value="add consequence" />
 </form>
 
-<ul>
-{% for cc in classification.classificationconsequence_set.all %}
-<li><a href="/edit{{cc.consequence.area.get_absolute_url}}">{{ cc.consequence.area.label }}</a>: <a href="/edit{{cc.consequence.get_absolute_url}}">{{ cc.consequence.label }}</a></li>
-{% endfor %}
-</ul>
 
 {% endblock %}

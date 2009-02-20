@@ -32,6 +32,8 @@ urlpatterns = patterns('',
                        ('^edit/area/(?P<slug>[^\/]+)/(?P<cslug>[^\/]+)/$','ccdb.law.views.edit_consequence'),
                        ('^edit/area/(?P<slug>[^\/]+)/(?P<cslug>[^\/]+)/add_classification/$','ccdb.law.views.add_classification_to_consequence'),
 
+                       ('^edit/bootstrap/','ccdb.law.views.bootstrap'),
+
                        ('^accounts/',include('djangowind.urls')),
                        (r'^admin/(.*)', admin.site.root),
                        (r'^site_media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': site_media_root}),
