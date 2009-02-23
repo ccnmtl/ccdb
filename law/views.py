@@ -26,21 +26,21 @@ def index(request):
     return dict(charges=snapshot.charge_set.all())
 
 
-@rendered_with('law/edit_index.html')
 @login_required
+@rendered_with('law/edit_index.html')
 def edit_index(request):
     return dict(snapshots=Snapshot.objects.all(),
                 working_snapshot=working_snapshot(),
                 public_snapshot=public_snapshot())
 
-@rendered_with('law/edit_snapshots_index.html')
 @login_required
+@rendered_with('law/edit_snapshots_index.html')
 def edit_snapshots(request):
     return dict(snapshots=Snapshot.objects.all().order_by("-created"))
 
 
-@rendered_with('law/edit_snapshot.html')
 @login_required
+@rendered_with('law/edit_snapshot.html')
 def edit_snapshot(request,id):
     return dict(snapshot = get_object_or_404(Snapshot,id=id))
 
@@ -64,8 +64,8 @@ def approve_snapshot(request,id):
     return HttpResponseRedirect("/edit/snapshots/")
                                            
 
-@rendered_with('law/edit_charge_index.html')
 @login_required
+@rendered_with('law/edit_charge_index.html')
 def edit_charge_index(request):
     snapshot = working_snapshot()
     return dict(working_snapshot=snapshot,
@@ -168,8 +168,8 @@ def delete_charge(request,slugs=""):
     return HttpResponseRedirect("/edit" + parent.get_absolute_url())
 
 
-@rendered_with('law/edit_search.html')
 @login_required
+@rendered_with('law/edit_search.html')
 def edit_search(request):
     q = request.GET['q']
     return dict(charges=Charge.objects.filter(label__icontains=q))
@@ -196,16 +196,16 @@ def remove_charge_classification(request,slugs="",classification_id=""):
     return render_to_response("law/remove_charge_classification.html",dict(charge=charge,classification=classification))
 
 
-@rendered_with('law/edit_charge.html')
 @login_required
+@rendered_with('law/edit_charge.html')
 def edit_charge(request,slugs):
     slugs = slugs.split("/")
     snapshot = working_snapshot()
     charge = snapshot.get_charge_by_slugs(slugs)
     return dict(charge=charge,add_charge_form=AddChargeForm())
 
-@rendered_with('law/edit_classification_index.html')
 @login_required
+@rendered_with('law/edit_classification_index.html')
 def edit_classification_index(request):
     snapshot = working_snapshot()
     return dict(classifications=Classification.objects.filter(snapshot=snapshot),
@@ -226,8 +226,8 @@ def add_classification(request):
 
     return HttpResponseRedirect("/edit/classification/")
 
-@rendered_with('law/edit_classification.html')
 @login_required
+@rendered_with('law/edit_classification.html')
 def edit_classification(request,slug):
     snapshot = working_snapshot()
     classification = get_object_or_404(Classification,snapshot=snapshot,name=slug)
@@ -245,8 +245,8 @@ def delete_classification(request,slug):
     return HttpResponseRedirect("/edit/classification/")
 
 
-@rendered_with('law/edit_area_index.html')
 @login_required
+@rendered_with('law/edit_area_index.html')
 def edit_area_index(request):
     snapshot = working_snapshot()
     return dict(areas=Area.objects.filter(snapshot=snapshot),
@@ -266,8 +266,8 @@ def add_area(request):
 
     return HttpResponseRedirect("/edit/area/")
 
-@rendered_with('law/edit_area.html')
 @login_required
+@rendered_with('law/edit_area.html')
 def edit_area(request,slug):
     snapshot = working_snapshot()
     area = get_object_or_404(Area,snapshot=snapshot,name=slug)
@@ -299,8 +299,8 @@ def add_consequence(request,slug):
     return HttpResponseRedirect("/edit" + area.get_absolute_url())
 
 
-@rendered_with('law/edit_consequence.html')
 @login_required
+@rendered_with('law/edit_consequence.html')
 def edit_consequence(request,slug,cslug):
     snapshot = working_snapshot()
     area = get_object_or_404(Area,snapshot=snapshot,name=slug)
