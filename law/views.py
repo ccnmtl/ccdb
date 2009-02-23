@@ -256,6 +256,17 @@ def edit_consequence(request,slug,cslug):
 
 
 @login_required
+def delete_consequence(request,slug,cslug):
+    snapshot = working_snapshot()
+    area = get_object_or_404(Area,snapshot=snapshot,name=slug)
+    consequence = get_object_or_404(Consequence,area=area,name=cslug)
+    e = Event.objects.create(snapshot=snapshot,user=request.user,
+                             description="deleting consequence %s" % consequence.label,
+                             note=request.POST.get('comment',''))
+    consequence.delete()
+    return HttpResponseRedirect("/edit" + area.get_absolute_url())
+
+@login_required
 def add_classification_to_consequence(request,slug,cslug):
     snapshot = working_snapshot()
     area = get_object_or_404(Area,snapshot=snapshot,name=slug)
@@ -289,9 +300,9 @@ def remove_consequence_from_classification(request,slug,consequence_id):
     consequence = get_object_or_404(Consequence,id=consequence_id)
     classification = get_object_or_404(Classification,snapshot=snapshot,name=slug)
     cc = get_object_or_404(ClassificationConsequence,consequence=consequence,classification=classification)
-    cc.delete()
     e = Event.objects.create(snapshot=snapshot,user=request.user,
                              description="consequence %s removed from classification %s" % (consequence.label,classification.label))
+    cc.delete()
     return HttpResponseRedirect("/edit" + classification.get_absolute_url())
 
 
