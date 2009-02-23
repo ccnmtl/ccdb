@@ -33,7 +33,7 @@ function getCookie(name) {
     	return unescape(dc.substring(begin + prefix.length, end));
 }
 
-function setCookie(name, value, expires, path, domain, secure) {   
+function setCookie(name, value, expires, path, domain, secure) {
     	document.cookie= name + "=" + escape(value) +
         	((expires) ? "; expires=" + expires.toGMTString() : "") +
         	((path) ? "; path=" + path : "") +
@@ -54,7 +54,7 @@ function hs_lookForCookie(a) {
    var s = getCookie(cookie_name(e));
    if (s == "hidden") {
       hs_hide(e);
-   } 
+   }
    if (s == "show") {
       hs_show(e);
    }
@@ -90,7 +90,7 @@ function hs_show(e) {
 	log("showing " + e);
 	removeElementClass(e,"hs-hide");
 	addElementClass(e,"hs-show");
-	
+
 	var control = hs_controls[e.id];
 	removeElementClass(control,"hs-control-hide");
 	addElementClass(control,"hs-control-show");

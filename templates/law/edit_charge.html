@@ -180,5 +180,31 @@ reparent to: <select name="sibling_id">
 </div>
 </div>
 
+<h3>Areas</h3>
+
+<div class="tabber">
+{% if charge.chargearea_set.all %}
+<div id="areas-list" class="tabbertab" title="list">
+<ul>
+{% for ca in charge.chargearea_set.all %}
+<li><a href="/edit{{ca.area.get_absolute_url}}">{{ca.area.label}}</a>
+(<a href="remove_area/{{ca.id}}/">X</a>)
+</li>
+{% endfor %}
+</ul>
+</div>
+{% endif %}
+{% if charge.no_areas %}
+<div id="areas-add" class="tabbertab" title="add">
+<form action="add_area/" method="post">
+<table>
+{{ charge.add_area_form.as_table }}
+</table>
+<input type="submit" value="show consequences for this charge in the selected area" />
+</form>
+
+</div>
+{% endif %}
+</div>
 
 {% endblock %}

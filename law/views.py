@@ -114,6 +114,36 @@ def add_charge_classification(request,slugs=""):
     return HttpResponseRedirect("/edit" + charge.get_absolute_url())
 
 @login_required
+def add_area_to_charge(request,slugs=""):
+    if slugs[-1] == "/":
+        slugs = slugs[:-1]
+    slugs = slugs.split("/")
+    snapshot = working_snapshot()
+    charge = snapshot.get_charge_by_slugs(slugs)    
+    area = get_object_or_404(Area,id=request.POST['area_id'])
+    ca = ChargeArea.objects.create(charge=charge,area=area)
+    e = Event.objects.create(snapshot=snapshot,
+                             user=request.user,
+                             description="charge %s added to area %s" % (charge.label,area.label),
+                             note=request.POST.get('comment',''))
+    return HttpResponseRedirect("/edit" + charge.get_absolute_url())
+
+@login_required
+def remove_area_from_charge(request,slugs="",ca_id=""):
+    if slugs[-1] == "/":
+        slugs = slugs[:-1]
+    slugs = slugs.split("/")
+    snapshot = working_snapshot()
+    charge = snapshot.get_charge_by_slugs(slugs)  
+    ca = get_object_or_404(ChargeArea,id=ca_id)
+    e = Event.objects.create(snapshot=snapshot,
+                             user=request.user,
+                             description="charge %s removed from area %s" % (charge.label,ca.area.label))
+    ca.delete()
+    return HttpResponseRedirect("/edit" + charge.get_absolute_url())
+
+
+@login_required
 def reparent_charge(request,slugs=""):
     if slugs[-1] == "/":
         slugs = slugs[:-1]

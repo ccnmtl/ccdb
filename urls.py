@@ -20,6 +20,8 @@ urlpatterns = patterns('',
                        ('^edit/charge/(?P<slugs>.*)add_classification/$','ccdb.law.views.add_charge_classification'),
                        ('^edit/charge/(?P<slugs>.*)reparent/$','ccdb.law.views.reparent_charge'),
                        ('^edit/charge/(?P<slugs>.*)delete/$','ccdb.law.views.delete_charge'),
+                       ('^edit/charge/(?P<slugs>.*)add_area/$','ccdb.law.views.add_area_to_charge'),
+                       ('^edit/charge/(?P<slugs>.*)remove_area/(?P<ca_id>\d+)/$','ccdb.law.views.remove_area_from_charge'),
                        ('^edit/charge/(?P<slugs>.+)/$','ccdb.law.views.edit_charge'),
 
                        ('^edit/classification/$','ccdb.law.views.edit_classification_index'),

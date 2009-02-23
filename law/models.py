@@ -256,6 +256,23 @@ class Charge(models.Model):
             child.delete_self()
         self.delete()
 
+    def add_area_form(self):
+        class AddAreaForm(forms.Form):
+            area_id = forms.IntegerField(
+                widget=forms.Select(choices=[(a.id,a.label) for a in self.no_areas()])
+                )
+            comment = forms.CharField(widget=forms.Textarea)
+        f = AddAreaForm()
+        return f
+
+    def yes_areas(self):
+        return [ca.area for ca in self.chargearea_set.all()]
+
+    def no_areas(self):
+        """ list the areas that this charge does not show consequences for """
+        yes = self.yes_areas()
+        return [area for area in Area.objects.all() if area not in yes]
+
 class ChargeChildren(models.Model):
     parent = models.ForeignKey(Charge,related_name="parent")
     child = models.ForeignKey(Charge,related_name="child")
@@ -408,3 +425,8 @@ class ClassificationConsequence(models.Model):
                                  default="yes")
 
 
+class ChargeArea(models.Model):
+    """ if one of these exists, the specified charge
+    will show consequences in the specified area """
+    charge = models.ForeignKey(Charge)
+    area = models.ForeignKey(Area)
