@@ -203,6 +203,17 @@ def edit_classification(request,slug):
     classification = get_object_or_404(Classification,snapshot=snapshot,name=slug)
     return dict(classification=classification)
 
+@login_required
+def delete_classification(request,slug):
+    snapshot = working_snapshot()
+    classification = get_object_or_404(Classification,snapshot=snapshot,name=slug)
+    e = Event.objects.create(snapshot=snapshot,
+                             user=request.user,
+                             description="deleted classification %s" % classification.label,
+                             note=request.POST.get('comment',''))
+    classification.delete()
+    return HttpResponseRedirect("/edit/classification/")
+
 
 @rendered_with('law/edit_area_index.html')
 @login_required
