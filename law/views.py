@@ -233,6 +233,18 @@ def edit_area(request,slug):
     return dict(area=area,add_consequence_form=AddConsequenceForm())
 
 @login_required
+def delete_area(request,slug):
+    snapshot = working_snapshot()
+    area = get_object_or_404(Area,snapshot=snapshot,name=slug)
+    e = Event.objects.create(snapshot=snapshot,
+                             user=request.user,
+                             description="area %s deleted" % area.label,
+                             note=request.POST.get('comment',''),
+                             )
+    area.delete()
+    return HttpResponseRedirect("/edit/area/")
+
+@login_required
 def add_consequence(request,slug):
     snapshot = working_snapshot()
     area = get_object_or_404(Area,snapshot=snapshot,name=slug)
