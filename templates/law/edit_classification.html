@@ -52,7 +52,8 @@
     <td>
       <ul>
 	{% for cc in classification.yes_consequences %}
-	<li><a href="/edit{{cc.consequence.area.get_absolute_url}}">{{ cc.consequence.area.label }}</a>: <a href="/edit{{cc.consequence.get_absolute_url}}">{{ cc.consequence.label }}</a></li>
+	
+	<li><a href="/edit{{cc.consequence.area.get_absolute_url}}">{{ cc.consequence.area.label }}</a>: <a href="/edit{{cc.consequence.get_absolute_url}}">{{ cc.consequence.label }}</a>(<a href="remove_consequence/{{cc.consequence.id}}/">X</a>)</li>
 	{% endfor %}
       </ul>
     </td>
@@ -60,7 +61,7 @@
     <td>
       <ul>
 	{% for cc in classification.probably_consequences %}
-	<li><a href="/edit{{cc.consequence.area.get_absolute_url}}">{{ cc.consequence.area.label }}</a>: <a href="/edit{{cc.consequence.get_absolute_url}}">{{ cc.consequence.label }}</a></li>
+	<li><a href="/edit{{cc.consequence.area.get_absolute_url}}">{{ cc.consequence.area.label }}</a>: <a href="/edit{{cc.consequence.get_absolute_url}}">{{ cc.consequence.label }}</a>(<a href="remove_consequence/{{cc.consequence.id}}/">X</a>)</li>
 	{% endfor %}
       </ul>
     </td>
@@ -68,7 +69,7 @@
     <td>
       <ul>
 	{% for cc in classification.maybe_consequences %}
-	<li><a href="/edit{{cc.consequence.area.get_absolute_url}}">{{ cc.consequence.area.label }}</a>: <a href="/edit{{cc.consequence.get_absolute_url}}">{{ cc.consequence.label }}</a></li>
+	<li><a href="/edit{{cc.consequence.area.get_absolute_url}}">{{ cc.consequence.area.label }}</a>: <a href="/edit{{cc.consequence.get_absolute_url}}">{{ cc.consequence.label }}</a>(<a href="remove_consequence/{{cc.consequence.id}}/">X</a>)</li>
 	{% endfor %}
       </ul>
     </td>

@@ -283,6 +283,18 @@ def add_consequence_to_classification(request,slug):
     return HttpResponseRedirect("/edit" + classification.get_absolute_url())
 
 
+@login_required
+def remove_consequence_from_classification(request,slug,consequence_id):
+    snapshot = working_snapshot()
+    consequence = get_object_or_404(Consequence,id=consequence_id)
+    classification = get_object_or_404(Classification,snapshot=snapshot,name=slug)
+    cc = get_object_or_404(ClassificationConsequence,consequence=consequence,classification=classification)
+    cc.delete()
+    e = Event.objects.create(snapshot=snapshot,user=request.user,
+                             description="consequence %s removed from classification %s" % (consequence.label,classification.label))
+    return HttpResponseRedirect("/edit" + classification.get_absolute_url())
+
+
 def remove_comment(line):
     if "#" in line:
         line = line[:line.index("#")]

@@ -26,6 +26,7 @@ urlpatterns = patterns('',
                        ('^edit/classification/add/$','ccdb.law.views.add_classification'),
                        ('^edit/classification/(?P<slug>[^\/]+)/$','ccdb.law.views.edit_classification'),
                        ('^edit/classification/(?P<slug>[^\/]+)/add_consequence/$','ccdb.law.views.add_consequence_to_classification'),
+                       ('^edit/classification/(?P<slug>[^\/]+)/remove_consequence/(?P<consequence_id>\d+)/$','ccdb.law.views.remove_consequence_from_classification'),
 
                        ('^edit/area/$','ccdb.law.views.edit_area_index'),
                        ('^edit/area/add/$','ccdb.law.views.add_area'),
