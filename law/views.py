@@ -90,7 +90,7 @@ def add_charge(request,slugs=""):
     if len(slugs) > 0 and slugs != ['']:
         parent = snapshot.get_charge_by_slugs(slugs)
         cc = ChargeChildren.objects.create(parent=parent,child=c)
-        description = "charge %s added as child of %s" % (str(c),str(parent))
+        description = "charge **%s** added as child of **%s**" % (str(c),str(parent))
     e = Event.objects.create(snapshot=snapshot,
                              user=request.user,
                              description=description)
@@ -112,7 +112,7 @@ def add_charge_classification(request,slugs=""):
                                              certainty=request.POST['certainty'])
     e = Event.objects.create(snapshot=snapshot,
                              user=request.user,
-                             description="charge %s classified as (%s) %s" % (cc.charge.label,cc.certainty,cc.classification.label),
+                             description="charge **%s** classified as (%s) **%s**" % (cc.charge.label,cc.certainty,cc.classification.label),
                              note=request.POST.get('comment',''))
     return HttpResponseRedirect("/edit" + charge.get_absolute_url())
 
@@ -127,7 +127,7 @@ def add_area_to_charge(request,slugs=""):
     ca = ChargeArea.objects.create(charge=charge,area=area)
     e = Event.objects.create(snapshot=snapshot,
                              user=request.user,
-                             description="charge %s added to area %s" % (charge.label,area.label),
+                             description="charge **%s** added to area **%s**" % (charge.label,area.label),
                              note=request.POST.get('comment',''))
     return HttpResponseRedirect("/edit" + charge.get_absolute_url())
 
@@ -141,7 +141,7 @@ def remove_area_from_charge(request,slugs="",ca_id=""):
     ca = get_object_or_404(ChargeArea,id=ca_id)
     e = Event.objects.create(snapshot=snapshot,
                              user=request.user,
-                             description="charge %s removed from area %s" % (charge.label,ca.area.label))
+                             description="charge **%s** removed from area **%s**" % (charge.label,ca.area.label))
     ca.delete()
     return HttpResponseRedirect("/edit" + charge.get_absolute_url())
 
@@ -193,7 +193,7 @@ def remove_charge_classification(request,slugs="",classification_id=""):
         cc.delete()
         e = Event.objects.create(snapshot=snapshot,
                                  user=request.user,
-                                 description="charge %s removed classification (%s) %s" % (cc.charge.label,cc.certainty,cc.classification.label),
+                                 description="charge **%s** removed classification (%s) **%s**" % (cc.charge.label,cc.certainty,cc.classification.label),
                                  note=request.POST.get('comment',''))
         return HttpResponseRedirect("/edit" + charge.get_absolute_url())
     return render_to_response("law/remove_charge_classification.html",dict(charge=charge,classification=classification))
@@ -234,7 +234,7 @@ def add_classification(request):
                                       )
     e = Event.objects.create(snapshot=snapshot,
                              user=request.user,
-                             description="added classification %s" % c.label)
+                             description="added classification **%s**" % c.label)
 
     return HttpResponseRedirect("/edit/classification/")
 
@@ -251,7 +251,7 @@ def delete_classification(request,slug):
     classification = get_object_or_404(Classification,snapshot=snapshot,name=slug)
     e = Event.objects.create(snapshot=snapshot,
                              user=request.user,
-                             description="deleted classification %s" % classification.label,
+                             description="deleted classification **%s**" % classification.label,
                              note=request.POST.get('comment',''))
     classification.delete()
     return HttpResponseRedirect("/edit/classification/")
@@ -274,7 +274,7 @@ def add_area(request):
                             )
     e = Event.objects.create(snapshot=snapshot,
                              user=request.user,
-                             description="added area %s" % a.label)
+                             description="added area **%s**" % a.label)
 
     return HttpResponseRedirect("/edit/area/")
 
@@ -291,7 +291,7 @@ def delete_area(request,slug):
     area = get_object_or_404(Area,snapshot=snapshot,name=slug)
     e = Event.objects.create(snapshot=snapshot,
                              user=request.user,
-                             description="area %s deleted" % area.label,
+                             description="area **%s** deleted" % area.label,
                              note=request.POST.get('comment',''),
                              )
     area.delete()
@@ -307,7 +307,7 @@ def add_consequence(request,slug):
                                              name=slugify(request.POST['label'])[:50])
     e = Event.objects.create(snapshot=snapshot,
                              user=request.user,
-                             description="consequence %s added to %s" % (consequence.label,area.label))
+                             description="consequence **%s** added to **%s**" % (consequence.label,area.label))
     return HttpResponseRedirect("/edit" + area.get_absolute_url())
 
 
@@ -326,7 +326,7 @@ def delete_consequence(request,slug,cslug):
     area = get_object_or_404(Area,snapshot=snapshot,name=slug)
     consequence = get_object_or_404(Consequence,area=area,name=cslug)
     e = Event.objects.create(snapshot=snapshot,user=request.user,
-                             description="deleting consequence %s" % consequence.label,
+                             description="deleting consequence **%s**" % consequence.label,
                              note=request.POST.get('comment',''))
     consequence.delete()
     return HttpResponseRedirect("/edit" + area.get_absolute_url())
@@ -341,7 +341,7 @@ def add_classification_to_consequence(request,slug,cslug):
                                                   classification=classification,
                                                   certainty=request.POST.get('certainty','yes'))
     e = Event.objects.create(snapshot=snapshot,user=request.user,
-                             description="consequence %s associated with classification %s" % (consequence.label,classification.label),
+                             description="consequence **%s** associated with classification **%s**" % (consequence.label,classification.label),
                              note=request.POST.get('comment',''))
     return HttpResponseRedirect("/edit" + consequence.get_absolute_url())
 
@@ -354,7 +354,7 @@ def add_consequence_to_classification(request,slug):
                                                   classification=classification,
                                                   certainty=request.POST.get('certainty','yes'))
     e = Event.objects.create(snapshot=snapshot,user=request.user,
-                             description="consequence %s associated with classification %s" % (consequence.label,classification.label),
+                             description="consequence **%s** associated with classification **%s**" % (consequence.label,classification.label),
                              note=request.POST.get('comment',''))
     return HttpResponseRedirect("/edit" + classification.get_absolute_url())
 
@@ -366,7 +366,7 @@ def remove_consequence_from_classification(request,slug,consequence_id):
     classification = get_object_or_404(Classification,snapshot=snapshot,name=slug)
     cc = get_object_or_404(ClassificationConsequence,consequence=consequence,classification=classification)
     e = Event.objects.create(snapshot=snapshot,user=request.user,
-                             description="consequence %s removed from classification %s" % (consequence.label,classification.label))
+                             description="consequence **%s** removed from classification **%s**" % (consequence.label,classification.label))
     cc.delete()
     return HttpResponseRedirect("/edit" + classification.get_absolute_url())
 
