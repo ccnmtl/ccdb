@@ -16,14 +16,17 @@ class rendered_with(object):
     def __call__(self, func):
         def rendered_func(request, *args, **kwargs):
             items = func(request, *args, **kwargs)
-            return render_to_response(self.template_name, items, context_instance=RequestContext(request))
+            if type(items) == type({}):
+                return render_to_response(self.template_name, items, context_instance=RequestContext(request))
+            else:
+                return items
 
         return rendered_func
 
 @rendered_with('law/index.html')
 def index(request):
     snapshot = public_snapshot()
-    return dict(charges=snapshot.charge_set.all())
+    return dict(charges=snapshot.top_level_charges())
 
 
 @login_required
@@ -203,6 +206,14 @@ def edit_charge(request,slugs):
     snapshot = working_snapshot()
     charge = snapshot.get_charge_by_slugs(slugs)
     return dict(charge=charge,add_charge_form=AddChargeForm())
+
+@rendered_with('law/charge.html')
+def view_charge(request,slugs):
+    slugs = slugs.split("/")
+    snapshot = public_snapshot()
+    charge = snapshot.get_charge_by_slugs(slugs)
+    return dict(charge=charge)
+
 
 @login_required
 @rendered_with('law/edit_classification_index.html')

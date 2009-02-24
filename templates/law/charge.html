@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block content %}
+{{ block.super }}
+
+<div id="path">
+{% for p in charge.parents %}&raquo;<a href="{{p.get_absolute_url}}">{{ p.penal_code }} {{ p.label }}</a>{% endfor %}
+</div>
+<h2>{{ charge.penal_code }} {{ charge.label }}</h2>
+
+
+<div class="tabber">
+  {% if charge.children %}
+  <div id="view" class="tabbertab" title="sub-charges">
+
+<ul>
+{% for charge in charge.children %}
+<li><a href="{{charge.get_absolute_url}}">{{ charge.penal_code }} {{ charge.label }}</a></li>
+{% endfor %}
+</ul>
+</div>
+{% endif %}
+
+</div>
+
+
+<div class="tabber">
+
+  {% if charge.all_classifications %}
+  <div id="view-categories" class="tabbertab" title="view">
+
+<table class="categories">
+  <tr>
+    <th></th>
+    <th class="yes">yes</th>
+    <th class="probably">probably</th>
+    <th class="maybe">maybe</th></tr>
+  <tr>
+    <th>direct</th>
+    <td>
+      <ul>
+	{% for cc in charge.yes %}
+	<li><a href="{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a>
+	  <ul>
+	    {% for clco in cc.classification.classificationconsequence_set.all %}
+	    <li><a href="{{clco.consequence.area.get_absolute_url}}">{{ clco.consequence.area.label }}</a>: <a href="{{clco.consequence.get_absolute_url}}">{{ clco.consequence.label }}</a></li>
+	    {% endfor %}
+	  </ul>
+	</li>
+	{% endfor %}
+      </ul>
+    </td>
+
+    <td>
+      <ul>
+	{% for cc in charge.probably %}
+	<li><a href="{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a>
+	  <ul>
+	    {% for clco in cc.classification.classificationconsequence_set.all %}
+	    <li><a href="{{clco.consequence.area.get_absolute_url}}">{{ clco.consequence.area.label }}</a>: <a href="{{clco.consequence.get_absolute_url}}">{{ clco.consequence.label }}</a></li>
+	    {% endfor %}
+	  </ul>
+	</li>
+	{% endfor %}
+      </ul>
+    </td>
+
+    <td>
+      <ul>
+	{% for cc in charge.maybe %}
+	<li><a href="{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a> 
+	  <ul>
+	    {% for clco in cc.classification.classificationconsequence_set.all %}
+	    <li><a href="{{clco.consequence.area.get_absolute_url}}">{{ clco.consequence.area.label }}</a>: <a href="{{clco.consequence.get_absolute_url}}">{{ clco.consequence.label }}</a></li>
+	    {% endfor %}
+	  </ul>
+	</li>
+	{% endfor %}
+      </ul>
+    </td>
+  </tr>
+
+  {% for p in charge.parents %}
+  {% if p.consequences %}
+  <tr class="{% cycle 'even' 'odd' %}">
+    <th><a href="{{p.get_absolute_url}}">{{p.penal_code}} {{p.label}}</a></th>
+    <td>
+      <ul>
+	{% for cc in p.yes %}
+	<li><a href="{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a>
+	  <ul>
+	    {% for clco in cc.classification.classificationconsequence_set.all %}
+	    <li><a href="{{clco.consequence.area.get_absolute_url}}">{{ clco.consequence.area.label }}</a>: <a href="{{clco.consequence.get_absolute_url}}">{{ clco.consequence.label }}</a></li>
+	    {% endfor %}
+	  </ul>
+	</li>
+	{% endfor %}
+      </ul>
+    </td>
+
+    <td>
+      <ul>
+	{% for cc in p.probably %}
+	<li><a href="{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a>
+	  <ul>
+	    {% for clco in cc.classification.classificationconsequence_set.all %}
+	    <li><a href="{{clco.consequence.area.get_absolute_url}}">{{ clco.consequence.area.label }}</a>: <a href="{{clco.consequence.get_absolute_url}}">{{ clco.consequence.label }}</a></li>
+	    {% endfor %}
+	  </ul>
+	</li>
+	{% endfor %}
+      </ul>
+    </td>
+
+    <td>
+      <ul>
+	{% for cc in p.maybe %}
+	<li><a href="{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a> 
+	  <ul>
+	    {% for clco in cc.classification.classificationconsequence_set.all %}
+	    <li><a href="{{clco.consequence.area.get_absolute_url}}">{{ clco.consequence.area.label }}</a>: <a href="{{clco.consequence.get_absolute_url}}">{{ clco.consequence.label }}</a></li>
+	    {% endfor %}
+	  </ul>
+	</li>
+	{% endfor %}
+      </ul>
+    </td>
+  </tr>
+{% endif %}
+{% endfor %}
+
+
+</table>
+
+</div>
+{% endif %}
+
+</div>
+
+{% endblock %}
