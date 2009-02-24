@@ -212,6 +212,7 @@ def view_charge(request,slugs):
     slugs = slugs.split("/")
     snapshot = public_snapshot()
     charge = snapshot.get_charge_by_slugs(slugs)
+    all = charge.view_all()
     return dict(charge=charge)
 
 

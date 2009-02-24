@@ -86,6 +86,11 @@ class Snapshot(models.Model):
                     classification=newclassification,
                     certainty=cc.certainty,
                     )
+            for ca in charge.chargearea_set.all():
+                newarea = area_map[ca.area.id]
+                nca = ChargeArea.objects.create(
+                    charge=newcharge,
+                    area=newarea)
 
         # and classifications -> consequences
 
@@ -96,6 +101,7 @@ class Snapshot(models.Model):
                 newcc = ClassificationConsequence.objects.create(classification=newclassification,
                                                                  consequence=newconsequence,
                                                                  certainty=cc.certainty)
+
 
         return new_snapshot
 
@@ -242,6 +248,33 @@ class Charge(models.Model):
                     classifications.append(cc.classification)
         return results
 
+    def view_yes(self):
+        """ show yes results only in areas that have been vetted """
+        r = self.all_yes()
+        areas = self.yes_areas()
+        return [cc for cc in r if cc.classification.in_areas(areas)]
+
+    def view_probably(self):
+        """ show yes results only in areas that have been vetted """
+        r = self.all_probably()
+        areas = self.yes_areas()
+        return [cc for cc in r if cc.classification.in_areas(areas)]
+
+    def view_maybe(self):
+        """ show yes results only in areas that have been vetted """
+        r = self.all_maybe()
+        areas = self.yes_areas()
+        return [cc for cc in r if cc.classification.in_areas(areas)]
+
+    def view_all(self):
+        """ show yes results only in areas that have been vetted """
+        maybe = self.all_maybe()
+        probably = self.all_probably()
+        yes = self.all_yes()
+        r = list(maybe) + list(probably) + list(yes)
+        areas = self.yes_areas()
+        return [cc for cc in r if cc.classification.in_areas(areas)]
+
 
     def no(self):
         """ return all classifications that this charge is not attached to at all """
@@ -271,7 +304,7 @@ class Charge(models.Model):
     def no_areas(self):
         """ list the areas that this charge does not show consequences for """
         yes = self.yes_areas()
-        return [area for area in Area.objects.all() if area not in yes]
+        return [area for area in Area.objects.filter(snapshot=self.snapshot) if area not in yes]
 
 class ChargeChildren(models.Model):
     parent = models.ForeignKey(Charge,related_name="parent")
@@ -346,7 +379,12 @@ class Classification(models.Model):
         allconsequences = [cc.consequence for cc in self.classificationconsequence_set.all()]
         return [c for c in Consequence.objects.filter(area__snapshot=self.snapshot) if c not in allconsequences]
         
-
+    def in_areas(self,areas):
+        in_all = True
+        for consequence in self.consequences():
+            if consequence.area not in areas:
+                in_all = False
+        return in_all
 
 class Area(models.Model):
     snapshot = models.ForeignKey(Snapshot)
@@ -399,7 +437,6 @@ class Consequence(models.Model):
         associated with this consequence """
         allclassifications = [cc.classification for cc in self.classificationconsequence_set.all()]
         return [c for c in Classification.objects.filter(snapshot=self.area.snapshot) if c not in allclassifications]
-
 
 class ChargeClassification(models.Model):
     charge = models.ForeignKey(Charge)

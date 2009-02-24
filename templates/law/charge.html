@@ -26,20 +26,18 @@
 
 <div class="tabber">
 
-  {% if charge.all_classifications %}
+  {% if charge.view_all %}
   <div id="view-categories" class="tabbertab" title="view">
 
 <table class="categories">
   <tr>
-    <th></th>
     <th class="yes">yes</th>
     <th class="probably">probably</th>
     <th class="maybe">maybe</th></tr>
   <tr>
-    <th>direct</th>
     <td>
       <ul>
-	{% for cc in charge.yes %}
+	{% for cc in charge.view_yes %}
 	<li><a href="{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a>
 	  <ul>
 	    {% for clco in cc.classification.classificationconsequence_set.all %}
@@ -53,7 +51,7 @@
 
     <td>
       <ul>
-	{% for cc in charge.probably %}
+	{% for cc in charge.view_probably %}
 	<li><a href="{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a>
 	  <ul>
 	    {% for clco in cc.classification.classificationconsequence_set.all %}
@@ -67,7 +65,7 @@
 
     <td>
       <ul>
-	{% for cc in charge.maybe %}
+	{% for cc in charge.view_maybe %}
 	<li><a href="{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a> 
 	  <ul>
 	    {% for clco in cc.classification.classificationconsequence_set.all %}
@@ -79,60 +77,17 @@
       </ul>
     </td>
   </tr>
-
-  {% for p in charge.parents %}
-  {% if p.consequences %}
-  <tr class="{% cycle 'even' 'odd' %}">
-    <th><a href="{{p.get_absolute_url}}">{{p.penal_code}} {{p.label}}</a></th>
-    <td>
-      <ul>
-	{% for cc in p.yes %}
-	<li><a href="{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a>
-	  <ul>
-	    {% for clco in cc.classification.classificationconsequence_set.all %}
-	    <li><a href="{{clco.consequence.area.get_absolute_url}}">{{ clco.consequence.area.label }}</a>: <a href="{{clco.consequence.get_absolute_url}}">{{ clco.consequence.label }}</a></li>
-	    {% endfor %}
-	  </ul>
-	</li>
-	{% endfor %}
-      </ul>
-    </td>
-
-    <td>
-      <ul>
-	{% for cc in p.probably %}
-	<li><a href="{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a>
-	  <ul>
-	    {% for clco in cc.classification.classificationconsequence_set.all %}
-	    <li><a href="{{clco.consequence.area.get_absolute_url}}">{{ clco.consequence.area.label }}</a>: <a href="{{clco.consequence.get_absolute_url}}">{{ clco.consequence.label }}</a></li>
-	    {% endfor %}
-	  </ul>
-	</li>
-	{% endfor %}
-      </ul>
-    </td>
-
-    <td>
-      <ul>
-	{% for cc in p.maybe %}
-	<li><a href="{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a> 
-	  <ul>
-	    {% for clco in cc.classification.classificationconsequence_set.all %}
-	    <li><a href="{{clco.consequence.area.get_absolute_url}}">{{ clco.consequence.area.label }}</a>: <a href="{{clco.consequence.get_absolute_url}}">{{ clco.consequence.label }}</a></li>
-	    {% endfor %}
-	  </ul>
-	</li>
-	{% endfor %}
-      </ul>
-    </td>
-  </tr>
-{% endif %}
-{% endfor %}
-
 
 </table>
 
 </div>
+
+{% else %}
+
+{% if not charge.children %}
+{# only show message if this is a leaf charge #}
+<p>There are no consequences listed for this charge</p>
+{% endif %}
 {% endif %}
 
 </div>
