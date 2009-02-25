@@ -32,12 +32,13 @@
 </form>
 {% endifequal %}
 
-<h2>events</h2>
+<h2>History</h2>
 
   {% for event in snapshot.event_set.all %}
+  {% ifchanged %}<h3>{{ event.created|date:"D, d M Y" }}</h3>{% endifchanged %}
   <div class="event">
     <div class="byline">
-      {{ event.created|date:"D, d M Y H:i:s" }} by {{ event.user.first_name }} {{ event.user.last_name }}
+      {{ event.created|date:"H:i" }} by {{ event.user.first_name }} {{ event.user.last_name }}
     </div>
     <div class="description">{{ event.description|markdown }}</div>
     <div class="note">{{ event.note|markdown }}</div>
