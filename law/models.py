@@ -122,7 +122,14 @@ class Snapshot(models.Model):
             if current is None:
                 raise Http404
         else:
-            current = get_object_or_404(Charge,snapshot=self,name=slugs[0])
+            options = Charge.objects.filter(snapshot=self,name=slugs[0])
+            if options.count() == 1:
+                current = get_object_or_404(Charge,snapshot=self,name=slugs[0])
+            else:
+                print "Multiple charges found with the same slug"
+                for c in options:
+                    print c.id,c.name,c.label
+                raise "Oh No!!!"
 
         if len(slugs) == 1:
             return current
@@ -159,6 +166,9 @@ class Charge(models.Model):
     snapshot = models.ForeignKey(Snapshot)
     name = models.SlugField()
 
+    class Meta:
+        ordering = ('penal_code','label')
+
     def __unicode__(self):
         return self.label
 
@@ -174,7 +184,7 @@ class Charge(models.Model):
                                      penal_code=self.penal_code,name=self.name)
 
     def children(self):
-        return [cc.child for cc in ChargeChildren.objects.filter(parent=self)]
+        return [cc.child for cc in ChargeChildren.objects.filter(parent=self).order_by('child__penal_code')]
 
     def parents(self,acc=None):
         if acc is None: acc = []

@@ -23,6 +23,10 @@ tr.even td {background-color: #eef;}
 tr.even th {font-size: .8em;}
 tr.odd th {font-size: .8em;}
 
+td {vertical-align: top;}
+
+.has-children { background-color: #eee;}
+
 #search {
     font-size: .8em;
     display: inline;

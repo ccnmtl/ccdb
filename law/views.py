@@ -175,7 +175,8 @@ def delete_charge(request,slugs=""):
 @rendered_with('law/edit_search.html')
 def edit_search(request):
     q = request.GET['q']
-    return dict(charges=Charge.objects.filter(label__icontains=q))
+    snapshot = working_snapshot()
+    return dict(charges=Charge.objects.filter(snapshot=snapshot,label__icontains=q))
 
 
 @login_required

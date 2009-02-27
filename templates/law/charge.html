@@ -9,25 +9,15 @@
 <h2>{{ charge.penal_code }} {{ charge.label }}</h2>
 
 
-<div class="tabber">
   {% if charge.children %}
-  <div id="view" class="tabbertab" title="sub-charges">
-
 <ul>
 {% for charge in charge.children %}
 <li><a href="{{charge.get_absolute_url}}">{{ charge.penal_code }} {{ charge.label }}</a></li>
 {% endfor %}
 </ul>
-</div>
 {% endif %}
 
-</div>
-
-
-<div class="tabber">
-
   {% if charge.view_all %}
-  <div id="view-categories" class="tabbertab" title="view">
 
 <table class="categories">
   <tr>
@@ -80,8 +70,6 @@
 
 </table>
 
-</div>
-
 {% else %}
 
 {% if not charge.children %}
@@ -90,6 +78,14 @@
 {% endif %}
 {% endif %}
 
-</div>
+{% if not charge.children and charge.no_areas %}
+<p>This charge has not been vetted for the following areas:</p>
+
+<ul>
+{% for area in charge.no_areas %}
+<li>{{ area.label }}</li>
+{% endfor %}
+</ul>
+{% endif %}
 
 {% endblock %}

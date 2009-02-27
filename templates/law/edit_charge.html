@@ -14,8 +14,8 @@
   <div id="view" class="tabbertab" title="sub-charges">
 
 <ul>
-{% for charge in charge.children %}
-<li><a href="/edit{{charge.get_absolute_url}}">{{ charge.penal_code }} {{ charge.label }}</a></li>
+{% for child in charge.children %}
+<li><a class="{% if child.children %}has-children{% else %}no-children{% endif %}" href="/edit{{child.get_absolute_url}}">{{ child.penal_code }} {{ child.label }}</a></li>
 {% endfor %}
 </ul>
 </div>
