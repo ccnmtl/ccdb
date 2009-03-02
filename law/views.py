@@ -452,3 +452,4 @@ def bootstrap(request):
 
     return HttpResponse("ok")
 
+
