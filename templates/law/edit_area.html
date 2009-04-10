@@ -1,5 +1,7 @@
 {% extends "law/edit_base.html" %}
-
+{% block css %}
+{{ add_consequence_form.media }}
+{% endblock %}
 {% block content %}
 {{ block.super }}
 
@@ -34,6 +36,5 @@ comment: <textarea name="comment"></textarea><br />
 </div>
 
 </div>
-
 
 {% endblock %}

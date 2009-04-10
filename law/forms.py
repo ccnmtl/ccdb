@@ -1,6 +1,7 @@
 from models import *
 from django import forms
 import datetime
+from tinymce.widgets import TinyMCE
 
 class AddChargeForm(forms.Form):
     label = forms.CharField()
@@ -15,5 +16,5 @@ class AddAreaForm(forms.Form):
 
 class AddConsequenceForm(forms.Form):
     label = forms.CharField()
-    description = forms.CharField(widget=forms.Textarea)
+    description = forms.CharField(widget=TinyMCE())
 

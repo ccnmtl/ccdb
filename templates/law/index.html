@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-
 {% block content %}
 
 {% for charge in charges %}
@@ -7,6 +6,5 @@
 <a href="{{charge.get_absolute_url}}">{{charge.penal_code}} {{ charge.label }}</a>
 </div>
 {% endfor %}
-
 
 {% endblock %}

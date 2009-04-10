@@ -65,6 +65,11 @@ INSTALLED_APPS = (
     'sorl.thumbnail',
     'django.contrib.admin',
     'ccdb.law',
+    'smartif',
+    'template_utils',
+    'typogrify',
+    'survey',
+    'tinymce',
 )
 
 THUMBNAIL_SUBDIR = "thumbs"
@@ -81,3 +86,19 @@ WIND_PROFILE_HANDLERS = ['djangowind.auth.CDAPProfileHandler']
 WIND_AFFIL_HANDLERS = ['djangowind.auth.AffilGroupMapper','djangowind.auth.StaffMapper','djangowind.auth.SuperuserMapper']
 WIND_STAFF_MAPPER_GROUPS = ['tlc.cunix.local:columbia.edu']
 WIND_SUPERUSER_MAPPER_GROUPS = ['anp8','jb2410','zm4','sbd12','egr2107','kmh2124','sld2131','amm8','mar227','ed2198']
+
+# TinyMCE settings
+
+TINYMCE_JS_URL = '/site_media/js/tiny_mce/tiny_mce.js'
+TINYMCE_JS_ROOT = 'media/js/tiny_mce'
+
+# if you set this to True, you may have to 
+# override TINYMCE_JS_ROOT with the full path on production
+TINYMCE_COMPRESSOR = False 
+TINYMCE_SPELLCHECKER = True
+
+TINYMCE_DEFAULT_CONFIG = {'cols': 80, 
+                          'rows': 30,
+                          'plugins':'table,spellchecker,paste,searchreplace',
+                          'theme' : 'simple',
+                          }
