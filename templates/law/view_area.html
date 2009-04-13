@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+{{ block.super }}
+
+<h2>Area: {{ area.label }}</h2>
+
+<h3>Consequences</h3>
+
+<ul>
+{% for consequence in area.consequence_set.all %}
+<li><a href="{{consequence.get_absolute_url}}">{{ consequence.label }}</a></li>
+{% endfor %}
+</ul>
+
+
+<h3>Charges</h3>
+<p>The following charges have been vetted for this area</p>
+
+<ul>
+{% for ca in area.chargearea_set.all %}
+<li><a href="{{ca.charge.get_absolute_url}}">{{ca.charge.label}}</a></li>
+{% endfor %}
+</ul>
+
+{% endblock %}
+
+
+

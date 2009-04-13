@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+{{ block.super }}
+
+<h2><a href="../">{{consequence.area.label}}</a>/ {{ consequence.label }}</h2>
+<p>{{ consequence.description }}</p>
+
+<ul>
+{% for cc in consequence.classificationconsequence_set.all %}
+<li>({{cc.certainty}}) <a href="{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a></li>
+{% endfor %}
+</ul>
+
+{% endblock %}

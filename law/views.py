@@ -231,7 +231,7 @@ def add_classification(request):
     c = Classification.objects.create(snapshot=snapshot,
                                       label=request.POST['label'],
                                       description=request.POST['description'],
-                                      name=slugify(request.POST['label']),
+                                      name=slugify(request.POST['label'])[:50],
                                       )
     e = Event.objects.create(snapshot=snapshot,
                              user=request.user,
@@ -245,6 +245,13 @@ def edit_classification(request,slug):
     snapshot = working_snapshot()
     classification = get_object_or_404(Classification,snapshot=snapshot,name=slug)
     return dict(classification=classification)
+
+@rendered_with('law/view_classification.html')
+def view_classification(request,slug):
+    snapshot = public_snapshot()
+    classification = get_object_or_404(Classification,snapshot=snapshot,name=slug)
+    return dict(classification=classification)
+
 
 @login_required
 def delete_classification(request,slug):
@@ -286,6 +293,13 @@ def edit_area(request,slug):
     area = get_object_or_404(Area,snapshot=snapshot,name=slug)
     return dict(area=area,add_consequence_form=AddConsequenceForm())
 
+@rendered_with('law/view_area.html')
+def view_area(request,slug):
+    snapshot = public_snapshot()
+    area = get_object_or_404(Area,snapshot=snapshot,name=slug)
+    return dict(area=area,add_consequence_form=AddConsequenceForm())
+
+
 @login_required
 def delete_area(request,slug):
     snapshot = working_snapshot()
@@ -319,6 +333,14 @@ def edit_consequence(request,slug,cslug):
     area = get_object_or_404(Area,snapshot=snapshot,name=slug)
     consequence = get_object_or_404(Consequence,area=area,name=cslug)
     return dict(consequence=consequence)
+
+@rendered_with('law/view_consequence.html')
+def view_consequence(request,slug,cslug):
+    snapshot = public_snapshot()
+    area = get_object_or_404(Area,snapshot=snapshot,name=slug)
+    consequence = get_object_or_404(Consequence,area=area,name=cslug)
+    return dict(consequence=consequence)
+
 
 
 @login_required

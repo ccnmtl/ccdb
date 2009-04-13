@@ -217,13 +217,38 @@ class Charge(models.Model):
         return f
 
     def yes(self):
-        return self.chargeclassification_set.filter(certainty="yes")
+        return list(self.chargeclassification_set.filter(certainty="yes"))
+
+
+    # these are a little harder, since they need to handle the situation
+    # where the certainty of the chargeclassification is different
+    # than the certainty of the classificationconsequence and duplicate
+    # those in the lesser column
+
+    # when using the results of these later on, make sure that
+    # instead of looping over cc.classification.classificationconsequence_set.all()
+    # results, you use cc.classification.yes_consequences() etc (matching the certainty)
 
     def probably(self):
-        return self.chargeclassification_set.filter(certainty="probably")
+        plain = list(self.chargeclassification_set.filter(certainty="probably"))
+        
+        # also include any Charge -> YES -> Classification -> PROBABLY -> Consequences
+        for cc in self.yes():
+            if cc.classification.classificationconsequence_set.filter(certainty="probably").count() > 0:
+                plain.append(cc)
+        return plain
 
     def maybe(self):
-        return self.chargeclassification_set.filter(certainty="maybe")
+        plain = list(self.chargeclassification_set.filter(certainty="maybe"))
+        # also include any Charge -> YES -> Classification -> MAYBE -> Consequences
+        for cc in self.yes():
+            if cc.classification.classificationconsequence_set.filter(certainty="maybe").count() > 0:
+                plain.append(cc)
+        # also include any Charge -> PROBABLY -> Classification -> MAYBE -> Consequences
+        for cc in self.probably():
+            if cc.classification.classificationconsequence_set.filter(certainty="probably").count() > 0:
+                plain.append(cc)
+        return plain
 
     def all_yes(self):
         """ include parents """

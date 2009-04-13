@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+{{ block.super }}
+
+<h2>Classification: {{ classification.label }}</h2>
+<p>{{ classification.description }}</p>
+
+{% if classification.all_charges %}
+<h3>charges</h3>
+<table class="categories">
+  <tr><th class="yes">yes</th><th class="probably">probably</th><th class="maybe">maybe</th></tr>
+  <tr>
+    <td>
+      <ul>
+	{% for cc in classification.yes %}
+	<li><a href="{{cc.charge.get_absolute_url}}">{{ cc.charge.label }}</a></li>
+	{% endfor %}
+      </ul>
+    </td>
+
+    <td>
+      <ul>
+	{% for cc in classification.probably %}
+	<li><a href="{{cc.charge.get_absolute_url}}">{{ cc.charge.label }}</a></li>
+	{% endfor %}
+      </ul>
+    </td>
+
+    <td>
+      <ul>
+	{% for cc in classification.maybe %}
+	<li><a href="{{cc.charge.get_absolute_url}}">{{ cc.charge.label }}</a></li>
+	{% endfor %}
+      </ul>
+    </td>
+  </tr>
+</table>
+
+{% endif %}
+
+{% if classification.consequences %}
+
+<h3>consequences</h3>
+
+
+<table class="categories">
+  <tr><th class="yes">yes</th><th class="probably">probably</th><th class="maybe">maybe</th></tr>
+  <tr>
+    <td>
+      <ul>
+	{% for cc in classification.yes_consequences %}
+	
+	<li><a href="{{cc.consequence.area.get_absolute_url}}">{{ cc.consequence.area.label }}</a>: <a href="{{cc.consequence.get_absolute_url}}">{{ cc.consequence.label }}</a></li>
+	{% endfor %}
+      </ul>
+    </td>
+
+    <td>
+      <ul>
+	{% for cc in classification.probably_consequences %}
+	<li><a href="{{cc.consequence.area.get_absolute_url}}">{{ cc.consequence.area.label }}</a>: <a href="{{cc.consequence.get_absolute_url}}">{{ cc.consequence.label }}</a></li>
+	{% endfor %}
+      </ul>
+    </td>
+
+    <td>
+      <ul>
+	{% for cc in classification.maybe_consequences %}
+	<li><a href="{{cc.consequence.area.get_absolute_url}}">{{ cc.consequence.area.label }}</a>: <a href="{{cc.consequence.get_absolute_url}}">{{ cc.consequence.label }}</a></li>
+	{% endfor %}
+      </ul>
+    </td>
+  </tr>
+</table>
+
+{% endif %}
+
+
+
+{% endblock %}

@@ -75,7 +75,7 @@ reparent to: <select name="sibling_id">
 	{% for cc in charge.yes %}
 	<li><a href="/edit{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a> (<a href="remove_classification/{{cc.classification.id}}/">X</a>)
 	  <ul>
-	    {% for clco in cc.classification.classificationconsequence_set.all %}
+	    {% for clco in cc.classification.yes_consequences %}
 	    <li><a href="/edit{{clco.consequence.area.get_absolute_url}}">{{ clco.consequence.area.label }}</a>: <a href="/edit{{clco.consequence.get_absolute_url}}">{{ clco.consequence.label }}</a></li>
 	    {% endfor %}
 	  </ul>
@@ -89,7 +89,7 @@ reparent to: <select name="sibling_id">
 	{% for cc in charge.probably %}
 	<li><a href="/edit{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a> (<a href="remove_classification/{{cc.classification.id}}/">X</a>)
 	  <ul>
-	    {% for clco in cc.classification.classificationconsequence_set.all %}
+	    {% for clco in cc.classification.probably_consequences %}
 	    <li><a href="/edit{{clco.consequence.area.get_absolute_url}}">{{ clco.consequence.area.label }}</a>: <a href="/edit{{clco.consequence.get_absolute_url}}">{{ clco.consequence.label }}</a></li>
 	    {% endfor %}
 	  </ul>
@@ -104,7 +104,7 @@ reparent to: <select name="sibling_id">
 	<li><a href="/edit{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a> 
 	  (<a href="remove_classification/{{cc.classification.id}}/">X</a>)
 	  <ul>
-	    {% for clco in cc.classification.classificationconsequence_set.all %}
+	    {% for clco in cc.classification.maybe_consequences %}
 	    <li><a href="/edit{{clco.consequence.area.get_absolute_url}}">{{ clco.consequence.area.label }}</a>: <a href="/edit{{clco.consequence.get_absolute_url}}">{{ clco.consequence.label }}</a></li>
 	    {% endfor %}
 	  </ul>
@@ -122,7 +122,7 @@ reparent to: <select name="sibling_id">
 	{% for cc in p.yes %}
 	<li><a href="/edit{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a> (<a href="remove_classification/{{cc.classification.id}}/">X</a>)
 	  <ul>
-	    {% for clco in cc.classification.classificationconsequence_set.all %}
+	    {% for clco in cc.classification.yes_consequences %}
 	    <li><a href="/edit{{clco.consequence.area.get_absolute_url}}">{{ clco.consequence.area.label }}</a>: <a href="/edit{{clco.consequence.get_absolute_url}}">{{ clco.consequence.label }}</a></li>
 	    {% endfor %}
 	  </ul>
@@ -136,7 +136,7 @@ reparent to: <select name="sibling_id">
 	{% for cc in p.probably %}
 	<li><a href="/edit{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a> (<a href="remove_classification/{{cc.classification.id}}/">X</a>)
 	  <ul>
-	    {% for clco in cc.classification.classificationconsequence_set.all %}
+	    {% for clco in cc.classification.probably_consequences %}
 	    <li><a href="/edit{{clco.consequence.area.get_absolute_url}}">{{ clco.consequence.area.label }}</a>: <a href="/edit{{clco.consequence.get_absolute_url}}">{{ clco.consequence.label }}</a></li>
 	    {% endfor %}
 	  </ul>
@@ -151,7 +151,7 @@ reparent to: <select name="sibling_id">
 	<li><a href="/edit{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a> 
 	  (<a href="remove_classification/{{cc.classification.id}}/">X</a>)
 	  <ul>
-	    {% for clco in cc.classification.classificationconsequence_set.all %}
+	    {% for clco in cc.classification.maybe_consequences %}
 	    <li><a href="/edit{{clco.consequence.area.get_absolute_url}}">{{ clco.consequence.area.label }}</a>: <a href="/edit{{clco.consequence.get_absolute_url}}">{{ clco.consequence.label }}</a></li>
 	    {% endfor %}
 	  </ul>
