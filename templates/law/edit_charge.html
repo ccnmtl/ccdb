@@ -114,7 +114,7 @@ reparent to: <select name="sibling_id">
     </td>
   </tr>
 
-  {% for p in charge.parents %}
+  {% for p in charge.rparents %}
   <tr class="{% cycle 'even' 'odd' %}">
     <th><a href="/edit{{p.get_absolute_url}}">{{p.penal_code}} {{p.label}}</a></th>
     <td>

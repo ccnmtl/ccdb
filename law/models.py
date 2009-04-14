@@ -196,6 +196,11 @@ class Charge(models.Model):
             acc.reverse()
             return acc
 
+    def rparents(self):
+        p = self.parents()
+        p.reverse()
+        return p
+
     def siblings(self):
         try:
             ps = ChargeChildren.objects.get(child=self).parent
