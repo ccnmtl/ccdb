@@ -394,84 +394,8 @@ def remove_consequence_from_classification(request,slug,consequence_id):
     return HttpResponseRedirect("/edit" + classification.get_absolute_url())
 
 
-def remove_comment(line):
-    if "#" in line:
-        line = line[:line.index("#")]
-    return line
 
-import re
-def normalize_whitespace(line):
-    p = re.compile(r"\s+")
-    return p.sub(" ",line)
 
-def bootstrap(request):
-    snapshot = working_snapshot()
-    print "clearing..."
-    snapshot.clear()
-    print "cleared."
-    current_group = ""
-    current_menu = ""
-    current_offense = ""
-    mode = "group"
-    label = ""
-    penal_code = ""
-    paragraph = ""
-    for line in open('n3/menus.n3').readlines():
-        line = normalize_whitespace(remove_comment(line.strip())).strip()
-        if not line:
-            continue
-        if line.endswith("a :Group;"):
-            mode = "group"
-            parts = line.split(' ')
-            print "Group: " + parts[0]
-            current_group = parts[0]
-            paragraph = ""
-            current_menu = ""
-            current_offense = ""
-        if line.endswith("a :MENU;"):
-            mode = "menu"
-            parts = line.split(' ')
-            print "%s / %s" % (current_group,parts[0])
-            current_menu = parts[0]
-            current_offense = ""
-            paragraph = ""
-        if ":in " in line:
-            mode = "offense"
-            parts = line.split(" ")
-            print "%s / %s / %s" % (current_group,current_menu,parts[0])
-            current_offense = parts[0]
-            paragraph = ""
-        
-        if line.startswith('rdfs:label'):
-            label = line[len('rdfs:label ') + 1:-2]
-            print "label: %s" % label
 
-        if line.startswith(':penal-code'):
-            penal_code = line[len(':penal-code ') + 1:-2]
-            print "penal-code: %s" % penal_code
-
-        if line.startswith(":paragraph"):
-            paragraph = line[len(':paragraph ') + 1:-2]
-
-        if line.endswith("."):
-            print "-- end of %s --" % mode
-            if paragraph != "" and mode == "offense":
-                label = label + " (%s)" % paragraph
-            c = Charge.objects.create(snapshot=snapshot,
-                                      label=label,
-                                      penal_code=penal_code,
-                                      name=slugify(penal_code + " " + label)[:50])
-
-            if mode == "group":
-                current_group = c
-            if mode == "menu":
-                # make it a child of the group
-                cc = ChargeChildren.objects.create(parent=current_group,child=c)
-                current_menu = c
-            if mode == "offense":
-                # make it a child of the menu
-                cc = ChargeChildren.objects.create(parent=current_menu,child=c)
-
-    return HttpResponse("ok")
 
 
