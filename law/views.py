@@ -206,7 +206,15 @@ def edit_charge(request,slugs):
     slugs = slugs.split("/")
     snapshot = working_snapshot()
     charge = snapshot.get_charge_by_slugs(slugs)
-    return dict(charge=charge,add_charge_form=AddChargeForm())
+    edit_charge_form = EditChargeForm(instance=charge)
+    if request.method == "POST":
+        edit_charge_form = EditChargeForm(request.POST,instance=charge)
+        if edit_charge_form.is_valid():
+            edit_charge_form.save()
+            return HttpResponseRedirect("/edit" + charge.get_absolute_url())
+    return dict(charge=charge,
+                edit_charge_form=edit_charge_form,
+                add_charge_form=AddChargeForm())
 
 @rendered_with('law/charge.html')
 def view_charge(request,slugs):

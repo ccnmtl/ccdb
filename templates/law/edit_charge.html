@@ -1,5 +1,5 @@
 {% extends "law/edit_base.html" %}
-
+{% block title %}{{ charge.penal_code }} {{ charge.label }}{% endblock %}
 {% block content %}
 {{ block.super }}
 
@@ -44,6 +44,15 @@ reparent to: <select name="sibling_id">
 </form>
 </div>
 {% endif %}
+
+<div id="edit" class="tabbertab" title="edit">
+<form action="." method="post">
+<table>
+{{ edit_charge_form.as_table }}
+</table>
+<input type="submit" value="save" />
+</form>
+</div>
 
 <div id="delete" class="tabbertab" title="delete">
 <form action="delete/" method="post">
