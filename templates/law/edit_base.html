@@ -7,23 +7,22 @@
 <script type="text/javascript" src="/site_media/js/hs.js"></script>
 {% endblock %}
 
-{% block content %}
+{% block primarynavtabs %}
+<ul>
+  <li><a href="/edit/">/</a></li>
+  <li><a href="/edit/snapshots/">snapshots</a></li>
+  <li><a href="/edit/charge/">charges</a></li>
+  <li><a href="/edit/classification/">classifications</a></li>
+  <li><a href="/edit/area/">areas</a></li>
+</ul><!-- id="primarynavtabs" -->
+{% endblock %}
 
-<div id="editnav">
-<a href="/edit/">/</a> |
-<a href="/edit/snapshots/">snapshots</a> |
-<a href="/edit/charge/">charges</a> |
-<a href="/edit/classification/">classifications</a> |
-<a href="/edit/area/">areas</a>
-
-<div id="search">
+{% block usernav %}
+<div id="usernav">
   <form action="/edit/search/" method="get">
     <input type="text" name="q" />
     <input type="submit" value="search" />
-  </form>
+  </form> 
 </div>
-
-</div>
-
-
 {% endblock %}
+

@@ -1,11 +1,14 @@
 {% extends "law/edit_base.html" %}
 {% block title %}{{ charge.penal_code }} {{ charge.label }}{% endblock %}
+
+{% block breadcrumbs %}
+{% for p in charge.parents %}&raquo;<a href="/edit{{p.get_absolute_url}}">{{ p.penal_code }} {{ p.label }}</a>{% endfor %}
+{% endblock %}
+
 {% block content %}
 {{ block.super }}
 
-<div id="path">
-{% for p in charge.parents %}&raquo;<a href="/edit{{p.get_absolute_url}}">{{ p.penal_code }} {{ p.label }}</a>{% endfor %}
-</div>
+
 <h2>{{ charge.penal_code }} {{ charge.label }}</h2>
 
 
