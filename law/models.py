@@ -319,7 +319,7 @@ class Charge(models.Model):
     def no(self):
         """ return all classifications that this charge is not attached to at all """
         all_classifications = self.all_classifications()
-        return [c for c in self.snapshot.classification_set.all() if c not in all_classifications]
+        return [c for c in self.snapshot.classification_set.all().order_by("label") if c not in all_classifications]
 
     def all_classifications(self):
         return [cc.classification for cc in self.chargeclassification_set.all()]
@@ -483,7 +483,7 @@ class Consequence(models.Model):
         """ return list of classifications that are *not* 
         associated with this consequence """
         allclassifications = [cc.classification for cc in self.classificationconsequence_set.all()]
-        return [c for c in Classification.objects.filter(snapshot=self.area.snapshot) if c not in allclassifications]
+        return [c for c in Classification.objects.filter(snapshot=self.area.snapshot).order_by("label") if c not in allclassifications]
 
 class ChargeClassification(models.Model):
     charge = models.ForeignKey(Charge)
