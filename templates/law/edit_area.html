@@ -37,4 +37,14 @@ comment: <textarea name="comment"></textarea><br />
 
 </div>
 
+<h3>Charges</h3>
+<p>The following charges have been vetted for this area</p>
+
+<ul>
+{% for ca in area.chargearea_set.all %}
+<li><a href="/edit{{ca.charge.get_absolute_url}}">{{ca.charge.label}}</a></li>
+{% endfor %}
+</ul>
+
+
 {% endblock %}

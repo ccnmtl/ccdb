@@ -45,8 +45,6 @@ urlpatterns = patterns('',
                        ('^edit/area/(?P<slug>[^\/]+)/(?P<cslug>[^\/]+)/add_classification/$','ccdb.law.views.add_classification_to_consequence'),
                        ('^edit/area/(?P<slug>[^\/]+)/(?P<cslug>[^\/]+)/delete/$','ccdb.law.views.delete_consequence'),
 
-                       ('^edit/bootstrap/','ccdb.law.views.bootstrap'),
-
                        ('^edit/search/$','ccdb.law.views.edit_search'),
 
                        ('^accounts/',include('djangowind.urls')),

@@ -407,6 +407,13 @@ class Classification(models.Model):
     def maybe_consequences(self):
         return self.classificationconsequence_set.filter(certainty="maybe")
 
+
+    def all_probably_consequences(self):
+        """ include the yes ones too """
+        return list(self.probably_consequences()) + list(self.yes_consequences())
+
+    def all_maybe_consequences(self):
+        return list(self.maybe_consequences()) + list(self.all_probably_consequences())
     
     def no_consequences(self):
         """ return list of consequences that are *not* 
