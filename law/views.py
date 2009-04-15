@@ -363,7 +363,16 @@ def edit_consequence(request,slug,cslug):
     snapshot = working_snapshot()
     area = get_object_or_404(Area,snapshot=snapshot,name=slug)
     consequence = get_object_or_404(Consequence,area=area,name=cslug)
-    return dict(consequence=consequence)
+
+    edit_consequence_form = EditConsequenceForm(instance=consequence)
+    if request.method == "POST":
+        edit_consequence_form = EditConsequenceForm(request.POST,instance=consequence)
+        if edit_consequence_form.is_valid():
+            edit_consequence_form.save()
+            return HttpResponseRedirect("/edit" + consequence.get_absolute_url())
+
+    return dict(consequence=consequence,
+                edit_consequence_form=edit_consequence_form)
 
 @rendered_with('law/view_consequence.html')
 def view_consequence(request,slug,cslug):

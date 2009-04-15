@@ -1,5 +1,9 @@
 {% extends "law/edit_base.html" %}
 
+{% block css %}
+{{ add_classification_form.media }}
+{% endblock %}
+
 {% block content %}
 {{ block.super }}
 

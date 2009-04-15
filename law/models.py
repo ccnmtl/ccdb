@@ -490,7 +490,7 @@ class Area(models.Model):
 class Consequence(models.Model):
     label = models.CharField(max_length=256)
     description = models.TextField()
-    area = models.ForeignKey(Area)
+    area = models.ForeignKey(Area,editable=False)
     name = models.SlugField()
 
     def __unicode__(self):

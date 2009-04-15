@@ -20,9 +20,13 @@ class EditClassificationForm(ModelForm):
     class Meta:
         model = Classification
 
+class EditConsequenceForm(ModelForm):
+    class Meta:
+        model = Consequence
+
 class AddClassificationForm(forms.Form):
     label = forms.CharField()
-    description = forms.CharField(widget=forms.Textarea)
+    description = forms.CharField(widget=TinyMCE)
 
 class AddAreaForm(forms.Form):
     label = forms.CharField()

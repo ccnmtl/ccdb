@@ -25,6 +25,16 @@
 </form>
 </div>
 
+<div id="edit" class="tabbertab" title="edit">
+<form action="." method="post">
+<table>
+{{ edit_consequence_form.as_table }}
+</table>
+<input type="submit" value="save" />
+</form>
+</div>
+
+
 <div id="delete" class="tabbertab" title="delete">
 <form action="delete/" method="post">
 comment: <textarea name="comment"></textarea><br />
