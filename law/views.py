@@ -64,6 +64,11 @@ def approve_snapshot(request,id):
     e = Event.objects.create(snapshot=snapshot,
                              user=request.user,
                              description="snapshot approved for production")
+    # clone it to make a new working snapshot
+    n = datetime.now()
+    new_snapshot = snapshot.clone(label="%04d-%02d-%02d %02d:%02d" % (n.year,n.month,n.day,n.hour,n.minute),
+                                  user=request.user,
+                                  description="")
     return HttpResponseRedirect("/edit/snapshots/")
                                            
 
