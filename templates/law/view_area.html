@@ -2,9 +2,9 @@
 {% block content %}
 {{ block.super }}
 
-<h2>Area: {{ area.label }}</h2>
+<h1>Area: {{ area.label }}</h1>
 
-<h3>Consequences</h3>
+<h2>Consequences</h2>
 
 <ul>
 {% for consequence in area.consequence_set.all %}
@@ -13,7 +13,7 @@
 </ul>
 
 
-<h3>Charges</h3>
+<h2>Charges</h2>
 <p>The following charges have been vetted for this area</p>
 
 <ul>

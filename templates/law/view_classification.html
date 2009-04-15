@@ -3,11 +3,11 @@
 {% block content %}
 {{ block.super }}
 
-<h2>Classification: {{ classification.label }}</h2>
+<h1>Classification: {{ classification.label }}</h1>
 <p>{{ classification.description }}</p>
 
 {% if classification.all_charges %}
-<h3>charges</h3>
+<h2>charges</h2>
 <table class="categories">
   <tr><th class="yes">yes</th><th class="probably">probably</th><th class="maybe">maybe</th></tr>
   <tr>
@@ -41,7 +41,7 @@
 
 {% if classification.consequences %}
 
-<h3>consequences</h3>
+<h2>consequences</h2>
 
 
 <table class="categories">

@@ -368,7 +368,13 @@ class Charge(models.Model):
         return f
 
     def yes_areas(self):
-        return [ca.area for ca in self.chargearea_set.all()]
+        parent_areas = []
+        for p in self.parents():
+            pa = p.yes_areas()
+            if len(pa) > 0:
+                for a in pa:
+                    parent_areas.append(a)
+        return [ca.area for ca in self.chargearea_set.all()] + parent_areas
 
     def no_areas(self):
         """ list the areas that this charge does not show consequences for """
