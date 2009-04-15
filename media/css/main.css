@@ -830,3 +830,42 @@ body.fluid #content
 	border: 0;
 }
 
+/* ccdb specific rules */
+.event { 
+    margin-bottom: 10px;
+    margin-left: 20px;
+    padding: 0px;
+}
+.event .byline { color: #666;}
+.event .note { color: #444; margin-left: 10px;}
+.event .description { margin-left: 10px;}
+
+#breadcrumbs { font-size: .9em; margin: 0; padding-top: .2em; 
+	       background-color: #fda; 
+	       border-bottom: #000 solid 1px;}
+
+table.categories {width: 100%; border: #ccc solid 1px; border-collapse: collapse;}
+table.categories td {border: #ccc solid 1px; }
+table.categories th {border: #ccc solid 1px; }
+th.yes {background-color: #c00; color: #fff; width: 30%;}
+th.probably {background-color: #c66; color: #fff; width: 30%;}
+th.maybe {background-color: #f99; color: #fff; width: 30%;}
+
+tr.even td {background-color: #eef;}
+tr.even th {font-size: .8em;}
+tr.odd th {font-size: .8em;}
+
+td {vertical-align: top;}
+
+.has-children { background-color: #eee;}
+
+#search {
+    font-size: .8em;
+    display: inline;
+  float: right;
+}
+
+#search input {font-size: .7em;}
+#search input[type="text"] { border: #666 solid 1px;}
+
+#search form { display: inline; margin-top: -1em;}
