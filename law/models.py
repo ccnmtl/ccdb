@@ -186,6 +186,35 @@ class Charge(models.Model):
     def children(self):
         return [cc.child for cc in ChargeChildren.objects.filter(parent=self).order_by('child__penal_code')]
 
+    def has_children(self):
+        return ChargeChildren.objects.filter(parent=self).count() > 0
+
+    def as_edit_ul(self):
+        """ return html for the charge and its children as an <ul> """
+        return self.as_ul(link_prefix="/edit")
+
+    def as_view_ul(self):
+        """ return html for the charge and its children as an <ul> """
+        return self.as_ul(link_prefix="")
+
+    def as_ul(self,link_prefix=""):
+        """ return html for the charge and its children as an <ul> """
+        parts = ["<li class=\"menuitem\" id=\"charge-",
+                 str(self.id),"\"><a href=\"",link_prefix,
+                 self.get_absolute_url(),
+                 "\">",self.penal_code," ",
+                 self.label,"</a>"]
+
+        if self.has_children():
+            parts.append("<ul>")
+            for child in self.children():
+                parts.append(child.as_ul(link_prefix=link_prefix))
+            parts.append("</ul>")
+        parts.append("</li>")
+        return "".join(parts)
+
+    
+
     def parents(self,acc=None):
         if acc is None: acc = []
         try:

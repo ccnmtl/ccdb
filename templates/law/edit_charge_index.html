@@ -11,7 +11,7 @@
 
 <ul>
 {% for charge in charges %}
-<li><a href="/edit{{charge.get_absolute_url}}">{{ charge.penal_code }} {{ charge.label }}</a></li>
+{{ charge.as_edit_ul|safe }}
 {% endfor %}
 </ul>
 
