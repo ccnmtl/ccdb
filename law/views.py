@@ -304,7 +304,16 @@ def add_area(request):
 def edit_area(request,slug):
     snapshot = working_snapshot()
     area = get_object_or_404(Area,snapshot=snapshot,name=slug)
-    return dict(area=area,add_consequence_form=AddConsequenceForm())
+
+    edit_area_form = EditAreaForm(instance=area)
+    if request.method == "POST":
+        edit_area_form = EditAreaForm(request.POST,instance=area)
+        if edit_area_form.is_valid():
+            edit_area_form.save()
+            return HttpResponseRedirect("/edit" + area.get_absolute_url())
+
+    return dict(area=area,add_consequence_form=AddConsequenceForm(),
+                edit_area_form=edit_area_form)
 
 @rendered_with('law/view_area.html')
 def view_area(request,slug):

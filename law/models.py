@@ -471,9 +471,11 @@ class Classification(models.Model):
         return in_all
 
 class Area(models.Model):
-    snapshot = models.ForeignKey(Snapshot)
+    snapshot = models.ForeignKey(Snapshot,editable=False)
     label = models.CharField(max_length=256)
-    name = models.SlugField()
+    name = models.SlugField(help_text="""unique identifier that appears in the URL. """
+                            """must be less than 50 characters long """ 
+                            """and no two areas can have the same name""")
 
     def __unicode__(self):
         return self.label
