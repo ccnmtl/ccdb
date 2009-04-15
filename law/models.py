@@ -164,7 +164,9 @@ class Charge(models.Model):
     # maybe rename this, as some charges will be non penal code:
     penal_code = models.CharField(max_length=256)
     snapshot = models.ForeignKey(Snapshot,editable=False)
-    name = models.SlugField(help_text="unique identifier that appears in the URL. must be less than 50 characters long and no two charges can have the same name")
+    name = models.SlugField(help_text="""unique identifier that appears in the URL. """
+                            """must be less than 50 characters long """ 
+                            """and no two charges can have the same name""")
 
     class Meta:
         ordering = ('penal_code','label')
