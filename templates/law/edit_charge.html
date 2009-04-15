@@ -9,7 +9,7 @@
 {{ block.super }}
 
 
-<h2>{{ charge.penal_code }} {{ charge.label }}</h2>
+<h1>{{ charge.penal_code }} {{ charge.label }}</h1>
 
 
 <div class="tabber">
@@ -18,7 +18,7 @@
 
 <ul>
 {% for child in charge.children %}
-<li><a class="{% if child.children %}has-children{% else %}no-children{% endif %}" href="/edit{{child.get_absolute_url}}">{{ child.penal_code }} {{ child.label }}</a></li>
+{{ child.as_edit_ul|safe}}
 {% endfor %}
 </ul>
 </div>
@@ -67,7 +67,7 @@ reparent to: <select name="sibling_id">
 
 
 
-<h3>classifications</h3>
+<h2>Classifications</h2>
 
 <div class="tabber">
 
@@ -192,7 +192,7 @@ reparent to: <select name="sibling_id">
 </div>
 </div>
 
-<h3>Areas</h3>
+<h2>Areas</h2>
 
 <div class="tabber">
 {% if charge.chargearea_set.all %}

@@ -1,15 +1,17 @@
 {% extends "law/edit_base.html" %}
 
+{% block title %}{{ classification.label}}{% endblock %}
+
 {% block content %}
 {{ block.super }}
 
-<h2>Classification: {{ classification.label }}</h2>
+<h1>Classification: {{ classification.label }}</h1>
 <p>{{ classification.description }}</p>
 
 <div class="tabber">
 {% if classification.all_charges %}
 <div id="charges" class="tabbertab" title="charges">
-<h3>charges</h3>
+<h2>charges</h2>
 <table class="categories">
   <tr><th class="yes">yes</th><th class="probably">probably</th><th class="maybe">maybe</th></tr>
   <tr>
@@ -43,7 +45,7 @@
 
 {% if classification.consequences %}
 <div id="consequences" class="tabbertab" title="consequences">
-<h3>consequences</h3>
+<h2>consequences</h2>
 
 
 <table class="categories">
