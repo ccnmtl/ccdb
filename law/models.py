@@ -389,7 +389,7 @@ class ChargeChildren(models.Model):
     # ordering is always by penal_code
 
 class Classification(models.Model):
-    snapshot = models.ForeignKey(Snapshot)
+    snapshot = models.ForeignKey(Snapshot,editable=False)
     label = models.CharField(max_length=256)
     name = models.SlugField()
     description = models.TextField()

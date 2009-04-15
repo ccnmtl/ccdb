@@ -16,6 +16,10 @@ class EditAreaForm(ModelForm):
     class Meta:
         model = Area
 
+class EditClassificationForm(ModelForm):
+    class Meta:
+        model = Classification
+
 class AddClassificationForm(forms.Form):
     label = forms.CharField()
     description = forms.CharField(widget=forms.Textarea)

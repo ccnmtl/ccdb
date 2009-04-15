@@ -257,7 +257,16 @@ def add_classification(request):
 def edit_classification(request,slug):
     snapshot = working_snapshot()
     classification = get_object_or_404(Classification,snapshot=snapshot,name=slug)
-    return dict(classification=classification)
+
+    edit_classification_form = EditClassificationForm(instance=classification)
+    if request.method == "POST":
+        edit_classification_form = EditClassificationForm(request.POST,instance=classification)
+        if edit_classification_form.is_valid():
+            edit_classification_form.save()
+            return HttpResponseRedirect("/edit" + classification.get_absolute_url())
+
+    return dict(classification=classification,
+                edit_classification_form=edit_classification_form)
 
 @rendered_with('law/view_classification.html')
 def view_classification(request,slug):
