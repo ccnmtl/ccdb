@@ -1,3 +1,4 @@
+import sets
 from django.db import models
 from django.contrib.auth.models import User
 from django.http import Http404
@@ -107,8 +108,9 @@ class Snapshot(models.Model):
 
     def top_level_charges(self):
         """ charges that don't have any parents """
-        all_children = [c.child for c in ChargeChildren.objects.all()]
-        return [c for c in self.charge_set.all().order_by("penal_code") if c not in all_children]
+        all_children = sets.Set([c.child_id for c in ChargeChildren.objects.all()])
+        return [c for c in self.charge_set.all().order_by("penal_code") if c.id not in all_children]
+
 
     def get_charge_by_slugs(self,slugs,acc=None):
         if acc is None: acc = []
