@@ -171,9 +171,16 @@ def delete_charge(request,slugs=""):
     slugs = slugs.split("/")
     snapshot = working_snapshot()
     charge = snapshot.get_charge_by_slugs(slugs)    
-    parent = charge.parents()[-1]
+    redirect_to = "/edit/charge/"
+    try:
+        parent = charge.parents()[-1]
+        redirect_to = "/edit" + parent.get_absolute_url()
+    except IndexError:
+        # top level charge
+        pass
+
     charge.delete_self()
-    return HttpResponseRedirect("/edit" + parent.get_absolute_url())
+    return HttpResponseRedirect(redirect_to)
 
 
 @login_required
