@@ -106,9 +106,15 @@ class Snapshot(models.Model):
 
         return new_snapshot
 
+    def all_chargechildren(self):
+        if hasattr(self,'__chargechildren_cache'):
+            return self.__chargechildren_cache
+        self.__chargechildren_cache = list(ChargeChildren.objects.all())
+        return self.__chargechildren_cache
+
     def top_level_charges(self):
         """ charges that don't have any parents """
-        all_children = sets.Set([c.child_id for c in ChargeChildren.objects.all()])
+        all_children = sets.Set([c.child_id for c in self.all_chargechildren()])
         return [c for c in self.charge_set.all().order_by("penal_code") if c.id not in all_children]
 
 
