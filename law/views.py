@@ -377,7 +377,9 @@ def edit_consequence(request,slug,cslug):
         if edit_consequence_form.is_valid():
             edit_consequence_form.save()
             return HttpResponseRedirect("/edit" + consequence.get_absolute_url())
-
+        else:
+            return dict(consequence=consequence,
+                        edit_consequence_form=edit_consequence_form)
     return dict(consequence=consequence,
                 edit_consequence_form=edit_consequence_form)
 

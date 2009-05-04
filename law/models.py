@@ -497,7 +497,7 @@ class Area(models.Model):
 
 class Consequence(models.Model):
     label = models.CharField(max_length=256)
-    description = models.TextField()
+    description = models.TextField(blank=True)
     area = models.ForeignKey(Area,editable=False)
     name = models.SlugField()
 
