@@ -260,10 +260,23 @@ def edit_classification_index(request):
 def add_classification(request):
     f = AddClassificationForm(request.POST)
     snapshot = working_snapshot()
+    slug = slugify(request.POST['label'])[:50]
+    # need to check for duplicate slugs and fix
+    try:
+        ct = Classification.objects.get(name=slug)
+        # uh oh. there's already a charge with that slug
+        # need to come up with a relatively unique new one
+        # this is the most reasonable approach I can think of
+        slug = slug[:-3] + "%03d" % (Classification.objects.count() % 1000)
+        # any better ideas?
+    except Classification.DoesNotExist:
+        # that's good
+        pass
+
     c = Classification.objects.create(snapshot=snapshot,
                                       label=request.POST['label'],
                                       description=request.POST['description'],
-                                      name=slugify(request.POST['label'])[:50],
+                                      name=slug,
                                       )
     e = Event.objects.create(snapshot=snapshot,
                              user=request.user,

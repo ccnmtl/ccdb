@@ -134,9 +134,6 @@ class Snapshot(models.Model):
             if options.count() == 1:
                 current = get_object_or_404(Charge,snapshot=self,name=slugs[0])
             else:
-                print "Multiple charges found with the same slug"
-                for c in options:
-                    print c.id,c.name,c.label
                 raise "Oh No!!!"
 
         if len(slugs) == 1:
