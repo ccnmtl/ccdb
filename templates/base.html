@@ -10,106 +10,148 @@
 	<![endif]-->
 	<link rel="shortcut icon" href="/site_media/img/favicon.ico" type="image/x-icon" />
 
+
+
 	{% block css %}{% endblock %}
 	{% block js %}{% endblock %}
 	{% block feeds %}{% endblock %}
+
+    <style type="text/css">
+        #pageLogin
+        {
+            font-size: 10px;
+            font-family: verdana;
+            text-align: right;
+        }
+    </style>
+    <script src="/site_media/js/mochikit/MochiKit/MochiKit.js" type="text/javascript"></script>
+    <script src="/site_media/js/hs.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+
+/*==================================================
+  Set the tabber options (must do this before including tabber.js)
+  ==================================================*/
+var tabberOptions = {
+
+  'cookie':"tabber", /* Name to use for the cookie */
+
+  'onLoad': function(argsObj)
+  {
+    var t = argsObj.tabber;
+    var i;
+
+    /* Optional: Add the id of the tabber to the cookie name to allow
+       for multiple tabber interfaces on the site.  If you have
+       multiple tabber interfaces (even on different pages) I suggest
+       setting a unique id on each one, to avoid having the cookie set
+       the wrong tab.
+    */
+    if (t.id) {
+      t.cookie = t.id + t.cookie;
+    }
+
+    /* If a cookie was previously set, restore the active tab */
+    i = parseInt(getCookie(t.cookie));
+    if (isNaN(i)) { return; }
+    t.tabShow(i);
+  },
+
+  'onClick':function(argsObj)
+  {
+    var c = argsObj.tabber.cookie;
+    var i = argsObj.index;
+    setCookie(c, i);
+  }
+};
+</script>
+
+
+    <script src="/site_media/js/tabber.js" type="text/javascript"></script>
+    <script src="/site_media/js/sniffer.js" type="text/javascript"></script>
+
 </head>
 
-<body class="one_column {% block widthtype %}fluid{% endblock %}">
-{% comment %}
-###### FOR WIDTH TYPE--
-   fixed : fixed width, doesn't change with browser resize
-   fluid : variable width, changes with browser resize
-   You can move this to base template if you don't want to deal with it
-   all time in flatpages templates
-{% endcomment %}
-
+<body>
 <div id="container">
-
+  <div id="container-inner">
 
 {% block masthead %}
 	<!-- ###### Site banner ###### -->
-	<div id="header">
-		<!-- Project title/logo --><h1 id="logo_project"><a href="./" title="Project Title: Project Django"><span>Project Title: Project Django </span></a></h1>	
-		{% block standardnav %}
-		<ul id="standardnav">
-			<li><a href="#">About</a></li>
-			<li><a href="#">Help</a></li>
-			<li><a href="#">Contact</a></li>
-		</ul>
-		{% endblock %}
-		<!-- CCNMTL title/logo --><h4 id="logo_ccnmtl"><a href="http://ccnmtl.columbia.edu" target="_blank" title="Columbia Center for New Media Teaching and Learning"><span>Produced by the Columbia Center for New Media Teaching and Learning</span></a></h4>
+	<div id="banner">
+	  <div id="banner-inner">
+	    <h2 id="banner-department">Columbia Law School</h2>
+	    <h1 id="banner-header"><a href="./" title="Return to main
+	    page"><span class="bigger">C</span>ollateral <span class="bigger">C</span>onsequences <span class="bigger">C</span>alculator—<span class="bigger">N</span>ew <span class="bigger">Y</span>ork <span class="bigger">S</span>tate</a></h1>
+
+	  </div>
 	</div><!-- id="header" -->
+
+		<!-- CCKC identity navigation -->
+		<div id="idnav">
+			<div id="idnav-inner">
+
+				<ul>
+					<li id="cckc_disclaimer"><a href="/disclaimer">Disclaimer</a></li>
+					<li id="cckc_fb"><a href="feedback">Send feedback</a></li>
+					<li id="cckc_home"><a href="./" title="Return to CCKC Home">Home</a></li>
+					<li id="cckc_alert">You are using an <a href="/requirements" title="This is an unsupported browser.  Please see system requirements for CCKC">unsupported browser</a>.  Please read the <a href="/requirements" title="System requirements for CCKC">system requirements</a>.</li>
+				</ul>
+			</div><!-- id=idnav-inner -->
+		</div><!-- id=idnav -->
+		
+		<div class="hiddenblock">
+		<hr />
+		</div><!-- id=hiddenblock -->
+
+
 {% endblock %}
-
-	<!-- ###### Don't touch this ###### -->
-	<div class="visualclear"></div>
-	
-
-{% block primarynav %}
-	<!-- ###### Primary navigation ###### -->
-	<div id="primarynav">
-		<div class="encase" id="{% block navalignment %}leftside{% endblock %}">
-{% comment %}
-###### FOR ALIGNMENT OF TABS on the primary navigation--
-   leftside : all tabs aligning to the left, login to the right
-   rightside :  all tabs aligning to the right, login to the left
-{% endcomment %}
-
-			{% block primarynavtabs %}
-			<ul>
-				<li><a href="/">Index of charges</a></li>
-				<li><a href="/classification/">Classifications</a></li>
-				<li><a href="/area/">Areas</a></li>
-			</ul><!-- id="primarynavtabs" -->
-			{% endblock %}
-			
-			{% block usernav %}
-
-			{% endblock %}
-
-		</div><!-- id="leftside/rightside" -->
-	</div><!-- id="primarynav" -->
-{% endblock %}
-
-<div id="breadcrumbs">{% block breadcrumbs %}{% endblock %}</div>
 
 
 	<!-- ###### Page: Sidebars and Content ###### -->
 	<div id="pagebody">
-
-
-		<!-- ###### Page Content ###### -->
-		<div id="content">
-			<div id="squish"><!-- Don't touch this div -->
-				<div class="block">
-					{% block pagetitle %}{% endblock %}
-				
-					{% block content %}{% endblock %}
-
-				<!-- ###### Don't touch this ###### -->
-				<div class="visualclear"></div><!-- id="visualclear" -->				
-
-				</div><!-- class="block" -->
-			</div><!-- id="squish" -->
-		</div><!-- id="content" -->
-
-
-		<!-- ###### Don't touch this ###### -->
-		<div class="visualclear"></div>
-	
+{% block primarynavtabs %}
+{% endblock %}
+	  {% block content %}{% endblock %}
 	</div><!-- id="pagebody" -->
 
+	<div class="hiddenblock">
+	<hr />
+	</div><!-- id=hiddenblock -->
+	
+	</div><!-- id=container-inner -->	
+</div><!-- id=container -->
 
-{% block footer %}
-	<!-- ###### Footer ###### -->
-	<div id="footer">
-	<p class="printonly"><br /><img src="/site_media/img/logo_ccnmtl_sidebar.gif" class="printonly" /></p>
-	</div><!-- id="footer" -->
-{% endblock %}
+<div id="footer">
+	<div class="hiddenblock">
+		<table border="0" cellspacing="2" cellpadding="0" align="right">
+			<tr>
+				<td>&nbsp;&nbsp;</td>
+				<td colspan="5" class="columbiarow">C&nbsp;O&nbsp;L&nbsp;U&nbsp;M&nbsp;B&nbsp;I&nbsp;A</td>
+			</tr>
+			<tr>
+				<td>&nbsp;&nbsp;</td>
+				<td class="acronym">C</td>
+				<td class="acronym">N</td>
+				<td class="acronym">M</td>
+				<td class="acronym">T</td>
+				<td class="acronym">L</td>
+			</tr>
+		</table>
+	</div><!-- id=hiddenblock -->
+	
+	<h3 id="ccnmtl-link"><a href="http://ccnmtl.columbia.edu/" title="Columbia Center for New Media Teaching and Learning"><span>Developed by Columbia Center for New Media Teaching and Learning</span></a></h3>
+	<h3 class="hiddenblock">General Information about Collateral Consequences Calculator:</h3>
+	<ul>
+		<li><a href="/requirements" title="System requirements for this tool">System Requirements</a></li>
+		<li><a href="./about" title="More information about this tool">About</a></li>
+		<li><a href="./help" title="Help on how to use this tool">Help</a></li>
+	</ul>
+</div><!-- id=footer -->
 
 
-</div><!-- id="container" -->
 </body>
 </html>
+
+
 

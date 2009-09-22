@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django import forms
+from pprint import pprint
 
 class Snapshot(models.Model):
     label = models.CharField(max_length=256)
@@ -206,14 +207,17 @@ class Charge(models.Model):
 
     def as_ul(self,link_prefix=""):
         """ return html for the charge and its children as an <ul> """
-        parts = ["<li class=\"menuitem\" id=\"charge-",
-                 str(self.id),"\"><a href=\"",link_prefix,
-                 self.get_absolute_url(),
-                 "\">",self.penal_code," ",
+        leaf = not self.has_children()
+
+        if leaf:
+            link = "<a href=\"" + link_prefix + self.get_absolute_url() + "\">"
+        else:
+            link = "<a href=\"#charge-" + str(self.id) + "\" class=\"hs-control\">"
+        parts = ["<li class=\"menuitem\">",link,self.penal_code," ",
                  self.label,"</a>"]
 
-        if self.has_children():
-            parts.append("<ul>")
+        if not leaf:
+            parts.append("<ul id=\"charge-" + str(self.id) + "\" class=\"hs-init-hide menu\">")
             for child in self.children():
                 parts.append(child.as_ul(link_prefix=link_prefix))
             parts.append("</ul>")
@@ -388,6 +392,61 @@ class Charge(models.Model):
         yes = self.yes_areas()
         return [area for area in Area.objects.filter(snapshot=self.snapshot) if area not in yes]
 
+    def all_consequences_by_area(self):
+        """ return all consequences for the charge, organized by Area -> Certainty. 
+        for ease of template display. Include ones from parents """
+
+        all_classifications = self.view_all()
+        all_consequences = []
+
+        all_areas = self.snapshot.area_set.all()
+
+        for cc in all_classifications:
+            for consequence in cc.classification.classificationconsequence_set.all():
+                all_consequences.append(dict(consequence=consequence,certainty=effective_certainty(cc.certainty,consequence.certainty)))
+        all_consequences.sort(key=lambda x: (x['consequence'].consequence.area.label,x['certainty']))
+        results = []
+        for area in all_areas:
+            area_results = dict(area=area)
+            area_results["yes"] = []
+            area_results["probably"] = []
+            area_results["maybe"] = []
+            for c in all_consequences:
+                if c['consequence'].consequence.area == area:
+                    area_results[c['certainty']].append(c['consequence'])
+
+            # need to uniquify
+            area_results["yes"] = list(sets.Set(area_results["yes"]))
+            area_results["probably"] = list(sets.Set(area_results["probably"]))
+            area_results["maybe"] = list(sets.Set(area_results["maybe"]))
+            
+            # stick counts in here
+            area_results["yes_count"] = len(area_results["yes"])
+            area_results["probably_count"] = len(area_results["yes"])
+            area_results["maybe_count"] = len(area_results["yes"])
+
+            # still need the consequences grouped by their classification
+            area_results["yes"] = dtolist(cluster_by(lambda x: x.classification,area_results["yes"]))
+            area_results["probably"] = dtolist(cluster_by(lambda x: x.classification,area_results["probably"]))
+            area_results["maybe"] = dtolist(cluster_by(lambda x: x.classification,area_results["maybe"]))
+
+            results.append(area_results)
+        pprint(results)
+        return results
+
+def dtolist(d):
+    r = []
+    for (k,v) in d.items():
+        r.append(dict(classification=k,consequences=v))
+    return r
+        
+def cluster_by(f,lst):
+    transformed = [f(x) for x in lst]
+    d = dict()
+    for t,i in zip(transformed,lst):
+        d.setdefault(t,[]).append(i)
+    return d
+
 class ChargeChildren(models.Model):
     parent = models.ForeignKey(Charge,related_name="parent")
     child = models.ForeignKey(Charge,related_name="child")
@@ -541,6 +600,11 @@ class ClassificationChild(models.Model):
     parent = models.ForeignKey(Classification,related_name="parent")
     child = models.ForeignKey(Classification,related_name="child")
     ordinality = models.IntegerField(default=1)
+
+def effective_certainty(ch_cl_certainty,cl_co_certainty):
+    nvals = dict(yes=1,probably=2,maybe=3)
+    effective_val = max(nvals[ch_cl_certainty],nvals[cl_co_certainty])
+    return ["yes","probably","maybe"][effective_val - 1]
 
 class ClassificationConsequence(models.Model):
     classification = models.ForeignKey(Classification)

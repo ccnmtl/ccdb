@@ -1,213 +1,225 @@
+@import "main.css";
+
 body
 {
-	min-width: 1px;
 	margin: 0;
 	padding: 0;
 	border: 0;
-	background-color: #fff;
-	font-family: arial, helvetica, verdana, sans-serif;
 	color: #000;
+	background: #fff none;
+	font: 1em serif !important;
 }
 
-/* ########## Standard elements ########## */
-
-h1, h2, h3, h4, h5, h6
+h1, h2, h3, h4
 {
-	margin: 0 0 0.7em 0;
-	padding: 0;
-	border: 0;
-	font-family: 'trebuchet ms', verdana, sans-serif;
-	font-weight: bold;
+	font-weight: bold !important;
+	font-family: serif !important;
 }
 
 h1
 {
-	margin: 0 0 0.7em 0;
-	font-size: 180%;
-	font-weight: normal;
+	margin: 0;
+	padding: 0;
+	font-size: 1.5em !important;
 }
 
 h2
 {
-	margin: 1.6em 0 0.7em 0;
-	font-size: 160%;
+	margin: 0;
+	padding: 0;
+	font-size: 1.2em !important;
 }
 
 h3
 {
-	margin: 1.4em 0 0.7em 0;
-	font-size: 140%;
-}
-
-h4
-{
-	margin: 1.2em 0 0.7em 0;
-	font-size: 140%;
-	font-style: italic;
-}
-
-h5
-{
-	margin: 1em 0 0.7em 0;
-	font-size: 120%;
-}
-
-h6
-{
-	margin: 1em 0 0.7em 0;
-	font-size: 110%;
-}
-
-p
-{
-	display: block;
-	margin: 0 0 0.7em 0;
+	margin: 0;
 	padding: 0;
-	border: 0;
-	font-size: 100%;
+	font-size: 1em !important;
 }
-
-blockquote
-{
-	display: block;
-	margin: 0 4em 0.7em 4em;
-	padding: 0;
-	border: 0;
-	font-size: 100%;
-}
-
-table
-{
-	margin: 0 0 0.7em 0;
-	padding: 0;
-	border: 1px solid #ccc;
-	border-collapse: collapse;
-	font-size: 100%;
-}
-
-th
-{
-	border: 1px solid #ccc;
-	border-collapse: collapse;
-}
-
-td
-{
-	border: 1px solid #ccc;
-	border-collapse: collapse;
-}
-
-ol, ul
-{
-	display: block;
-	margin: 0 4em 0.7em 4em;
-	padding: 0;
-	border: 0;
-	font-size: 100%;
-}
-
-/*
-li
-{
-}
-*/
 
 a
 {
-	color: #06c;
+	color: #000;
+	text-decoration: underline;
 }
 
-a:hover
+a:hover { color: #000; }
+
+.divider-block
 {
-	color: #69c;
+	border-bottom: 1px solid #999;
 }
 
-a:visited
+#banner
 {
-	color: #900;
+	margin: 0 0 20px 0;
+	border-bottom: 1px dotted #000;
+	background: #fff none;
 }
 
-img, img a
+#banner-inner
 {
-	border: 0;
+	background: #fff none;
 }
 
-/* ########## Blocks style definitions ########## */
-
-#primarynav,
-#sidebar_left,
-#sidebar_right,
-#standardnav
+#banner-header
 {
-	display: none !important;
+	background: #fff none;
 }
 
-/* ---- Header block elements ---------- */
-#header
+#banner-header a
 {
-	display: block;
-	width: 100%;
-	min-width: 1px;
-	height: 100px;
-	margin: 0;
-	padding: 0;
-	border: 0;
-	background: #fffbc7 url('../img/bg_header.jpg') left top no-repeat;
+	font: normal 21px/80px georgia, garamond, 'times new roman', times, serif !important;
+	color: #000;
+	text-decoration: none;
 }
 
-#header #logo_project
+#banner-header a:hover
 {
-	display: block;
-	float: left;
-	width: 430px;
-	height: 90px;
-	overflow: hidden;
-	margin: 5px 0 0 0;
-	padding: 0;
-	border: 0;
+	color: #000;
+	text-decoration: none;
 }
 
-#header #logo_project a
+#banner-department
 {
-	display: block;
-	width: 430px;
-	height: 90px;
-	margin: 0;
-	padding: 0;
-	border: 0;
-	background: transparent url('../img/logo_project.jpg') left center no-repeat;
-}
-
-.visualhide
-{
-	display: none !important;
-}
-
-#header #logo_ccnmtl
-{
-	display: none;
-}
-
-#header #logo_project span,
-#header #logo_ccnmtl span
-{
-	display: none;
+	color: #000;
 }
 
 #pagebody
 {
-	border-top: 2px solid #ccc;
-	clear: both;
-	margin-top: 1.5em;
-	padding-top: 2em;
+	border: 1px solid #999;
+	background: #fff none;
+}
+
+.alpha
+{
+	border-right: 1px dotted #999;
+	width: 250px;
+}
+
+.alpha-inner
+{
+	margin: 0;
+}
+
+.alpha-header h2
+{
+	width: 251px !important;
+	height: 45px !important;
+	border-bottom: 1px solid #999;
+	background: #eaeaea none top;
+}
+
+.column-content ul ul li
+{
+	font-size: 1em !important;
+}
+
+.column-content ul.selectedcharges li
+{
+	font-size: 1em !important;
+}
+
+.beta
+{
+	margin: 0 0 0 250px;
+	border-left: 1px dotted #999;
+}
+
+.beta-inner
+{
+	margin: 0;
+}
+
+.beta-header
+{
+	background: none;
+	overflow: hidden;
+}
+
+.beta-header-inner
+{
+	margin: 0;
+	padding: 0;
+	border: 0;
+	border-right: 1px solid #eff6ff;
+	background: none;
+}
+
+.beta-header h2
+{
+	height: 45px !important;
+	border-bottom: 1px solid #999;
+	background: #eaeaea none top;
 }
 
 #footer
 {
-		border-top: 2px solid #ccc;
+	height: 50px;
 }
 
-.printonly
+#ccnmtl-link
+{
+	background: none;
+}
+
+#ccnmtl-link a
 {
 	display: block;
+	width: auto;
+	height: auto;
+}
+
+#ccnmtl-link span
+{
+	visibility: visible;
+	display: inline;
+}
+
+#footer ul
+{
+	visibility: hidden;
+	display: none;
+}
+
+#footer .hiddenblock
+{
+	visibility: visible;
+	display: inline;
+}
+
+#footer h3.hiddenblock
+{
+	visibility: hidden;
+	display: none;
+}
+
+td.acronym
+{
+	height: 17px;
+	width: 17px;
+	border: 1px solid #000;
+	text-align: center;
+	vertical-align: middle;
+}
+
+td.columbiarow
+{
+	font: bold 11px Arial, Helvetica, sans-serif;
+	text-align: center;
+	vertical-align: middle;
+	letter-spacing: 2px;
+}
+
+.hs-control-hide,
+.hs-init-hide
+{ 	
+	display: inline;
+	visibility: visible;
+}
+
+.hide-print
+{
+	visibility: hidden;
+	display: none;
 }

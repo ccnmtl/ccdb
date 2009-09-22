@@ -1,15 +1,15 @@
 {% extends "base.html" %}
-
+{% load markup %}
 {% block content %}
 {{ block.super }}
-
+<div class="beta">
 <h1><a href="../">{{consequence.area.label}}</a>/ {{ consequence.label }}</h1>
-<p>{{ consequence.description }}</p>
+{{ consequence.description|markdown }}
 
 <ul>
 {% for cc in consequence.classificationconsequence_set.all %}
 <li>({{cc.certainty}}) <a href="{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a></li>
 {% endfor %}
 </ul>
-
+</div>
 {% endblock %}

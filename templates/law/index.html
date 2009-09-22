@@ -1,9 +1,109 @@
 {% extends "base.html" %}
+{% block js %}
+    <script src="/site_media/js/disclaimer.js" type="text/javascript"></script>
+{% endblock %}
 {% block content %}
 
-<ul>
-{% for charge in charges %}
-{{ charge.as_view_ul|safe}}
-{% endfor %}
+  <div id="disclaimer">
 
+<h3>Welcome to the Collateral Consequences of Criminal Charges Calculator.</h3>
+
+<h3>Purpose</h3>
+
+<p>This calculator is designed as an aid to legal research for judges, attorneys and legal academics. It can provide a preliminary overview of the collateral consequences associated with sections of the New York State Penal Law. You may use this as a way of seeing the big picture and beginning the process of parsing the varied consequences of criminal charges. As the calculator cannot account for the specific circumstances of each defendant, it is up to you to research and analyze the ultimate consequences of each charge in the context of the defendant&#8217;s life.</p>
+
+<h3>Scope</h3>
+
+<p>In this, the initial version of the Calculator, we have tracked the collateral consequences in two important substantive areas:  <b>immigration</b> and <b>public housing in New York City</b>. The <b>immigration</b> consequences are analyzed for the top 50 crimes that are either most commonly charged or most misunderstood. The <b>public housing</b> consequences are analyzed for all crimes listed in the Penal Law, but apply only to public housing in New York City.</p>
+
+<h3>Format</h3>
+
+<p>We have tried to maintain an &#8220;at-a-glance&#8221; format so that you can quickly see where collateral consequences occur. Turnbuckles expand to reveal more information.  Blue print is linked to more specific relevant information. In this way, you can choose how deeply to delve into a particular topic commensurate with your research needs and duties to your client. We encourage you to utilize the Calculator in conjunction with the <a href="http://www2.law.columbia.edu/fourcs/index.html" target="_blank">4 C&#8217;s</a> website, which contains &#8220;best of&#8221; information about collateral consequences compiled by experts in the six substantive areas where collateral consequences most frequently occur.</p>
+
+<h3 style="color: #f00;">Disclaimer</h3>
+
+<p>This calculator is not designed to provide legal advice over the Internet.  Legal advice is dependent upon the specific circumstances of each situation.  The information provided here is targeted toward collateral consequences in New York.  The law varies from state to state, so that some information provided herein may not be correct outside New York State.  While every effort is made to keep the content on this site current, the information contained herein is not guaranteed to be up to date.  Therefore, the information provided herein cannot replace the advice of competent legal counsel licensed in your state.</p>
+
+<p>Also, a skilled advocate may be able to overcome some of the predicted consequences. Therefore, this information should not be taken as an absolute limitation on what such advocacy might achieve.</p>
+
+    <p>
+      We welcome your <a href="feedback">feedback</a> about missing consequences and
+      inaccuracies as well as about the design and function of the
+      system.
+    </p>
+
+    <p><a href="feedback" class="searchButton">Send feedback</a>
+    &nbsp;
+    <a href="javascript:hideDisclaimer()" class="searchButton">Go to Calculator's homepage</a>
+    </p>
+
+  </div>
+
+<div id="alloffenses">
+  <div class="alpha">
+    <div class="alpha-inner">
+      <div class="alpha-header">
+	<div class="alpha-header-inner">
+	  <h2>Criminal Charges:</h2>
+	</div>
+      </div>
+      
+      <div class="column-content hide-print">
+	<h3>Search offense/penal code:</h3>
+	<form action="/redirect_from_label" method="get">
+	  <div id="smartsearch"><!-- -->[SEARCH FORM GOES HERE]<!-- --></div>
+	  <input type="submit" value="Search" class="searchButton" />
+	</form>
+	<br />
+	<h3 class="two-categories"><span>Select a criminal offense:</span></h3>
+	<ul id="offenses" class="menu"><!-- Begin the charges listed by Offenses -->
+	  
+	  {% for charge in charges %}
+	  {{ charge.as_view_ul|safe}}
+	  {% endfor %}
+
+	</ul>
+
+      </div><!-- id=column-content -->
+    </div><!-- id=alpha-inner -->
+  </div><!-- id=alpha -->
+
+  <div class="beta">
+    <div class="beta-inner">
+      <div class="beta-header">
+	<div class="beta-header-inner">
+	  <h2>Introduction to Collateral Consequences of Criminal Charges:</h2>
+	</div><!-- id=beta-header-inner -->
+      </div><!-- id=beta-header -->
+
+      <div class="column-content">
+	<p>Welcome to the Collateral Consequences of Criminal Charges Calculator.</p>
+
+	<h3>Purpose</h3>
+
+	<p>This calculator is designed as an aid to legal research for judges, attorneys and legal academics. It can provide a preliminary overview of the collateral consequences associated with sections of the New York State Penal Law. You may use this as a way of seeing the big picture and beginning the process of parsing the varied consequences of criminal charges. As the calculator cannot account for the specific circumstances of each defendant, it is up to you to research and analyze the ultimate consequences of each charge in the context of the defendant&#8217;s life.</p>
+
+	<h3>Scope</h3>
+
+	<p>In this, the initial version of the Calculator, we have tracked the collateral consequences in two important substantive areas:  <b>immigration</b> and <b>public housing in New York City</b>. The <b>immigration</b> consequences are analyzed for the top 50 crimes that are either most commonly charged or most misunderstood. The <b>public housing</b> consequences are analyzed for all crimes listed in the Penal Law, but apply only to public housing in New York City.</p>
+
+	<h3>Format</h3>
+
+	<p>We have tried to maintain an &#8220;at-a-glance&#8221; format so that you can quickly see where collateral consequences occur. Turnbuckles expand to reveal more information.  Blue print is linked to more specific relevant information. In this way, you can choose how deeply to delve into a particular topic commensurate with your research needs and duties to your client. We encourage you to utilize the Calculator in conjunction with the <a href="http://www2.law.columbia.edu/fourcs/index.html" target="_blank">4 C&#8217;s</a> website, which contains &#8220;best of&#8221; information about collateral consequences compiled by experts in the six substantive areas where collateral consequences most frequently occur.</p>
+
+	<h3 style="color: #f00;">Disclaimer</h3>
+
+	<p>This calculator is not designed to provide legal advice over the Internet.  Legal advice is dependent upon the specific circumstances of each situation.  The information provided here is targeted toward collateral consequences in New York.  The law varies from state to state, so that some information provided herein may not be correct outside New York State.  While every effort is made to keep the content on this site current, the information contained herein is not guaranteed to be up to date.  Therefore, the information provided herein cannot replace the advice of competent legal counsel licensed in your state.</p>
+
+	<p>Also, a skilled advocate may be able to overcome some of the predicted consequences. Therefore, this information should not be taken as an absolute limitation on what such advocacy might achieve.</p>
+
+	<p>
+	  We welcome your <a href="feedback">feedback</a> about missing consequences and
+	  inaccuracies as well as about the design and function of the
+	  system.
+	</p>
+      </div><!-- id=column-content -->
+    </div><!-- id=beta-inner -->
+  </div>
+</div>
 {% endblock %}
