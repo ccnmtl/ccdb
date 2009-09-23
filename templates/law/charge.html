@@ -154,6 +154,104 @@
     </tr>
 </table>
 {% endfor %}
+</div>
+</div>
+<!-- TODO: Now, repeat, isolating each area -->
+
+{% for area in charge.all_consequences_by_area %}
+<div class="tabbertab" title="{{area.area.label}}">
+  <div class="offensebox">
+    <div class="offensesorttype">
+      Breakdown by offense classification
+    </div>
+    <div class="offensetitle">
+      <h3 class="comparison">PRIMARY OFFENSE: </h3>
+      <h3 class="selectedoffense">{{ charge.penal_code }} {{ charge.label }}</h3>
+    </div><!--  class="offensetitle" -->
+
+    <table border="1" width="99%" cellspacing="0" cellpadding="0" class="cc-table" py:if="checked['immigration']">
+      <thead>
+	<tr valign="top">
+	  <th class="cc-yes">YES</th>
+	  <th class="cc-probably">PROBABLY</th>
+	  <th class="cc-maybe">MAYBE</th>
+	</tr>
+      </thead>
+      <tbody>
+	<tr valign="top">
+	  <td class="tdcc-yes">
+{% if area.yes %}
+	<ul class="ccmenu">
+	  <li><a href="#{{area.area.name}}-yes-{{area.id}}" class="hs-control">{{area.yes_count}} in {{area.area.label}}</a>
+	    <div id="{{area.area.name}}-yes-{{area.id}}" class="hs-init-hide menu chargelist">
+	      <ul>
+		{% for cgroup in area.yes %}
+		<li class="offensecategory"><a href="{{cgroup.classification.get_absolute_url}}">{{cgroup.classification.label}}</a>
+		  <ul class="selectedcharges">
+		    {% for consequence in cgroup.consequences %}
+		    <li><a href="{{consequence.consequence.get_absolute_url}}">{{consequence.consequence.label}}</a></li>
+		    {% endfor %}
+		  </ul>
+		</li>
+		{% endfor %}
+	      </ul>
+	    </div>
+	  </li>
+	</ul>
+	{% endif %}
+      </td>
+
+      <td class="tdcc-probably">
+	{% if area.probably %}
+	<ul class="ccmenu">
+	  <li><a href="#{{area.area.name}}-probably-{{area.id}}" class="hs-control">{{area.probably_count}} in {{area.area.label}}</a>
+	    <div id="{{area.area.name}}-probably-{{area.id}}" class="hs-init-hide menu chargelist">
+	      <ul>
+		{% for cgroup in area.probably %}
+		<li class="offensecategory"><a href="{{cgroup.classification.get_absolute_url}}">{{cgroup.classification.label}}</a>
+		  <ul class="selectedcharges">
+		    {% for consequence in cgroup.consequences %}
+		    <li><a href="{{consequence.consequence.get_absolute_url}}">{{consequence.consequence.label}}</a></li>
+		    {% endfor %}
+		  </ul>
+		</li>
+		{% endfor %}
+	      </ul>
+	    </div>
+	  </li>
+	</ul>
+	{% endif %}
+      </td>
+
+      <td class="tdcc-maybe">
+	{% if area.maybe %}
+	<ul class="ccmenu">
+	  <li><a href="#{{area.area.name}}-maybe-{{area.id}}" class="hs-control">{{area.maybe_count}} in {{area.area.label}}</a>
+	    <div id="{{area.area.name}}-maybe-{{area.id}}" class="hs-init-hide menu chargelist">
+	      <ul>
+		{% for cgroup in area.maybe %}
+		<li class="offensecategory"><a href="{{cgroup.classification.get_absolute_url}}">{{cgroup.classification.label}}</a>
+		  <ul class="selectedcharges">
+		    {% for consequence in cgroup.consequences %}
+		    <li><a href="{{consequence.consequence.get_absolute_url}}">{{consequence.consequence.label}}</a></li>
+		    {% endfor %}
+		  </ul>
+		</li>
+		{% endfor %}
+	      </ul>
+	    </div>
+	  </li>
+	</ul>
+	{% endif %}
+      </td>
+
+    </tr>
+</table>
+
+  </div><!-- /offensebox -->
+</div>
+{% endfor %}
+
 {% else %}
 
 {% if not charge.children %}
