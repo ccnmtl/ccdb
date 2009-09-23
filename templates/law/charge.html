@@ -16,22 +16,38 @@
 	  <h2>Criminal Charges:</h2>
 	</div>
       </div>
-      
-      <div class="column-content hide-print">
-	<h3>Search offense/penal code:</h3>
-	<form action="/redirect_from_label" method="get">
-	  <div id="smartsearch"><!-- -->[SEARCH FORM GOES HERE]<!-- --></div>
-	  <input type="submit" value="Search" class="searchButton" />
-	</form>
-	<br />
-	<h3 class="two-categories"><span>Select a criminal offense:</span></h3>
-	<ul id="offenses" class="menu"><!-- Begin the charges listed by Offenses -->
-	  
-	  {% for charge in charges %}
-	  {{ charge.as_view_ul|safe}}
-	  {% endfor %}
 
-	</ul>
+      <div class="column-content hide-print">
+
+	<div class="tabsbox">
+	  <div id="comparelisttab" class="tabs activetab">
+	    <a href="#comparelist" onclick="splitanchor(this); return false;">Compare</a>
+	  </div>
+
+	  <div id="newsearchlisttab" class="tabs">
+	    <a href="#newsearchlist" onclick="splitanchor(this); return false;">Start over</a>
+	  </div>
+	</div>
+
+	<!-- List of charges to compare -->
+	<div id="comparelist">
+	  <h3 class="comparison">Compare this offense with...</h3>
+	  <ul id="offenses" class="menu"><!-- Begin the charges listed by Offenses -->
+	    {% for charge in charges %}
+	    {{ charge.as_view_ul|safe}}
+	    {% endfor %}
+	  </ul>
+	</div><!-- /comparelist -->
+
+
+	<div id="newsearchlist">
+	  <h3 class="comparison">Start over with a new offense:</h3>
+	  <ul id="offenses-so" class="menu"><!-- Begin the charges listed by Offenses -->
+	    {% for charge in charges %}
+	    {{ charge.as_view_ul|safe}}
+	    {% endfor %}
+	  </ul>
+	</div><!-- /newsearchlist -->
 
       </div><!-- id=column-content -->
     </div><!-- id=alpha-inner -->

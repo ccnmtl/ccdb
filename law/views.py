@@ -246,7 +246,7 @@ def view_charge(request,slugs):
     snapshot = public_snapshot()
     charge = snapshot.get_charge_by_slugs(slugs)
     all = charge.view_all()
-    return dict(charge=charge)
+    return dict(charge=charge,charges=snapshot.top_level_charges())
 
 
 @login_required
