@@ -8,13 +8,10 @@ function splitanchor(a) {
 	for (i=0; i< 2; i++) {
 		box_list[i].style.display = "none";
 		if (box_list[i].id == boxtoshow) {
-		document.getElementById('comparelisttab').className = "";
-		document.getElementById('newsearchlisttab').className = "";
-		document.getElementById('comparelisttab').className = "tabs";
-		document.getElementById('newsearchlisttab').className = "tabs";
-			document.getElementById(boxtoshow+'tab').className = "";
-			document.getElementById(boxtoshow+'tab').className = "tabs activetab";
-			box_list[i].style.display = "block";
+		  document.getElementById('comparelisttab').className = "tabs";
+		  document.getElementById('newsearchlisttab').className = "tabs";
+		  document.getElementById(boxtoshow+'tab').className = "tabs activetab";
+		  box_list[i].style.display = "block";
 		}
 
 	}

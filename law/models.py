@@ -132,10 +132,12 @@ class Snapshot(models.Model):
                 raise Http404
         else:
             options = Charge.objects.filter(snapshot=self,name=slugs[0])
-            if options.count() == 1:
+            if options.count() <= 1:
                 current = get_object_or_404(Charge,snapshot=self,name=slugs[0])
             else:
-                raise "Oh No!!!"
+                # technically, this is bad. we shouldn't let there be two
+                # charges with the same name, but what can you do?
+                current = options[0]
 
         if len(slugs) == 1:
             return current
@@ -220,6 +222,31 @@ class Charge(models.Model):
             parts.append("<ul id=\"charge-" + str(self.id) + "\" class=\"hs-init-hide menu\">")
             for child in self.children():
                 parts.append(child.as_ul(link_prefix=link_prefix))
+            parts.append("</ul>")
+        parts.append("</li>")
+        return "".join(parts)
+
+    # Blech. Should convert this to the pagetree approach
+    # where menus can be edited in a template instead of here
+    def as_view_compare_ul(self):
+        """ return html for the charge and its children as an <ul> """
+        return self.as_compare_ul(link_prefix="")
+
+    def as_compare_ul(self,link_prefix=""):
+        """ return html for the charge and its children as an <ul> """
+        leaf = not self.has_children()
+
+        if leaf:
+            link = "<a href=\"?charge2=" + self.get_absolute_url() + "\">"
+        else:
+            link = "<a href=\"#compare-charge-" + str(self.id) + "\" class=\"hs-control\">"
+        parts = ["<li class=\"menuitem\">",link,self.penal_code," ",
+                 self.label,"</a>"]
+
+        if not leaf:
+            parts.append("<ul id=\"compare-charge-" + str(self.id) + "\" class=\"hs-init-hide menu\">")
+            for child in self.children():
+                parts.append(child.as_compare_ul(link_prefix=link_prefix))
             parts.append("</ul>")
         parts.append("</li>")
         return "".join(parts)
@@ -431,7 +458,6 @@ class Charge(models.Model):
             area_results["maybe"] = dtolist(cluster_by(lambda x: x.classification,area_results["maybe"]))
 
             results.append(area_results)
-        pprint(results)
         return results
 
 def dtolist(d):

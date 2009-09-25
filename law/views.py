@@ -245,8 +245,12 @@ def view_charge(request,slugs):
     slugs = slugs.split("/")
     snapshot = public_snapshot()
     charge = snapshot.get_charge_by_slugs(slugs)
-    all = charge.view_all()
-    return dict(charge=charge,charges=snapshot.top_level_charges())
+    charge2 = None
+    if request.GET.get('charge2',''):
+        charge2_path = request.GET.get('charge2','')[len("/charge/"):].strip("/")
+        charge2_slugs = charge2_path.split("/")
+        charge2 = snapshot.get_charge_by_slugs(charge2_path.split("/"))
+    return dict(charge=charge,charge2=charge2,charges=snapshot.top_level_charges())
 
 
 @login_required

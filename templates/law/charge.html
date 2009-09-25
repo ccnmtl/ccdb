@@ -34,7 +34,7 @@
 	  <h3 class="comparison">Compare this offense with...</h3>
 	  <ul id="offenses" class="menu"><!-- Begin the charges listed by Offenses -->
 	    {% for charge in charges %}
-	    {{ charge.as_view_ul|safe}}
+	    {{ charge.as_view_compare_ul|safe}}
 	    {% endfor %}
 	  </ul>
 	</div><!-- /comparelist -->
@@ -69,7 +69,7 @@
                 <div class="offensetitle">
                   <h3 class="comparison">PRIMARY OFFENSE: </h3>
 		  <h3 class="selectedoffense">{{ charge.penal_code }} {{ charge.label }}</h3>
-		</div>
+		</div> <!-- /offensetitle -->
 {% if charge.children %}
 <ul>
 {% for charge in charge.children %}
@@ -170,16 +170,130 @@
     </tr>
 </table>
 {% endfor %}
-</div>
-</div>
+{% endif %}
+</div> <!-- /offensebox -->
+
+<!-- charge 2 -->
+{% if charge2 %}
+<div class="offensebox">
+  <div class="offensetitle">
+    <h3 class="comparison">COMPARE WITH: </h3>
+    <h3 class="selectedoffense">{{ charge2.penal_code }} {{ charge2.label }}</h3>
+  </div> <!-- /offensetitle -->
+  {% if charge2.children %}
+  <ul>
+    {% for charge in charge2.children %}
+    {{ charge.as_view_ul|safe }}
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+{% if charge2.view_all %}
+
+<table border="1" width="99%" cellspacing="0" cellpadding="0" class="cc-table">
+  <thead>
+    <tr valign="top">
+      <th class="cc-yes">YES</th>
+      <th class="cc-probably">PROBABLY</th>
+      <th class="cc-maybe">MAYBE</th>
+    </tr>
+  </thead>
+</table>
+
+{% for area in charge2.all_consequences_by_area %}
+
+<table border="1" width="99%" cellspacing="0" cellpadding="0" class="cc-table cc-table2">
+  <tbody>
+    <tr valign="top">
+      <td colspan="3" class="offensesorttype2">
+	{{area.area.label}}: Breakdown by offense classification
+      </td>
+    </tr>
+    <tr valign="top">
+      <td class="tdcc-yes">
+	{% if area.yes %}
+	<ul class="ccmenu">
+	  <li><a href="#{{area.area.name}}-compare-showall-yes-{{area.area.id}}" class="hs-control">{{area.yes_count}} in {{area.area.label}}</a>
+	    <div id="{{area.area.name}}--compare-showall-yes-{{area.area.id}}" class="hs-init-hide menu chargelist">
+	      <ul>
+		{% for cgroup in area.yes %}
+		<li class="offensecategory"><a href="{{cgroup.classification.get_absolute_url}}">{{cgroup.classification.label}}</a>
+		  <ul class="selectedcharges">
+		    {% for consequence in cgroup.consequences %}
+		    <li><a href="{{consequence.consequence.get_absolute_url}}">{{consequence.consequence.label}}</a></li>
+		    {% endfor %}
+		  </ul>
+		</li>
+		{% endfor %}
+	      </ul>
+	    </div>
+	  </li>
+	</ul>
+	{% endif %}
+      </td>
+
+      <td class="tdcc-probably">
+	{% if area.probably %}
+	<ul class="ccmenu">
+	  <li><a href="#{{area.area.name}}-compare-showall-probably-{{area.area.id}}" class="hs-control">{{area.probably_count}} in {{area.area.label}}</a>
+	    <div id="{{area.area.name}}-compare-showall-probably-{{area.area.id}}" class="hs-init-hide menu chargelist">
+	      <ul>
+		{% for cgroup in area.probably %}
+		<li class="offensecategory"><a href="{{cgroup.classification.get_absolute_url}}">{{cgroup.classification.label}}</a>
+		  <ul class="selectedcharges">
+		    {% for consequence in cgroup.consequences %}
+		    <li><a href="{{consequence.consequence.get_absolute_url}}">{{consequence.consequence.label}}</a></li>
+		    {% endfor %}
+		  </ul>
+		</li>
+		{% endfor %}
+	      </ul>
+	    </div>
+	  </li>
+	</ul>
+	{% endif %}
+      </td>
+
+      <td class="tdcc-maybe">
+	{% if area.maybe %}
+	<ul class="ccmenu">
+	  <li><a href="#{{area.area.name}}-compare-showall-maybe-{{area.area.id}}" class="hs-control">{{area.maybe_count}} in {{area.area.label}}</a>
+	    <div id="{{area.area.name}}-compare-showall-maybe-{{area.area.id}}" class="hs-init-hide menu chargelist">
+	      <ul>
+		{% for cgroup in area.maybe %}
+		<li class="offensecategory"><a href="{{cgroup.classification.get_absolute_url}}">{{cgroup.classification.label}}</a>
+		  <ul class="selectedcharges">
+		    {% for consequence in cgroup.consequences %}
+		    <li><a href="{{consequence.consequence.get_absolute_url}}">{{consequence.consequence.label}}</a></li>
+		    {% endfor %}
+		  </ul>
+		</li>
+		{% endfor %}
+	      </ul>
+	    </div>
+	  </li>
+	</ul>
+	{% endif %}
+      </td>
+
+    </tr>
+</table>
+{% endfor %}
+</div> <!-- /offenseblock -->
+{% endif %}
+<!-- /charge2 -->
+
+</div> <!-- /tabbertab show all -->
 <!-- TODO: Now, repeat, isolating each area -->
 
 {% for area in charge.all_consequences_by_area %}
-<div class="tabbertab" title="{{area.area.label}}">
+<div class="tabbertab" title="{{area.area.label}}" style="border: #f60 solid 1px ">
   <div class="offensebox">
+
     <div class="offensesorttype">
       Breakdown by offense classification
     </div>
+
     <div class="offensetitle">
       <h3 class="comparison">PRIMARY OFFENSE: </h3>
       <h3 class="selectedoffense">{{ charge.penal_code }} {{ charge.label }}</h3>
@@ -265,9 +379,10 @@
 </table>
 
   </div><!-- /offensebox -->
-</div>
-{% endfor %}
+</div><!-- /tabbertab -->
 
+{% endfor %}
+</div> <!-- /outer-tab -->
 {% else %}
 
 {% if not charge.children %}
