@@ -383,10 +383,14 @@ def delete_area(request,slug):
 def add_consequence(request,slug):
     snapshot = working_snapshot()
     area = get_object_or_404(Area,snapshot=snapshot,name=slug)
+    name = slugify(request.POST['label'])[:50]
+    r = Consequence.objects.filter(area=area,name=name)
+    if r.count() > 0:
+        name = name + "-1"
     consequence = Consequence.objects.create(area=area,
                                              label=request.POST['label'],
                                              description=request.POST.get('description',''),
-                                             name=slugify(request.POST['label'])[:50])
+                                             name=name)
     e = Event.objects.create(snapshot=snapshot,
                              user=request.user,
                              description="consequence **%s** added to **%s**" % (consequence.label,area.label))
