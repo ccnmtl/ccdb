@@ -8,3 +8,4 @@ MEDIA_ROOT = '/var/www/ccdb/uploads/'
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
+CACHE_BACKEND = 'locmem:///'

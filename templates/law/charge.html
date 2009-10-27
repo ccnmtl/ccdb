@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% load cache %}
 {% block title %}{{ charge.penal_code }} {{ charge.label }}{% endblock %}
 
 {% block breadcrumbs %}
@@ -33,9 +33,11 @@
 	<div id="comparelist">
 	  <h3 class="comparison">Compare this offense with...</h3>
 	  <ul id="offenses" class="menu"><!-- Begin the charges listed by Offenses -->
+	    {% cache 500 menu %}
 	    {% for charge in charges %}
 	    {{ charge.as_view_compare_ul|safe}}
 	    {% endfor %}
+	    {% endcache %}
 	  </ul>
 	</div><!-- /comparelist -->
 
@@ -43,9 +45,11 @@
 	<div id="newsearchlist">
 	  <h3 class="comparison">Start over with a new offense:</h3>
 	  <ul id="offenses-so" class="menu"><!-- Begin the charges listed by Offenses -->
+	    {% cache 500 menu_compare %}
 	    {% for charge in charges %}
 	    {{ charge.as_view_ul|safe}}
 	    {% endfor %}
+	    {% endcache %}
 	  </ul>
 	</div><!-- /newsearchlist -->
 
