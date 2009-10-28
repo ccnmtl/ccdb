@@ -84,34 +84,26 @@
 {% endif %}
 
 {% if charge.view_all %}
-
-
 <table border="1" width="99%" cellspacing="0" cellpadding="0" class="cc-table">
-  <thead>
-    <tr valign="top">
-      <th class="cc-yes">YES</th>
-      <th class="cc-probably">PROBABLY</th>
-      <th class="cc-maybe">MAYBE</th>
-    </tr>
-  </thead>
-</table>
-
-{% for area in charge.all_consequences_by_area %}
-
-<table border="1" width="99%" cellspacing="0" cellpadding="0" class="cc-table cc-table2">
+  {% include 'law/charge_thead.html' %}
   <tbody>
+    {% for area in charge.all_consequences_by_area %}
     <tr valign="top">
       <td colspan="3" class="offensesorttype2">
 	{{area.area.label}}: Breakdown by offense classification
       </td>
     </tr>
+
     {% with "showall" as section %}
     {% include 'law/charge_row.html' %}
     {% endwith %} 
+
+    {% endfor %}
   </tbody>
 </table>
-{% endfor %}
-{% endif %}
+{% endif %} {# /charge.view_all #}
+
+
 </div> <!-- /offensebox -->
 
 <!-- charge 2 -->
@@ -132,19 +124,9 @@
 {% if charge2.view_all %}
 
 <table border="1" width="99%" cellspacing="0" cellpadding="0" class="cc-table">
-  <thead>
-    <tr valign="top">
-      <th class="cc-yes">YES</th>
-      <th class="cc-probably">PROBABLY</th>
-      <th class="cc-maybe">MAYBE</th>
-    </tr>
-  </thead>
-</table>
-
-{% for area in charge2.all_consequences_by_area %}
-
-<table border="1" width="99%" cellspacing="0" cellpadding="0" class="cc-table cc-table2">
+  {% include 'law/charge_thead.html' %}
   <tbody>
+    {% for area in charge2.all_consequences_by_area %}
     <tr valign="top">
       <td colspan="3" class="offensesorttype2">
 	{{area.area.label}}: Breakdown by offense classification
@@ -153,9 +135,9 @@
     {% with "compare-showall" as section %}
     {% include 'law/charge_row.html' %}
     {% endwith %}
+    {% endfor %}
   </tbody>
 </table>
-{% endfor %}
 </div> <!-- /offenseblock -->
 {% endif %}
 <!-- /charge2 -->
@@ -177,13 +159,7 @@
     </div><!--  class="offensetitle" -->
 
     <table border="1" width="99%" cellspacing="0" cellpadding="0" class="cc-table" py:if="checked['immigration']">
-      <thead>
-	<tr valign="top">
-	  <th class="cc-yes">YES</th>
-	  <th class="cc-probably">PROBABLY</th>
-	  <th class="cc-maybe">MAYBE</th>
-	</tr>
-      </thead>
+      {% include 'law/charge_thead.html' %}
       <tbody>
       {% with "individual" as section %}
       {% include 'law/charge_row.html' %}
