@@ -1,0 +1,25 @@
+<tr valign="top">
+{% with area.yes as cgroups %}
+{% with area.yes_count as cgroups_count %}
+{% with "yes" as certainty %}
+{% include 'law/charge_cell.html' %}
+{% endwith %}
+{% endwith %}
+{% endwith %}
+
+{% with area.probably as cgroups %}
+{% with area.probably_count as cgroups_count %}
+{% with "probably" as certainty %}
+{% include 'law/charge_cell.html' %}
+{% endwith %}
+{% endwith %}
+{% endwith %}
+
+{% with area.maybe as cgroups %}
+{% with area.maybe_count as cgroups_count %}
+{% with "maybe" as certainty %}
+{% include 'law/charge_cell.html' %}
+{% endwith %}
+{% endwith %}
+{% endwith %}
+</tr>
