@@ -1,0 +1,19 @@
+{# expected variables:                      #}
+{#                                          #}
+{# certainty: string (yes, probably, maybe) #}
+{# cgroups: list of categories              #}
+{# cgroups_count: count of consequences     #}
+{# area                                     #}
+{# section: string for ids                  #}
+
+<td class="tdcc-{{certainty}}">
+  {% if cgroups %}
+  <ul class="ccmenu">
+    <li><a href="#{{area.area.name}}-{{section}}-{{certainty}}-{{area.id}}" class="hs-control">{{cgroups_count}} in {{area.area.label}}</a>
+      <div id="{{area.area.name}}-{{section}}-{{certainty}}-{{area.id}}" class="hs-init-hide menu chargelist">
+	{% include 'law/cgroup_list.html' %}
+      </div>
+    </li>
+  </ul>
+  {% endif %}
+</td>
