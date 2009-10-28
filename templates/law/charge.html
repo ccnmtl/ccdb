@@ -14,15 +14,15 @@
       <div class="alpha-header">
 	<div class="alpha-header-inner">
 	  <h2>Criminal Charges:</h2>
-	</div>
-      </div>
+	</div><! --/alpha-header-inner -->
+      </div><! --/alpha-header -->
 
       <div class="column-content hide-print">
 
 	<div class="tabsbox">
 	  <div id="comparelisttab" class="tabs activetab">
 	    <a href="#comparelist" onclick="splitanchor(this); return false;">Compare</a>
-	  </div>
+	  </div> <!-- /comparelisttab -->
 
 	  <div id="newsearchlisttab" class="tabs">
 	    <a href="#newsearchlist" onclick="splitanchor(this); return false;">Start over</a>
@@ -113,13 +113,7 @@
 	    <div id="{{area.area.name}}-showall-yes-{{area.id}}" class="hs-init-hide menu chargelist">
 	      <ul>
 		{% for cgroup in area.yes %}
-		<li class="offensecategory"><a href="{{cgroup.classification.get_absolute_url}}">{{cgroup.classification.label}}</a>
-		  <ul class="selectedcharges">
-		    {% for consequence in cgroup.consequences %}
-		    <li><a href="{{consequence.consequence.get_absolute_url}}">{{consequence.consequence.label}}</a></li>
-		    {% endfor %}
-		  </ul>
-		</li>
+		{% include 'law/consequences_list.html' %}
 		{% endfor %}
 	      </ul>
 	    </div>
@@ -135,13 +129,7 @@
 	    <div id="{{area.area.name}}-showall-probably-{{area.id}}" class="hs-init-hide menu chargelist">
 	      <ul>
 		{% for cgroup in area.probably %}
-		<li class="offensecategory"><a href="{{cgroup.classification.get_absolute_url}}">{{cgroup.classification.label}}</a>
-		  <ul class="selectedcharges">
-		    {% for consequence in cgroup.consequences %}
-		    <li><a href="{{consequence.consequence.get_absolute_url}}">{{consequence.consequence.label}}</a></li>
-		    {% endfor %}
-		  </ul>
-		</li>
+		{% include 'law/consequences_list.html' %}
 		{% endfor %}
 	      </ul>
 	    </div>
@@ -157,13 +145,7 @@
 	    <div id="{{area.area.name}}-showall-maybe-{{area.id}}" class="hs-init-hide menu chargelist">
 	      <ul>
 		{% for cgroup in area.maybe %}
-		<li class="offensecategory"><a href="{{cgroup.classification.get_absolute_url}}">{{cgroup.classification.label}}</a>
-		  <ul class="selectedcharges">
-		    {% for consequence in cgroup.consequences %}
-		    <li><a href="{{consequence.consequence.get_absolute_url}}">{{consequence.consequence.label}}</a></li>
-		    {% endfor %}
-		  </ul>
-		</li>
+		{% include 'law/consequences_list.html' %}
 		{% endfor %}
 	      </ul>
 	    </div>
@@ -223,13 +205,7 @@
 	    <div id="{{area.area.name}}--compare-showall-yes-{{area.area.id}}" class="hs-init-hide menu chargelist">
 	      <ul>
 		{% for cgroup in area.yes %}
-		<li class="offensecategory"><a href="{{cgroup.classification.get_absolute_url}}">{{cgroup.classification.label}}</a>
-		  <ul class="selectedcharges">
-		    {% for consequence in cgroup.consequences %}
-		    <li><a href="{{consequence.consequence.get_absolute_url}}">{{consequence.consequence.label}}</a></li>
-		    {% endfor %}
-		  </ul>
-		</li>
+		{% include 'law/consequences_list.html' %}
 		{% endfor %}
 	      </ul>
 	    </div>
@@ -245,13 +221,7 @@
 	    <div id="{{area.area.name}}-compare-showall-probably-{{area.area.id}}" class="hs-init-hide menu chargelist">
 	      <ul>
 		{% for cgroup in area.probably %}
-		<li class="offensecategory"><a href="{{cgroup.classification.get_absolute_url}}">{{cgroup.classification.label}}</a>
-		  <ul class="selectedcharges">
-		    {% for consequence in cgroup.consequences %}
-		    <li><a href="{{consequence.consequence.get_absolute_url}}">{{consequence.consequence.label}}</a></li>
-		    {% endfor %}
-		  </ul>
-		</li>
+		{% include 'law/consequences_list.html' %}
 		{% endfor %}
 	      </ul>
 	    </div>
@@ -267,13 +237,7 @@
 	    <div id="{{area.area.name}}-compare-showall-maybe-{{area.area.id}}" class="hs-init-hide menu chargelist">
 	      <ul>
 		{% for cgroup in area.maybe %}
-		<li class="offensecategory"><a href="{{cgroup.classification.get_absolute_url}}">{{cgroup.classification.label}}</a>
-		  <ul class="selectedcharges">
-		    {% for consequence in cgroup.consequences %}
-		    <li><a href="{{consequence.consequence.get_absolute_url}}">{{consequence.consequence.label}}</a></li>
-		    {% endfor %}
-		  </ul>
-		</li>
+		{% include 'law/consequences_list.html' %}
 		{% endfor %}
 	      </ul>
 	    </div>
@@ -322,13 +286,7 @@
 	    <div id="{{area.area.name}}-yes-{{area.id}}" class="hs-init-hide menu chargelist">
 	      <ul>
 		{% for cgroup in area.yes %}
-		<li class="offensecategory"><a href="{{cgroup.classification.get_absolute_url}}">{{cgroup.classification.label}}</a>
-		  <ul class="selectedcharges">
-		    {% for consequence in cgroup.consequences %}
-		    <li><a href="{{consequence.consequence.get_absolute_url}}">{{consequence.consequence.label}}</a></li>
-		    {% endfor %}
-		  </ul>
-		</li>
+		{% include 'law/consequences_list.html' %}
 		{% endfor %}
 	      </ul>
 	    </div>
@@ -344,13 +302,7 @@
 	    <div id="{{area.area.name}}-probably-{{area.id}}" class="hs-init-hide menu chargelist">
 	      <ul>
 		{% for cgroup in area.probably %}
-		<li class="offensecategory"><a href="{{cgroup.classification.get_absolute_url}}">{{cgroup.classification.label}}</a>
-		  <ul class="selectedcharges">
-		    {% for consequence in cgroup.consequences %}
-		    <li><a href="{{consequence.consequence.get_absolute_url}}">{{consequence.consequence.label}}</a></li>
-		    {% endfor %}
-		  </ul>
-		</li>
+		{% include 'law/consequences_list.html' %}
 		{% endfor %}
 	      </ul>
 	    </div>
@@ -366,13 +318,7 @@
 	    <div id="{{area.area.name}}-maybe-{{area.id}}" class="hs-init-hide menu chargelist">
 	      <ul>
 		{% for cgroup in area.maybe %}
-		<li class="offensecategory"><a href="{{cgroup.classification.get_absolute_url}}">{{cgroup.classification.label}}</a>
-		  <ul class="selectedcharges">
-		    {% for consequence in cgroup.consequences %}
-		    <li><a href="{{consequence.consequence.get_absolute_url}}">{{consequence.consequence.label}}</a></li>
-		    {% endfor %}
-		  </ul>
-		</li>
+		{% include 'law/consequences_list.html' %}
 		{% endfor %}
 	      </ul>
 	    </div>
