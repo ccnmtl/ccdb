@@ -75,123 +75,124 @@
                   <h3 class="comparison">PRIMARY OFFENSE: </h3>
 		  <h3 class="selectedoffense">{{ charge.penal_code }} {{ charge.label }}</h3>
 		</div> <!-- /offensetitle -->
-{% if charge.children %}
-<ul>
-{% for charge in charge.children %}
-{{ charge.as_view_ul|safe }}
-{% endfor %}
-</ul>
-{% endif %}
 
-{% if charge.view_all %}
-<table border="1" width="99%" cellspacing="0" cellpadding="0" class="cc-table">
-  {% include 'law/charge_thead.html' %}
-  <tbody>
-    {% for area in charge.all_consequences_by_area %}
-    <tr valign="top">
-      <td colspan="3" class="offensesorttype2">
-	{{area.area.label}}: Breakdown by offense classification
-      </td>
-    </tr>
+		{% if charge.children %}
+		<ul>
+		  {% for charge in charge.children %}
+		  {{ charge.as_view_ul|safe }}
+		  {% endfor %}
+		</ul>
+		{% endif %}
 
-    {% with "showall" as section %}
-    {% include 'law/charge_row.html' %}
-    {% endwith %} 
+		{% if charge.view_all %}
+		<table border="1" width="99%" cellspacing="0" cellpadding="0" class="cc-table">
+		  {% include 'law/charge_thead.html' %}
+		  <tbody>
+		    {% for area in charge.all_consequences_by_area %}
+		    <tr valign="top">
+		      <td colspan="3" class="offensesorttype2">
+			{{area.area.label}}: Breakdown by offense classification
+		      </td>
+		    </tr>
 
-    {% endfor %}
-  </tbody>
-</table>
-{% endif %} {# /charge.view_all #}
+		    {% with "showall" as section %}
+		    {% include 'law/charge_row.html' %}
+		    {% endwith %} 
 
+		    {% endfor %}
+		  </tbody>
+		</table>
+		{% endif %} {# /charge.view_all #}
+	      </div> <!-- /offensebox -->
 
-</div> <!-- /offensebox -->
+	      <!-- charge 2 -->
 
-<!-- charge 2 -->
-{% if charge2 %}
-<div class="offensebox">
-  <div class="offensetitle">
-    <h3 class="comparison">COMPARE WITH: </h3>
-    <h3 class="selectedoffense">{{ charge2.penal_code }} {{ charge2.label }}</h3>
-  </div> <!-- /offensetitle -->
-  {% if charge2.children %}
-  <ul>
-    {% for charge in charge2.children %}
-    {{ charge.as_view_ul|safe }}
-    {% endfor %}
-  </ul>
-  {% endif %}
+	      {% if charge2 %}
+	      <div class="offensebox">
+		<div class="offensetitle">
+		  <h3 class="comparison">COMPARE WITH: </h3>
+		  <h3 class="selectedoffense">{{ charge2.penal_code }} {{ charge2.label }}</h3>
+		</div> <!-- /offensetitle -->
+		{% if charge2.children %}
+		<ul>
+		  {% for charge in charge2.children %}
+		  {{ charge.as_view_ul|safe }}
+		  {% endfor %}
+		</ul>
+		{% endif %}
 
-{% if charge2.view_all %}
+		{% if charge2.view_all %}
 
-<table border="1" width="99%" cellspacing="0" cellpadding="0" class="cc-table">
-  {% include 'law/charge_thead.html' %}
-  <tbody>
-    {% for area in charge2.all_consequences_by_area %}
-    <tr valign="top">
-      <td colspan="3" class="offensesorttype2">
-	{{area.area.label}}: Breakdown by offense classification
-      </td>
-    </tr>
-    {% with "compare-showall" as section %}
-    {% include 'law/charge_row.html' %}
-    {% endwith %}
-    {% endfor %}
-  </tbody>
-</table>
-</div> <!-- /offenseblock -->
-{% endif %}
-<!-- /charge2 -->
+		<table border="1" width="99%" cellspacing="0" cellpadding="0" class="cc-table">
+		  {% include 'law/charge_thead.html' %}
+		  <tbody>
+		    {% for area in charge2.all_consequences_by_area %}
+		    <tr valign="top">
+		      <td colspan="3" class="offensesorttype2">
+			{{area.area.label}}: Breakdown by offense classification
+		      </td>
+		    </tr>
+		    {% with "compare-showall" as section %}
+		    {% include 'law/charge_row.html' %}
+		    {% endwith %}
+		    {% endfor %}
+		  </tbody>
+		</table>
+	      </div> <!-- /offenseblock -->
+	      {% endif %}
+	      <!-- /charge2 -->
+	    </div> <!-- /tabbertab show all -->
 
-</div> <!-- /tabbertab show all -->
-<!-- TODO: Now, repeat, isolating each area -->
+	    <!-- Now, repeat, isolating each area -->
 
-{% for area in charge.all_consequences_by_area %}
-<div class="tabbertab" title="{{area.area.label}}" style="border: #f60 solid 1px ">
-  <div class="offensebox">
+	    {% for area in charge.all_consequences_by_area %}
+	    <div class="tabbertab" title="{{area.area.label}}" style="border: #f60 solid 1px ">
+	      <div class="offensebox">
+		<div class="offensesorttype">
+		  Breakdown by offense classification
+		</div><!-- /offensesorttype -->
 
-    <div class="offensesorttype">
-      Breakdown by offense classification
-    </div>
+		<div class="offensetitle">
+		  <h3 class="comparison">PRIMARY OFFENSE: </h3>
+		  <h3 class="selectedoffense">{{ charge.penal_code }} {{ charge.label }}</h3>
+		</div><!--  class="offensetitle" -->
 
-    <div class="offensetitle">
-      <h3 class="comparison">PRIMARY OFFENSE: </h3>
-      <h3 class="selectedoffense">{{ charge.penal_code }} {{ charge.label }}</h3>
-    </div><!--  class="offensetitle" -->
+		<table border="1" width="99%" cellspacing="0" cellpadding="0" class="cc-table" py:if="checked['immigration']">
+		  {% include 'law/charge_thead.html' %}
+		  <tbody>
+		    {% with "individual" as section %}
+		    {% include 'law/charge_row.html' %}
+		    {% endwith %}
+		  </tbody>
+		</table>
+	      </div><!-- /offensebox -->
+	    </div><!-- /tabbertab -->
+	    {% endfor %}
+	  </div> <!-- /outer-tabber -->
 
-    <table border="1" width="99%" cellspacing="0" cellpadding="0" class="cc-table" py:if="checked['immigration']">
-      {% include 'law/charge_thead.html' %}
-      <tbody>
-      {% with "individual" as section %}
-      {% include 'law/charge_row.html' %}
-      {% endwith %}
-      </tbody>
-</table>
+	  {% else %}
 
-  </div><!-- /offensebox -->
-</div><!-- /tabbertab -->
+	  {% if not charge.children %}
+	  {# only show message if this is a leaf charge #}
+	  <p>There are no consequences listed for this charge</p>
+	  {% endif %}
 
-{% endfor %}
-</div> <!-- /outer-tab -->
-{% else %}
+	  {% endif %}
 
-{% if not charge.children %}
-{# only show message if this is a leaf charge #}
-<p>There are no consequences listed for this charge</p>
-{% endif %}
-{% endif %}
+	  {% if not charge.children and charge.no_areas %}
+	  <p class="offensenotvetted">This charge has not been vetted for the following areas:</p>
 
-{% if not charge.children and charge.no_areas %}
-<p class="offensenotvetted">This charge has not been vetted for the following areas:</p>
+	  <ul>
+	    {% for area in charge.no_areas %}
+	    <li>{{ area.label }}</li>
+	    {% endfor %}
+	  </ul>
+	  {% endif %}
 
-<ul>
-{% for area in charge.no_areas %}
-<li>{{ area.label }}</li>
-{% endfor %}
-</ul>
-{% endif %}
-</div>
-</div> <!-- /beta-inner -->
-</div> <!-- /beta -->
+	</div><!-- /column-content -->
+      </div><!-- /results-contentbox -->
+    </div> <!-- /beta-inner -->
+  </div> <!-- /beta -->
 </div> <!-- /pagebody -->
 </div> <!-- /container-inner -->
 </div> <!-- /container -->
