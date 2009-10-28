@@ -111,11 +111,9 @@
 	<ul class="ccmenu">
 	  <li><a href="#{{area.area.name}}-showall-yes-{{area.id}}" class="hs-control">{{area.yes_count}} in {{area.area.label}}</a>
 	    <div id="{{area.area.name}}-showall-yes-{{area.id}}" class="hs-init-hide menu chargelist">
-	      <ul>
-		{% for cgroup in area.yes %}
-		{% include 'law/consequences_list.html' %}
-		{% endfor %}
-	      </ul>
+	      {% with area.yes as cgroups %}
+	      {% include 'law/cgroup_list.html' %}
+	      {% endwith %}
 	    </div>
 	  </li>
 	</ul>
@@ -127,11 +125,9 @@
 	<ul class="ccmenu">
 	  <li><a href="#{{area.area.name}}-showall-probably-{{area.id}}" class="hs-control">{{area.probably_count}} in {{area.area.label}}</a>
 	    <div id="{{area.area.name}}-showall-probably-{{area.id}}" class="hs-init-hide menu chargelist">
-	      <ul>
-		{% for cgroup in area.probably %}
-		{% include 'law/consequences_list.html' %}
-		{% endfor %}
-	      </ul>
+	      {% with area.probably as cgroups %}
+	      {% include 'law/cgroup_list.html' %}
+	      {% endwith %}
 	    </div>
 	  </li>
 	</ul>
@@ -143,11 +139,9 @@
 	<ul class="ccmenu">
 	  <li><a href="#{{area.area.name}}-showall-maybe-{{area.id}}" class="hs-control">{{area.maybe_count}} in {{area.area.label}}</a>
 	    <div id="{{area.area.name}}-showall-maybe-{{area.id}}" class="hs-init-hide menu chargelist">
-	      <ul>
-		{% for cgroup in area.maybe %}
-		{% include 'law/consequences_list.html' %}
-		{% endfor %}
-	      </ul>
+	      {% with area.maybe as cgroups %}
+	      {% include 'law/cgroup_list.html' %}
+	      {% endwith %}
 	    </div>
 	  </li>
 	</ul>
@@ -203,11 +197,9 @@
 	<ul class="ccmenu">
 	  <li><a href="#{{area.area.name}}-compare-showall-yes-{{area.area.id}}" class="hs-control">{{area.yes_count}} in {{area.area.label}}</a>
 	    <div id="{{area.area.name}}--compare-showall-yes-{{area.area.id}}" class="hs-init-hide menu chargelist">
-	      <ul>
-		{% for cgroup in area.yes %}
-		{% include 'law/consequences_list.html' %}
-		{% endfor %}
-	      </ul>
+	      {% with area.yes as cgroups %}
+	      {% include 'law/cgroup_list.html' %}
+	      {% endwith %}
 	    </div>
 	  </li>
 	</ul>
@@ -219,11 +211,9 @@
 	<ul class="ccmenu">
 	  <li><a href="#{{area.area.name}}-compare-showall-probably-{{area.area.id}}" class="hs-control">{{area.probably_count}} in {{area.area.label}}</a>
 	    <div id="{{area.area.name}}-compare-showall-probably-{{area.area.id}}" class="hs-init-hide menu chargelist">
-	      <ul>
-		{% for cgroup in area.probably %}
-		{% include 'law/consequences_list.html' %}
-		{% endfor %}
-	      </ul>
+	      {% with area.probably as cgroups %}
+	      {% include 'law/cgroup_list.html' %}
+	      {% endwith %}
 	    </div>
 	  </li>
 	</ul>
@@ -235,11 +225,9 @@
 	<ul class="ccmenu">
 	  <li><a href="#{{area.area.name}}-compare-showall-maybe-{{area.area.id}}" class="hs-control">{{area.maybe_count}} in {{area.area.label}}</a>
 	    <div id="{{area.area.name}}-compare-showall-maybe-{{area.area.id}}" class="hs-init-hide menu chargelist">
-	      <ul>
-		{% for cgroup in area.maybe %}
-		{% include 'law/consequences_list.html' %}
-		{% endfor %}
-	      </ul>
+	      {% with area.maybe as cgroups %}
+	      {% include 'law/cgroup_list.html %}
+	      {% endwith %}
 	    </div>
 	  </li>
 	</ul>
@@ -284,11 +272,9 @@
 	<ul class="ccmenu">
 	  <li><a href="#{{area.area.name}}-yes-{{area.id}}" class="hs-control">{{area.yes_count}} in {{area.area.label}}</a>
 	    <div id="{{area.area.name}}-yes-{{area.id}}" class="hs-init-hide menu chargelist">
-	      <ul>
-		{% for cgroup in area.yes %}
-		{% include 'law/consequences_list.html' %}
-		{% endfor %}
-	      </ul>
+	      {% with area.yes as cgroups %}
+	      {% include 'law/cgroup_list.html' %}
+	      {% endwith %}
 	    </div>
 	  </li>
 	</ul>
@@ -300,11 +286,9 @@
 	<ul class="ccmenu">
 	  <li><a href="#{{area.area.name}}-probably-{{area.id}}" class="hs-control">{{area.probably_count}} in {{area.area.label}}</a>
 	    <div id="{{area.area.name}}-probably-{{area.id}}" class="hs-init-hide menu chargelist">
-	      <ul>
-		{% for cgroup in area.probably %}
-		{% include 'law/consequences_list.html' %}
-		{% endfor %}
-	      </ul>
+	      {% with area.probably as cgroups %}
+	      {% include 'law/cgroup_list.html' %}
+	      {% endwith %}
 	    </div>
 	  </li>
 	</ul>
@@ -316,11 +300,9 @@
 	<ul class="ccmenu">
 	  <li><a href="#{{area.area.name}}-maybe-{{area.id}}" class="hs-control">{{area.maybe_count}} in {{area.area.label}}</a>
 	    <div id="{{area.area.name}}-maybe-{{area.id}}" class="hs-init-hide menu chargelist">
-	      <ul>
-		{% for cgroup in area.maybe %}
-		{% include 'law/consequences_list.html' %}
-		{% endfor %}
-	      </ul>
+	      {% with area.maybe as cgroups %}
+	      {% include 'law/cgroup_list.html' %}
+	      {% endwith %}
 	    </div>
 	  </li>
 	</ul>
