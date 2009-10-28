@@ -105,36 +105,9 @@
 	{{area.area.label}}: Breakdown by offense classification
       </td>
     </tr>
-    <tr valign="top">
-
-      {% with "showall" as section %}
-      {% with area.yes as cgroups %}
-      {% with area.yes_count as cgroups_count %}
-      {% with "yes" as certainty %}
-      {% include 'law/charge_cell.html' %}
-      {% endwith %}
-      {% endwith %}
-      {% endwith %}
-
-      {% with area.probably as cgroups %}
-      {% with area.probably_count as cgroups_count %}
-      {% with "probably" as certainty %}
-      {% include 'law/charge_cell.html' %}
-      {% endwith %}
-      {% endwith %}
-      {% endwith %}
-
-      {% with area.maybe as cgroups %}
-      {% with area.maybe_count as cgroups_count %}
-      {% with "maybe" as certainty %}
-      {% include 'law/charge_cell.html' %}
-      {% endwith %}
-      {% endwith %}
-      {% endwith %}
-
-      {% endwith %} {# /"showall" #}
-
-    </tr>
+    {% with "showall" as section %}
+    {% include 'law/charge_row.html' %}
+    {% endwith %} 
   </tbody>
 </table>
 {% endfor %}
@@ -177,36 +150,10 @@
 	{{area.area.label}}: Breakdown by offense classification
       </td>
     </tr>
-    <tr valign="top">
-
-      {% with "compare-showall" as section %}
-      {% with area.yes as cgroups %}
-      {% with area.yes_count as cgroups_count %}
-      {% with "yes" as certainty %}
-      {% include 'law/charge_cell.html' %}
-      {% endwith %}
-      {% endwith %}
-      {% endwith %}
-
-      {% with area.probably as cgroups %}
-      {% with area.probably_count as cgroups_count %}
-      {% with "probably" as certainty %}
-      {% include 'law/charge_cell.html' %}
-      {% endwith %}
-      {% endwith %}
-      {% endwith %}
-
-      {% with area.maybe as cgroups %}
-      {% with area.maybe_count as cgroups_count %}
-      {% with "maybe" as certainty %}
-      {% include 'law/charge_cell.html' %}
-      {% endwith %}
-      {% endwith %}
-      {% endwith %}
-
-      {% endwith %} {# /"compare-showall" #}
-
-    </tr>
+    {% with "compare-showall" as section %}
+    {% include 'law/charge_row.html' %}
+    {% endwith %}
+  </tbody>
 </table>
 {% endfor %}
 </div> <!-- /offenseblock -->
@@ -238,36 +185,9 @@
 	</tr>
       </thead>
       <tbody>
-	<tr valign="top">
-
       {% with "individual" as section %}
-      {% with area.yes as cgroups %}
-      {% with area.yes_count as cgroups_count %}
-      {% with "yes" as certainty %}
-      {% include 'law/charge_cell.html' %}
+      {% include 'law/charge_row.html' %}
       {% endwith %}
-      {% endwith %}
-      {% endwith %}
-
-      {% with area.probably as cgroups %}
-      {% with area.probably_count as cgroups_count %}
-      {% with "probably" as certainty %}
-      {% include 'law/charge_cell.html' %}
-      {% endwith %}
-      {% endwith %}
-      {% endwith %}
-
-      {% with area.maybe as cgroups %}
-      {% with area.maybe_count as cgroups_count %}
-      {% with "maybe" as certainty %}
-      {% include 'law/charge_cell.html' %}
-      {% endwith %}
-      {% endwith %}
-      {% endwith %}
-
-      {% endwith %} {# /"individual" #}
-
-    </tr>
       </tbody>
 </table>
 
