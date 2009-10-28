@@ -423,6 +423,8 @@ class Charge(models.Model):
         """ return all consequences for the charge, organized by Area -> Certainty. 
         for ease of template display. Include ones from parents """
 
+        certainties = ["yes","probably","maybe"]
+
         all_classifications = self.view_all()
         all_consequences = []
 
@@ -435,27 +437,23 @@ class Charge(models.Model):
         results = []
         for area in all_areas:
             area_results = dict(area=area)
-            area_results["yes"] = []
-            area_results["probably"] = []
-            area_results["maybe"] = []
+            for c in certainties:
+                area_results[c] = []
+
             for c in all_consequences:
                 if c['consequence'].consequence.area == area:
                     area_results[c['certainty']].append(c['consequence'])
 
-            # need to uniquify
-            area_results["yes"] = list(sets.Set(area_results["yes"]))
-            area_results["probably"] = list(sets.Set(area_results["probably"]))
-            area_results["maybe"] = list(sets.Set(area_results["maybe"]))
-            
-            # stick counts in here
-            area_results["yes_count"] = len(area_results["yes"])
-            area_results["probably_count"] = len(area_results["yes"])
-            area_results["maybe_count"] = len(area_results["yes"])
 
-            # still need the consequences grouped by their classification
-            area_results["yes"] = dtolist(cluster_by(lambda x: x.classification,area_results["yes"]))
-            area_results["probably"] = dtolist(cluster_by(lambda x: x.classification,area_results["probably"]))
-            area_results["maybe"] = dtolist(cluster_by(lambda x: x.classification,area_results["maybe"]))
+            for c in certainties:
+                # need to uniquify
+                area_results[c] = list(sets.Set(area_results[c]))
+                
+                # stick counts in here
+                area_results[c + "_count"] = len(area_results[c])
+                
+                # still need the consequences grouped by their classification
+                area_results[c] = dtolist(cluster_by(lambda x: x.classification,area_results[c]))
 
             results.append(area_results)
         return results
