@@ -82,7 +82,7 @@
 		  {{ charge.as_view_ul|safe }}
 		  {% endfor %}
 		</ul>
-		{% endif %}
+		{% endif %} {# /charge.children #}
 
 		{% if charge.view_all %}
 		<table border="1" width="99%" cellspacing="0" cellpadding="0" class="cc-table">
@@ -105,8 +105,6 @@
 		{% endif %} {# /charge.view_all #}
 	      </div> <!-- /offensebox -->
 
-	      <!-- charge 2 -->
-
 	      {% if charge2 %}
 	      <div class="offensebox">
 		<div class="offensetitle">
@@ -119,9 +117,9 @@
 		  {{ charge.as_view_ul|safe }}
 		  {% endfor %}
 		</ul>
-		{% endif %}
+		{% endif %} {# /charge2.children #}
 
-		{% if charge2.view_all %}
+		{% if charge2.view_all %} 
 
 		<table border="1" width="99%" cellspacing="0" cellpadding="0" class="cc-table">
 		  {% include 'law/charge_thead.html' %}
@@ -139,9 +137,9 @@
 		  </tbody>
 		</table>
 	      </div> <!-- /offenseblock -->
-	      {% endif %}
-	      <!-- /charge2 -->
+	      {% endif %} {# /charge2.view_all #}
 	    </div> <!-- /tabbertab show all -->
+	    {% endif %} {# /charge2 #}
 
 	    <!-- Now, repeat, isolating each area -->
 
@@ -170,14 +168,6 @@
 	    {% endfor %}
 	  </div> <!-- /outer-tabber -->
 
-	  {% else %}
-
-	  {% if not charge.children %}
-	  {# only show message if this is a leaf charge #}
-	  <p>There are no consequences listed for this charge</p>
-	  {% endif %}
-
-	  {% endif %}
 
 	  {% if not charge.children and charge.no_areas %}
 	  <p class="offensenotvetted">This charge has not been vetted for the following areas:</p>
