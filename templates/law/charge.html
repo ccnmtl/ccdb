@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load cc_extras %}
 {% load cache %}
 {% block title %}{{ charge.penal_code }} {{ charge.label }}{% endblock %}
 
@@ -136,7 +137,7 @@
 		    {% endfor %}
 		  </tbody>
 		</table>
-	      </div> <!-- /offenseblock -->
+	      </div> <!-- /offensebox -->
 	      {% endif %} {# /charge2.view_all #}
 	    </div> <!-- /tabbertab show all -->
 	    {% endif %} {# /charge2 #}
@@ -164,7 +165,42 @@
 		  </tbody>
 		</table>
 	      </div><!-- /offensebox -->
+
+
+	      {% if charge2 %}
+	      {# IMPORTANT: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! #}
+
+	      {% charge_area charge2 area.area %}
+
+	      {# that template tag overwrites the 'area' variable  #}
+	      {# in the template context with the matching results #}
+	      {# from charge2. very ugly but I can't figure out    #}
+	      {# a better way to do it.                            #}
+	      {# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! #}
+
+	      <div class="offensebox">
+		<div class="offensesorttype">
+		  Breakdown by offense classification
+		</div><!-- /offensesorttype -->
+
+		<div class="offensetitle">
+		  <h3 class="comparison">COMPARE WITH: </h3>
+		  <h3 class="selectedoffense">{{ charge2.penal_code }} {{ charge2.label }}</h3>
+		</div><!--  class="offensetitle" -->
+               
+		<table border="1" width="99%" cellspacing="0" cellpadding="0" class="cc-table" py:if="checked['immigration']">
+		  {% include 'law/charge_thead.html' %}
+		  <tbody>
+		    {% with "individual2" as section %}
+		    {% include 'law/charge_row.html' %}
+		    {% endwith %}
+		  </tbody>
+		</table>
+	      </div><!-- /offensebox -->
+	      {% endif %}
+
 	    </div><!-- /tabbertab -->
+
 	    {% endfor %}
 	  </div> <!-- /outer-tabber -->
 
