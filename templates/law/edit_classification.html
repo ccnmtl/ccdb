@@ -3,6 +3,7 @@
 {% block title %}{{ classification.label}}{% endblock %}
 
 {% block content %}
+<div id="editscreen">
 {{ block.super }}
 
 <h1>Classification: {{ classification.label }}</h1>
@@ -12,8 +13,8 @@
 {% if classification.all_charges %}
 <div id="charges" class="tabbertab" title="charges">
 <h2>charges</h2>
-<table class="categories">
-  <tr><th class="yes">yes</th><th class="probably">probably</th><th class="maybe">maybe</th></tr>
+		<table border="1" width="99%" cellspacing="0" cellpadding="0" class="cc-table">
+  <tr><th class="cc-yes">yes</th><th class="cc-probably">probably</th><th class="cc-maybe">maybe</th></tr>
   <tr>
     <td>
       <ul>
@@ -47,9 +48,8 @@
 <div id="consequences" class="tabbertab" title="consequences">
 <h2>consequences</h2>
 
-
-<table class="categories">
-  <tr><th class="yes">yes</th><th class="probably">probably</th><th class="maybe">maybe</th></tr>
+		<table border="1" width="99%" cellspacing="0" cellpadding="0" class="cc-table">
+  <tr><th class="cc-yes">yes</th><th class="cc-probably">probably</th><th class="cc-maybe">maybe</th></tr>
   <tr>
     <td>
       <ul>
@@ -107,5 +107,5 @@ comment: <textarea name="comment"></textarea><br />
 </div>
 
 </div>
-
+</div>
 {% endblock %}

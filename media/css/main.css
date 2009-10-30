@@ -824,6 +824,10 @@ ul.tabbernav li
 	text-align: center;
 }
 
+#editscreen ul.tabbernav li {
+  width: 200px;
+}
+
 ul.tabbernav li a
 {
 	display: block;
@@ -832,6 +836,10 @@ ul.tabbernav li a
 	border: 0;
 	border-bottom: 1px solid #999;
 	background: #dce7fb url('../img/bg_tabbernav.jpg') left top no-repeat;
+}
+
+#editscreen ul.tabbernav li a {
+ background: #dce7fb;
 }
 
 ul.tabbernav li a:link { color: #448; }
@@ -981,3 +989,5 @@ ul.tabbernav li.tabberactive a
 
 
 ul#primarynavtabs li { display: inline;}
+
+#editscreen {background: #fff; margin: 1em;}
