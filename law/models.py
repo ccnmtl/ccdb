@@ -444,17 +444,18 @@ class Charge(models.Model):
                 if c['consequence'].consequence.area == area:
                     area_results[c['certainty']].append(c['consequence'])
 
-
+            total_count = 0
             for c in certainties:
                 # need to uniquify
                 area_results[c] = list(sets.Set(area_results[c]))
                 
                 # stick counts in here
                 area_results[c + "_count"] = len(area_results[c])
+                total_count += len(area_results[c])
                 
                 # still need the consequences grouped by their classification
                 area_results[c] = dtolist(cluster_by(lambda x: x.classification,area_results[c]))
-
+            area_results['total_count'] = total_count
             results.append(area_results)
         return results
 

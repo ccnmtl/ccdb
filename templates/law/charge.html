@@ -93,6 +93,7 @@
 		  {% include 'law/charge_thead.html' %}
 		  <tbody>
 		    {% for area in charge.all_consequences_by_area %}
+		    {% if area.total_count %}
 		    <tr valign="top">
 		      <td colspan="3" class="offensesorttype2">
 			{{area.area.label}}: Breakdown by offense classification
@@ -102,7 +103,7 @@
 		    {% with "showall" as section %}
 		    {% include 'law/charge_row.html' %}
 		    {% endwith %} 
-
+		    {% endif %}
 		    {% endfor %}
 		  </tbody>
 		</table>
@@ -129,6 +130,7 @@
 		  {% include 'law/charge_thead.html' %}
 		  <tbody>
 		    {% for area in charge2.all_consequences_by_area %}
+		    {% if area.total_count %}
 		    <tr valign="top">
 		      <td colspan="3" class="offensesorttype2">
 			{{area.area.label}}: Breakdown by offense classification
@@ -137,7 +139,9 @@
 		    {% with "compare-showall" as section %}
 		    {% include 'law/charge_row.html' %}
 		    {% endwith %}
+		    {% endif %}
 		    {% endfor %}
+
 		  </tbody>
 		</table>
 	      </div> <!-- /offensebox -->
@@ -159,6 +163,7 @@
 		  <h3 class="selectedoffense">{{ charge.penal_code }} {{ charge.label }}</h3>
 		</div><!--  class="offensetitle" -->
 
+		{% if area.total_count %}
 		<table border="1" width="99%" cellspacing="0" cellpadding="0" class="cc-table" py:if="checked['immigration']">
 		  {% include 'law/charge_thead.html' %}
 		  <tbody>
@@ -167,6 +172,9 @@
 		    {% endwith %}
 		  </tbody>
 		</table>
+		{% else %}
+		<p>There are no {{area.area.label}} consequences for this charge.</p>
+		{% endif %}
 	      </div><!-- /offensebox -->
 
 
@@ -190,7 +198,7 @@
 		  <h3 class="comparison">COMPARE WITH: </h3>
 		  <h3 class="selectedoffense">{{ charge2.penal_code }} {{ charge2.label }}</h3>
 		</div><!--  class="offensetitle" -->
-               
+		{% if area.total_count %}		
 		<table border="1" width="99%" cellspacing="0" cellpadding="0" class="cc-table" py:if="checked['immigration']">
 		  {% include 'law/charge_thead.html' %}
 		  <tbody>
@@ -199,6 +207,9 @@
 		    {% endwith %}
 		  </tbody>
 		</table>
+		{% else %}
+		<p>There are no {{area.area.label}} consequences for this charge.</p>
+		{% endif %}
 	      </div><!-- /offensebox -->
 	      {% endif %}
 
