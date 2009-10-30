@@ -16,11 +16,13 @@
   {% if charge.children %}
   <div id="view" class="tabbertab" title="sub-charges">
 
-<ul>
+<div class="column-content hide-print">
+<ul id="offenses" class="menu">
 {% for child in charge.children %}
 {{ child.as_edit_ul|safe}}
 {% endfor %}
 </ul>
+</div>
 </div>
 {% endif %}
 
