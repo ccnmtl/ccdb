@@ -2,7 +2,9 @@
 {% load cc_extras %}
 {% load cache %}
 {% block title %}{{ charge.penal_code }} {{ charge.label }}{% endblock %}
-
+{% block js %}
+    <script src="/site_media/js/splitanchor.js" type="text/javascript"></script>
+{% endblock %}
 {% block breadcrumbs %}
 {% for p in charge.parents %}&raquo;<a href="{{p.get_absolute_url}}">{{ p.penal_code }} {{ p.label }}</a>{% endfor %}
 {% endblock %}
@@ -22,7 +24,7 @@
 
 	<div class="tabsbox">
 	  <div id="comparelisttab" class="tabs activetab">
-	    <a href="#comparelist" onclick="splitanchor(this); return false;">Compare</a>
+	    <a href="#comparelist" id="comparelink" onclick="splitanchor(this); return false;">Compare</a>
 	  </div> <!-- /comparelisttab -->
 
 	  <div id="newsearchlisttab" class="tabs">

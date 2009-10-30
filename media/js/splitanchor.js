@@ -26,3 +26,12 @@ function splitanchor(a) {
 	}
 
 }
+
+function initAnchor() {
+  var compare = $('comparelink');
+  if(compare) {
+    splitanchor(compare);
+  }
+}
+
+addLoadEvent(initAnchor)
