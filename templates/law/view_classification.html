@@ -1,47 +1,15 @@
 {% extends "base.html" %}
-
+{% load markup %}
 {% block content %}
 {{ block.super }}
 
-<h1>Classification: {{ classification.label }}</h1>
-<p>{{ classification.description }}</p>
-
-{% if classification.all_charges %}
-<h2>charges</h2>
-<table class="categories">
-  <tr><th class="yes">yes</th><th class="probably">probably</th><th class="maybe">maybe</th></tr>
-  <tr>
-    <td>
-      <ul>
-	{% for cc in classification.yes %}
-	<li><a href="{{cc.charge.get_absolute_url}}">{{ cc.charge.label }}</a></li>
-	{% endfor %}
-      </ul>
-    </td>
-
-    <td>
-      <ul>
-	{% for cc in classification.probably %}
-	<li><a href="{{cc.charge.get_absolute_url}}">{{ cc.charge.label }}</a></li>
-	{% endfor %}
-      </ul>
-    </td>
-
-    <td>
-      <ul>
-	{% for cc in classification.maybe %}
-	<li><a href="{{cc.charge.get_absolute_url}}">{{ cc.charge.label }}</a></li>
-	{% endfor %}
-      </ul>
-    </td>
-  </tr>
-</table>
-
-{% endif %}
+<h1>{{ classification.label }}</h1>
+<h2>What is a {{ classification.label }}?</h2>
+<div class="description">{{ classification.description|markdown }}</div>
 
 {% if classification.consequences %}
 
-<h2>consequences</h2>
+<h2>What are the consequences of a {{ classification.label }}?</h2>
 
 
 <table class="categories">
@@ -75,6 +43,42 @@
 </table>
 
 {% endif %}
+
+
+
+{% if classification.all_charges %}
+<h2>Which offenses may be {{ classification.label }}?</h2>
+<table class="categories">
+  <tr><th class="yes">yes</th><th class="probably">probably</th><th class="maybe">maybe</th></tr>
+  <tr>
+    <td>
+      <ul>
+	{% for cc in classification.yes %}
+	<li><a href="{{cc.charge.get_absolute_url}}">{{ cc.charge.label }}</a></li>
+	{% endfor %}
+      </ul>
+    </td>
+
+    <td>
+      <ul>
+	{% for cc in classification.probably %}
+	<li><a href="{{cc.charge.get_absolute_url}}">{{ cc.charge.label }}</a></li>
+	{% endfor %}
+      </ul>
+    </td>
+
+    <td>
+      <ul>
+	{% for cc in classification.maybe %}
+	<li><a href="{{cc.charge.get_absolute_url}}">{{ cc.charge.label }}</a></li>
+	{% endfor %}
+      </ul>
+    </td>
+  </tr>
+</table>
+
+{% endif %}
+
 
 
 
