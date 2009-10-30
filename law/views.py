@@ -286,7 +286,7 @@ def add_classification(request):
                              user=request.user,
                              description="added classification **%s**" % c.label)
 
-    return HttpResponseRedirect("/edit/classification/")
+    return HttpResponseRedirect("/edit/classification/%s/" % c.name)
 
 @login_required
 @rendered_with('law/edit_classification.html')

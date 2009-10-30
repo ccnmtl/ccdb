@@ -77,13 +77,18 @@ reparent to: <select name="sibling_id">
   {% if charge.all_classifications %}
   <div id="view-categories" class="tabbertab" title="view">
 
-<table class="categories">
-  <tr>
+<table border="1" width="99%" cellspacing="0"
+       cellpadding="0" class="categories">
+<thead>
+  <tr valign="top">
     <th></th>
-    <th class="yes">yes</th>
-    <th class="probably">probably</th>
-    <th class="maybe">maybe</th></tr>
-  <tr>
+    <th class="cc-yes">YES</th>
+    <th class="cc-probably">PROBABLY</th>
+    <th class="cc-maybe">MAYBE</th>
+  </tr>
+</thead>
+
+  <tbody>
     <th>direct</th>
     <td>
       <ul>
@@ -177,7 +182,7 @@ reparent to: <select name="sibling_id">
   </tr>
 {% endfor %}
 
-
+</tbody>
 </table>
 
 </div>
