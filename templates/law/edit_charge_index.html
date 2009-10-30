@@ -1,5 +1,7 @@
 {% extends "law/edit_base.html" %}
+{% block js %}
 
+{% endblock %}
 {% block content %}
 {{ block.super }}
 
@@ -8,13 +10,14 @@
 
 <div class="tabber">
 <div id="list" class="tabbertab" title="charges">
-
-<ul>
+<br />
+      <div class="column-content hide-print">
+<ul id="offenses" class="menu">
 {% for charge in charges %}
 {{ charge.as_edit_ul|safe }}
 {% endfor %}
 </ul>
-
+</div>
 </div>
 
 <div id="add" class="tabbertab" title="add top level charge">
