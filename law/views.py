@@ -88,16 +88,14 @@ def add_charge(request,slugs=""):
     snapshot = working_snapshot()
     slug = slugify(request.POST['penal_code'] + " " + request.POST['label'])[:50]
     # need to check for duplicate slugs and fix
-    try:
-        ct = Charge.objects.get(slug=slug)
+    ct = Charge.objects.filter(name=slug)
+    if ct.count() > 0:
         # uh oh. there's already a charge with that slug
         # need to come up with a relatively unique new one
         # this is the most reasonable approach I can think of
         slug = slug[:-3] + "%03d" % (Charge.objects.count() % 1000)
         # any better ideas?
-    except Charge.DoesNotExist:
-        # that's good
-        pass
+
     c = Charge.objects.create(snapshot=snapshot,
                               label=request.POST['label'],
                               penal_code=request.POST['penal_code'],
