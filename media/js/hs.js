@@ -55,9 +55,9 @@ function setCookie(name, value, expires, path, domain, secure) {
 }
 
 function hs_loadCookie() {
-    x = evalJSON(getCookie(cookie_name()));
-    if (x) {
-	hs_ids = x;
+    var c = getCookie(cookie_name());
+    if (c !== null) {
+	hs_ids = evalJSON(c);
     }
 }
 
