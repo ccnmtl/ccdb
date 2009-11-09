@@ -1,1 +1,1 @@
-Collatoral Consequences Calculator
+Collateral Consequences Calculator
