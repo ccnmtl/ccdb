@@ -142,7 +142,7 @@ def add_area_to_charge(request,slugs=""):
     ca = ChargeArea.objects.create(charge=charge,area=area)
     e = Event.objects.create(snapshot=snapshot,
                              user=request.user,
-                             description="charge **%s** added to area **%s**" % (charge.label,area.label),
+                             description="charge **%s** vetted for area **%s**" % (charge.label,area.label),
                              note=request.POST.get('comment',''))
     return HttpResponseRedirect("/edit" + charge.get_absolute_url())
 
@@ -156,7 +156,7 @@ def remove_area_from_charge(request,slugs="",ca_id=""):
     ca = get_object_or_404(ChargeArea,id=ca_id)
     e = Event.objects.create(snapshot=snapshot,
                              user=request.user,
-                             description="charge **%s** removed from area **%s**" % (charge.label,ca.area.label))
+                             description="charge **%s** vetting removed for area **%s**" % (charge.label,ca.area.label))
     ca.delete()
     return HttpResponseRedirect("/edit" + charge.get_absolute_url())
 
