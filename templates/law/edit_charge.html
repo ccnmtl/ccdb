@@ -201,7 +201,7 @@ reparent to: <select name="sibling_id">
 </div>
 </div>
 
-<h2>Areas</h2>
+<h2>Vet for Areas</h2>
 
 <div class="tabber">
 {% if charge.chargearea_set.all %}
@@ -221,7 +221,7 @@ reparent to: <select name="sibling_id">
 <table>
 {{ charge.add_area_form.as_table }}
 </table>
-<input type="submit" value="show consequences for this charge in the selected area" />
+<input type="submit" value="display consequences and remove 'not vetted' notice" />
 </form>
 
 </div>
