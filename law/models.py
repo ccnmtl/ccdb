@@ -5,6 +5,7 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404
 from django import forms
 from pprint import pprint
+import re
 
 class Snapshot(models.Model):
     label = models.CharField(max_length=256)
@@ -587,6 +588,12 @@ class Consequence(models.Model):
 
     def __unicode__(self):
         return self.label
+
+    def display_label(self):
+        if "[" in self.label:
+            return re.sub(r"\s*\[[^\[]+\]","",self.label)
+        else:
+            return self.label
 
     def get_absolute_url(self):
         return self.area.get_absolute_url() + self.name + "/"

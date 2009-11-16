@@ -14,7 +14,7 @@
 
 <ul type="disc">
 {% for cc in classification.all_consequences %}
-<li><a name="{{cc.consequence.id}}"><b>{{ cc.consequence.label }}</b></a>
+<li><a name="{{cc.consequence.id}}"><b>{{ cc.consequence.display_label }}</b></a>
 {{cc.consequence.description|markdown}}
 </li>
 {% endfor %}
