@@ -1,4 +1,5 @@
 {% extends "law/edit_base.html" %}
+{% load markup %}
 
 {% block title %}{{ classification.label}}{% endblock %}
 
@@ -7,7 +8,7 @@
 {{ block.super }}
 
 <h1>Classification: {{ classification.label }}</h1>
-<p>{{ classification.description }}</p>
+<p>{{ classification.description|markdown }}</p>
 
 <div class="tabber">
 {% if classification.all_charges %}

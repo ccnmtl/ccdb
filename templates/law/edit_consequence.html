@@ -1,11 +1,11 @@
 {% extends "law/edit_base.html" %}
-
+{% load markup %}
 {% block content %}
 <div id="editscreen">
 {{ block.super }}
 
 <h1><a href="../">{{consequence.area.label}}</a>/ {{ consequence.label }}</h1>
-<p>{{ consequence.description }}</p>
+<p>{{ consequence.description|markdown }}</p>
 
 <div class="tabber">
 <div id="classifications" class="tabbertab" title="classifications">
