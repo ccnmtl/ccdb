@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load markup %}
+{% block bodyclass %}class="popupwin"{% endblock %}
 {% block content %}
 {{ block.super }}
 
@@ -7,5 +8,17 @@
 <h2>What is a {{ classification.label }}?</h2>
 <div class="description">{{ classification.description|markdown }}</div>
 
+{% if classification.consequences %}
+
+<h2>Consequences of {{ classification.label }} conviction</h2> 
+
+<ul type="disc">
+{% for cc in classification.all_consequences %}
+<li><a name="{{cc.consequence.id}}"><b>{{ cc.consequence.label }}</b></a>
+{{cc.consequence.description|markdown}}
+</li>
+{% endfor %}
+</ul>
+{% endif %}
 
 {% endblock %}

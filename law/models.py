@@ -545,6 +545,9 @@ class Classification(models.Model):
 
     def all_maybe_consequences(self):
         return list(self.maybe_consequences()) + list(self.all_probably_consequences())
+
+    def all_consequences(self):
+        return list(self.yes_consequences()) + list(self.probably_consequences()) + list(self.maybe_consequences())
     
     def no_consequences(self):
         """ return list of consequences that are *not* 

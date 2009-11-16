@@ -1,7 +1,7 @@
 <li class="offensecategory"><a target="_blank" href="{{cgroup.classification.get_absolute_url}}">{{cgroup.classification.label}}</a>
   <ul class="selectedcharges">
     {% for consequence in cgroup.consequences %}
-    <li><a target="_blank" href="{{consequence.consequence.get_absolute_url}}">{{consequence.consequence.label}}</a></li>
+    <li><a target="_blank" href="{{cgroup.classification.get_absolute_url}}#{{consequence.consequence.id}}">{{consequence.consequence.label}}</a></li>
     {% endfor %}
   </ul>
 </li>
