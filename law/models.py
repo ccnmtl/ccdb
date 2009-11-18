@@ -548,7 +548,9 @@ class Classification(models.Model):
         return list(self.maybe_consequences()) + list(self.all_probably_consequences())
 
     def all_consequences(self):
-        return list(self.yes_consequences()) + list(self.probably_consequences()) + list(self.maybe_consequences())
+        all_consequences = list(self.yes_consequences()) + list(self.probably_consequences()) + list(self.maybe_consequences())
+        all_consequences.sort(key=lambda x: x.ordinality)
+        return all_consequences
     
     def no_consequences(self):
         """ return list of consequences that are *not* 

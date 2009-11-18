@@ -308,6 +308,12 @@ def view_classification(request,slug):
     classification = get_object_or_404(Classification,snapshot=snapshot,name=slug)
     return dict(classification=classification)
 
+@rendered_with('law/view_classification.html')
+def preview_classification(request,slug):
+    snapshot = working_snapshot()
+    classification = get_object_or_404(Classification,snapshot=snapshot,name=slug)
+    return dict(classification=classification)
+
 
 @login_required
 def delete_classification(request,slug):
