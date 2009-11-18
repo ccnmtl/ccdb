@@ -1,10 +1,17 @@
-{% extends "base.html" %}
+{% extends "popupbase.html" %}
 {% load markup %}
 {% block bodyclass %}class="popupwin"{% endblock %}
 {% block content %}
 {{ block.super }}
 
-<h1>{{ classification.label }}</h1>
+<div id="header"> 
+	<div id="header_inner"> 
+	<h1>{{classification.label}}</h1> 
+	</div> 
+</div> 
+
+<div id="pagebody"> 
+
 <h2>What is a {{ classification.label }}?</h2>
 <div class="description">{{ classification.description|markdown }}</div>
 
@@ -20,5 +27,5 @@
 {% endfor %}
 </ul>
 {% endif %}
-
+</div>
 {% endblock %}
