@@ -202,27 +202,33 @@ class Charge(models.Model):
 
     def as_edit_ul(self):
         """ return html for the charge and its children as an <ul> """
-        return self.as_ul(link_prefix="/edit")
+        return self.as_ul(link_prefix="/edit",hs=False)
 
     def as_view_ul(self):
         """ return html for the charge and its children as an <ul> """
-        return self.as_ul(link_prefix="")
+        return self.as_ul(link_prefix="",hs=True)
 
-    def as_ul(self,link_prefix=""):
+    def as_ul(self,link_prefix="",hs=True):
         """ return html for the charge and its children as an <ul> """
         leaf = not self.has_children()
 
         if leaf:
             link = "<a href=\"" + link_prefix + self.get_absolute_url() + "\">"
         else:
-            link = "<a href=\"#charge-" + str(self.id) + "\" class=\"hs-control\">"
+            hsclass="hs-control"
+            if not hs:
+                hsclass=""
+            link = "<a href=\"#charge-" + str(self.id) + "\" class=\"" + hsclass + "\">"
         parts = ["<li class=\"menuitem\">",link,self.penal_code," ",
                  self.label,"</a>"]
 
         if not leaf:
-            parts.append("<ul id=\"charge-" + str(self.id) + "\" class=\"hs-init-hide menu\">")
+            hsclass="hs-init-hide"
+            if not hs:
+                hsclass=""
+            parts.append("<ul id=\"charge-" + str(self.id) + "\" class=\"" + hsclass + " menu\">")
             for child in self.children():
-                parts.append(child.as_ul(link_prefix=link_prefix))
+                parts.append(child.as_ul(link_prefix=link_prefix,hs=hs))
             parts.append("</ul>")
         parts.append("</li>")
         return "".join(parts)
