@@ -1,7 +1,20 @@
-<li class="offensecategory"><a target="_blank" href="{{cgroup.classification.get_absolute_url}}">{{cgroup.classification.label}}</a>
+<li class="offensecategory">
+  {% if cgroup.classification.description %}
+  <a target="_blank"
+  href="{{cgroup.classification.get_absolute_url}}">{{cgroup.classification.label}}</a>
+  {% else %}
+  {{cgroup.classification.label}}
+  {% endif %}
   <ul class="selectedcharges">
     {% for consequence in cgroup.consequences %}
-    <li><a target="_blank" href="{{cgroup.classification.get_absolute_url}}#{{consequence.consequence.id}}">{{consequence.consequence.display_label}}</a></li>
+    <li>
+      {% if cgroup.classification.description %}
+      <a target="_blank"
+      href="{{cgroup.classification.get_absolute_url}}#{{consequence.consequence.id}}">{{consequence.consequence.display_label}}</a>
+      {% else %}
+      {{consequence.consequence.display_label}}
+      {% endif %}
+    </li>
     {% endfor %}
   </ul>
 </li>
