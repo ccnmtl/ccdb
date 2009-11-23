@@ -3,6 +3,7 @@ from forms import *
 from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render_to_response, get_object_or_404
 from django import forms
 from datetime import datetime
@@ -29,25 +30,25 @@ def index(request):
     return dict(charges=snapshot.top_level_charges())
 
 
-@login_required
+@user_passes_test(lambda u: u.is_staff)
 @rendered_with('law/edit_index.html')
 def edit_index(request):
     return dict(snapshots=Snapshot.objects.all(),
                 working_snapshot=working_snapshot(),
                 public_snapshot=public_snapshot())
 
-@login_required
+@user_passes_test(lambda u: u.is_staff)
 @rendered_with('law/edit_snapshots_index.html')
 def edit_snapshots(request):
     return dict(snapshots=Snapshot.objects.all().order_by("-created"))
 
 
-@login_required
+@user_passes_test(lambda u: u.is_staff)
 @rendered_with('law/edit_snapshot.html')
 def edit_snapshot(request,id):
     return dict(snapshot = get_object_or_404(Snapshot,id=id))
 
-@login_required
+@user_passes_test(lambda u: u.is_staff)
 def clone_snapshot(request,id):
     snapshot = get_object_or_404(Snapshot,id=id)
     new_snapshot = snapshot.clone(label=request.POST.get('label','new snapshot'),
@@ -56,7 +57,7 @@ def clone_snapshot(request,id):
     return HttpResponseRedirect("/edit/")
 
 
-@login_required
+@user_passes_test(lambda u: u.is_staff)
 def approve_snapshot(request,id):
     snapshot = get_object_or_404(Snapshot,id=id)
     snapshot.status = 'vetted'
@@ -72,7 +73,7 @@ def approve_snapshot(request,id):
     return HttpResponseRedirect("/edit/snapshots/")
                                            
 
-@login_required
+@user_passes_test(lambda u: u.is_staff)
 @rendered_with('law/edit_charge_index.html')
 def edit_charge_index(request):
     snapshot = working_snapshot()
@@ -80,7 +81,7 @@ def edit_charge_index(request):
                 charges=snapshot.top_level_charges(),
                 add_charge_form=AddChargeForm())
                 
-@login_required
+@user_passes_test(lambda u: u.is_staff)
 def add_charge(request,slugs=""):
     if slugs != "" and slugs[-1] == "/":
         slugs = slugs[:-1]
@@ -115,7 +116,7 @@ def add_charge(request,slugs=""):
     else:
         return HttpResponseRedirect("/edit/charge/")
 
-@login_required
+@user_passes_test(lambda u: u.is_staff)
 def add_charge_classification(request,slugs=""):
     if slugs[-1] == "/":
         slugs = slugs[:-1]
@@ -131,7 +132,7 @@ def add_charge_classification(request,slugs=""):
                              note=request.POST.get('comment',''))
     return HttpResponseRedirect("/edit" + charge.get_absolute_url())
 
-@login_required
+@user_passes_test(lambda u: u.is_staff)
 def add_area_to_charge(request,slugs=""):
     if slugs[-1] == "/":
         slugs = slugs[:-1]
@@ -146,7 +147,7 @@ def add_area_to_charge(request,slugs=""):
                              note=request.POST.get('comment',''))
     return HttpResponseRedirect("/edit" + charge.get_absolute_url())
 
-@login_required
+@user_passes_test(lambda u: u.is_staff)
 def remove_area_from_charge(request,slugs="",ca_id=""):
     if slugs[-1] == "/":
         slugs = slugs[:-1]
@@ -161,7 +162,7 @@ def remove_area_from_charge(request,slugs="",ca_id=""):
     return HttpResponseRedirect("/edit" + charge.get_absolute_url())
 
 
-@login_required
+@user_passes_test(lambda u: u.is_staff)
 def reparent_charge(request,slugs=""):
     if slugs[-1] == "/":
         slugs = slugs[:-1]
@@ -174,7 +175,7 @@ def reparent_charge(request,slugs=""):
     ncc = ChargeChildren.objects.create(child=charge,parent=new_parent)
     return HttpResponseRedirect("/edit" + charge.get_absolute_url())
 
-@login_required
+@user_passes_test(lambda u: u.is_staff)
 def delete_charge(request,slugs=""):
     if slugs[-1] == "/":
         slugs = slugs[:-1]
@@ -193,7 +194,7 @@ def delete_charge(request,slugs=""):
     return HttpResponseRedirect(redirect_to)
 
 
-@login_required
+@user_passes_test(lambda u: u.is_staff)
 @rendered_with('law/edit_search.html')
 def edit_search(request):
     q = request.GET['q']
@@ -201,7 +202,7 @@ def edit_search(request):
     return dict(charges=Charge.objects.filter(snapshot=snapshot,label__icontains=q))
 
 
-@login_required
+@user_passes_test(lambda u: u.is_staff)
 def remove_charge_classification(request,slugs="",classification_id=""):
     if slugs[-1] == "/":
         slugs = slugs[:-1]
@@ -222,7 +223,7 @@ def remove_charge_classification(request,slugs="",classification_id=""):
     return render_to_response("law/remove_charge_classification.html",dict(charge=charge,classification=classification))
 
 
-@login_required
+@user_passes_test(lambda u: u.is_staff)
 @rendered_with('law/edit_charge.html')
 def edit_charge(request,slugs):
     slugs = slugs.split("/")
@@ -251,14 +252,14 @@ def view_charge(request,slugs):
     return dict(charge=charge,charge2=charge2,charges=snapshot.top_level_charges())
 
 
-@login_required
+@user_passes_test(lambda u: u.is_staff)
 @rendered_with('law/edit_classification_index.html')
 def edit_classification_index(request):
     snapshot = working_snapshot()
     return dict(classifications=Classification.objects.filter(snapshot=snapshot),
                 add_classification_form=AddClassificationForm())
 
-@login_required
+@user_passes_test(lambda u: u.is_staff)
 def add_classification(request):
     f = AddClassificationForm(request.POST)
     snapshot = working_snapshot()
@@ -286,7 +287,7 @@ def add_classification(request):
 
     return HttpResponseRedirect("/edit/classification/%s/" % c.name)
 
-@login_required
+@user_passes_test(lambda u: u.is_staff)
 @rendered_with('law/edit_classification.html')
 def edit_classification(request,slug):
     snapshot = working_snapshot()
@@ -315,7 +316,7 @@ def preview_classification(request,slug):
     return dict(classification=classification)
 
 
-@login_required
+@user_passes_test(lambda u: u.is_staff)
 def delete_classification(request,slug):
     snapshot = working_snapshot()
     classification = get_object_or_404(Classification,snapshot=snapshot,name=slug)
@@ -327,14 +328,14 @@ def delete_classification(request,slug):
     return HttpResponseRedirect("/edit/classification/")
 
 
-@login_required
+@user_passes_test(lambda u: u.is_staff)
 @rendered_with('law/edit_area_index.html')
 def edit_area_index(request):
     snapshot = working_snapshot()
     return dict(areas=Area.objects.filter(snapshot=snapshot),
                 add_area_form=AddAreaForm())
 
-@login_required
+@user_passes_test(lambda u: u.is_staff)
 def add_area(request):
     f = AddAreaForm(request.POST)
     snapshot = working_snapshot()
@@ -348,7 +349,7 @@ def add_area(request):
 
     return HttpResponseRedirect("/edit/area/")
 
-@login_required
+@user_passes_test(lambda u: u.is_staff)
 @rendered_with('law/edit_area.html')
 def edit_area(request,slug):
     snapshot = working_snapshot()
@@ -371,7 +372,7 @@ def view_area(request,slug):
     return dict(area=area,add_consequence_form=AddConsequenceForm())
 
 
-@login_required
+@user_passes_test(lambda u: u.is_staff)
 def delete_area(request,slug):
     snapshot = working_snapshot()
     area = get_object_or_404(Area,snapshot=snapshot,name=slug)
@@ -383,7 +384,7 @@ def delete_area(request,slug):
     area.delete()
     return HttpResponseRedirect("/edit/area/")
 
-@login_required
+@user_passes_test(lambda u: u.is_staff)
 def add_consequence(request,slug):
     snapshot = working_snapshot()
     area = get_object_or_404(Area,snapshot=snapshot,name=slug)
@@ -401,7 +402,7 @@ def add_consequence(request,slug):
     return HttpResponseRedirect("/edit" + area.get_absolute_url())
 
 
-@login_required
+@user_passes_test(lambda u: u.is_staff)
 @rendered_with('law/edit_consequence.html')
 def edit_consequence(request,slug,cslug):
     snapshot = working_snapshot()
@@ -429,7 +430,7 @@ def view_consequence(request,slug,cslug):
 
 
 
-@login_required
+@user_passes_test(lambda u: u.is_staff)
 def delete_consequence(request,slug,cslug):
     snapshot = working_snapshot()
     area = get_object_or_404(Area,snapshot=snapshot,name=slug)
@@ -440,7 +441,7 @@ def delete_consequence(request,slug,cslug):
     consequence.delete()
     return HttpResponseRedirect("/edit" + area.get_absolute_url())
 
-@login_required
+@user_passes_test(lambda u: u.is_staff)
 def add_classification_to_consequence(request,slug,cslug):
     snapshot = working_snapshot()
     area = get_object_or_404(Area,snapshot=snapshot,name=slug)
@@ -454,7 +455,7 @@ def add_classification_to_consequence(request,slug,cslug):
                              note=request.POST.get('comment',''))
     return HttpResponseRedirect("/edit" + consequence.get_absolute_url())
 
-@login_required
+@user_passes_test(lambda u: u.is_staff)
 def add_consequence_to_classification(request,slug):
     snapshot = working_snapshot()
     consequence = get_object_or_404(Consequence,id=request.POST['consequence_id'])
@@ -468,7 +469,7 @@ def add_consequence_to_classification(request,slug):
     return HttpResponseRedirect("/edit" + classification.get_absolute_url())
 
 
-@login_required
+@user_passes_test(lambda u: u.is_staff)
 def remove_consequence_from_classification(request,slug,consequence_id):
     snapshot = working_snapshot()
     consequence = get_object_or_404(Consequence,id=consequence_id)
