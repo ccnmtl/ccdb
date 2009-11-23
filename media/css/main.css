@@ -987,6 +987,8 @@ ul.tabbernav li.tabberactive a
 	margin-bottom: 6px;
 }
 
+.popupwin li a { color: #000; text-decoration: none;}
+
 
 ul#primarynavtabs li { display: inline;}
 
