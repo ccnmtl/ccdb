@@ -389,11 +389,18 @@ def add_consequence(request,slug):
     snapshot = working_snapshot()
     area = get_object_or_404(Area,snapshot=snapshot,name=slug)
     name = slugify(request.POST['label'])[:50]
-    r = Consequence.objects.filter(area=area,name=name)
-    if r.count() > 0:
-        appendix = "-%d" % r.count()
-        lapp = len(appendix)
-        name = name[:-lapp] + appendix
+    # they really like naming consequences similarly so we have to 
+    # work hard to keep slugs unique
+    i = 1
+    while 1:
+        r = Consequence.objects.filter(area=area,name=name)
+        if r.count() == 0:
+            break
+        else:
+            appendix = "-%d" % i
+            i += 1
+            lapp = len(appendix)
+            name = name[:-lapp] + appendix
         
     consequence = Consequence.objects.create(area=area,
                                              label=request.POST['label'],
