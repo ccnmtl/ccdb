@@ -391,7 +391,10 @@ def add_consequence(request,slug):
     name = slugify(request.POST['label'])[:50]
     r = Consequence.objects.filter(area=area,name=name)
     if r.count() > 0:
-        name = name + "-1"
+        appendix = "-%d" % r.count()
+        lapp = len(appendix)
+        name = name[:-lapp] + appendix
+        
     consequence = Consequence.objects.create(area=area,
                                              label=request.POST['label'],
                                              description=request.POST.get('description',''),
