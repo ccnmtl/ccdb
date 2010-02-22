@@ -215,10 +215,10 @@ class Charge(models.Model):
         if leaf:
             link = "<a href=\"" + link_prefix + self.get_absolute_url() + "\">"
         else:
-            hsclass="hs-control"
             if not hs:
-                hsclass=""
-            link = "<a href=\"#charge-" + str(self.id) + "\" class=\"" + hsclass + "\">"
+                link = "<a href=\"" + link_prefix + self.get_absolute_url() + "\">"
+            else:
+                link = "<a href=\"#charge-" + str(self.id) + "\" class=\"" + "hs-control" + "\">"
         parts = ["<li class=\"menuitem\">",link,self.penal_code," ",
                  self.label,"</a>"]
 
