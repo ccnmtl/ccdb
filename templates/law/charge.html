@@ -109,6 +109,15 @@
 		</table>
 		{% endif %} {# /charge.view_all #}
 	      </div> <!-- /offensebox -->
+	  {% if not charge.children and charge.no_areas %}
+	  <p class="offensenotvetted">This charge has not been vetted for the following areas:</p>
+
+	  <ul>
+	    {% for area in charge.no_areas %}
+	    <li>{{ area.label }}</li>
+	    {% endfor %}
+	  </ul>
+	  {% endif %}
 
 	      {% if charge2 %}
 	      <div class="offensebox">
@@ -145,6 +154,16 @@
 		  </tbody>
 		</table>
 	      </div> <!-- /offensebox -->
+	  {% if not charge2.children and charge2.no_areas %}
+	  <p class="offensenotvetted">This charge has not been vetted for the following areas:</p>
+
+	  <ul>
+	    {% for area in charge2.no_areas %}
+	    <li>{{ area.label }}</li>
+	    {% endfor %}
+	  </ul>
+	  {% endif %}
+
 	      {% endif %} {# /charge2.view_all #}
 	    {% endif %} {# /charge2 #}
 	    </div> <!-- /tabbertab show all -->
@@ -175,7 +194,18 @@
 		{% else %}
 		<p>There are no {{area.area.label}} consequences for this charge.</p>
 		{% endif %}
+
+
 	      </div><!-- /offensebox -->
+	  {% if not charge.children and charge.no_areas %}
+	  <p class="offensenotvetted">This charge has not been vetted for the following areas:</p>
+
+	  <ul>
+	    {% for area in charge.no_areas %}
+	    <li>{{ area.label }}</li>
+	    {% endfor %}
+	  </ul>
+	  {% endif %}
 
 
 	      {% if charge2 %}
@@ -210,8 +240,23 @@
 		{% else %}
 		<p>There are no {{area.area.label}} consequences for this charge.</p>
 		{% endif %}
+
+
 	      </div><!-- /offensebox -->
+	  {% if not charge2.children and charge2.no_areas %}
+	  <p class="offensenotvetted">This charge has not been vetted for the following areas:</p>
+
+	  <ul>
+	    {% for area in charge2.no_areas %}
+	    <li>{{ area.label }}</li>
+	    {% endfor %}
+	  </ul>
+	  {% endif %}
+
+
 	      {% endif %}
+
+
 
 	    </div><!-- /tabbertab -->
 
@@ -219,15 +264,6 @@
 	  </div> <!-- /outer-tabber -->
 
 
-	  {% if not charge.children and charge.no_areas %}
-	  <p class="offensenotvetted">This charge has not been vetted for the following areas:</p>
-
-	  <ul>
-	    {% for area in charge.no_areas %}
-	    <li>{{ area.label }}</li>
-	    {% endfor %}
-	  </ul>
-	  {% endif %}
 
 	</div><!-- /column-content -->
       </div><!-- /results-contentbox -->
