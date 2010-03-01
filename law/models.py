@@ -200,6 +200,9 @@ class Charge(models.Model):
     def has_children(self):
         return ChargeChildren.objects.filter(parent=self).count() > 0
 
+    def is_leaf(self):
+        return not self.has_children()
+
     def as_edit_ul(self):
         """ return html for the charge and its children as an <ul> """
         return self.as_ul(link_prefix="/edit",hs=False)

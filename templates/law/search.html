@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load markup %}
+{% block content %}
+{{ block.super }}
+
+<h2>Search Results</h2>
+
+
+<ul>
+{% for charge in charges %}
+<li><a href="{{charge.get_absolute_url}}">{{ charge.penal_code }} {{ charge.label }}</a></li>
+{% endfor %}
+</ul>
+
+{% endblock %}

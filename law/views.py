@@ -205,6 +205,13 @@ def edit_search(request):
     snapshot = working_snapshot()
     return dict(charges=Charge.objects.filter(snapshot=snapshot,label__icontains=q))
 
+@rendered_with('law/search.html')
+def search(request):
+    q = request.GET['q']
+    snapshot = public_snapshot()
+    charges = Charge.objects.filter(snapshot=snapshot,label__icontains=q) | Charge.objects.filter(snapshot=snapshot,penal_code__icontains=q)
+    charges = [c for c in charges if c.is_leaf()]
+    return dict(charges=charges)
 
 @user_passes_test(lambda u: u.is_staff)
 def remove_charge_classification(request,slugs="",classification_id=""):
