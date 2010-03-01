@@ -30,6 +30,10 @@ def index(request):
     return dict(charges=snapshot.top_level_charges())
 
 
+@rendered_with('law/feedback.html')
+def feedback(request):
+    return dict()
+
 @user_passes_test(lambda u: u.is_staff)
 @rendered_with('law/edit_index.html')
 def edit_index(request):

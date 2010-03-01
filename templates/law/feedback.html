@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load markup %}
+{% block content %}
+{{ block.super }}
+<div class="beta">
+
+<div style="display: block;" id="feedbackform"> 
+  <h1>Send Feedback</h1> 
+	<p>Please use this for to send us feedback about missing consequences and inaccuracies as well as about the design and function of the system.</p> 
+	<p>For all other inquiries, please send mail to <a href="mailto:ccnmtl-cckc@columbia.edu">ccnmtl-cckc@columbia.edu</a>.</p> 
+  <form action="http://pmt.ccnmtl.columbia.edu/external_add_item.pl" method="post"> 
+	<input type="hidden" name="pid" value="343" /> 
+	<input type="hidden" name="mid" value="1690" /> 
+	<input type="hidden" name="redirect_url" value="http://cckc.ccnmtl.columbia.edu/thanks" /> 
+	<table cellpadding="4" cellspacing="0" border="0"> 
+		<tr valign="middle"> 
+			<td align="right">Your name: </td> 
+			<td align="left"><input type="text" name="name" /></td> 
+		</tr> 
+		<tr valign="middle"> 
+			<td align="right">Your e-mail: </td> 
+			<td align="left"><input type="text" name="email" /></td> 
+		</tr> 
+		<tr valign="top"> 
+			<td align="right">Message: </td> 
+			<td align="left"><textarea rows="10" name="description" cols="60"></textarea></td> 
+		</tr> 
+		<tr valign="top"> 
+			<td align="right">&#xa0;</td> 
+			<td align="left"><input type="submit" class="searchButton" value="Send feedback" /></td> 
+		</tr> 
+	</table> 
+</form> 
+<p>&#xa0;</p> 
+  </div> 
+
+</div>
+{% endblock %}
