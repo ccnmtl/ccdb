@@ -17,7 +17,8 @@ DATABASE_PASSWORD = ''         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
-CACHE_BACKEND = 'locmem:///'
+CACHE_BACKEND = 'johnny.backends.locmem:///'
+JOHNNY_MIDDLEWARE_KEY_PREFIX='jc_ccdb'
 
 TIME_ZONE = 'America/New_York'
 LANGUAGE_CODE = 'en-us'
@@ -44,6 +45,8 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
+    'johnny.middleware.LocalStoreClearMiddleware',
+    'johnny.middleware.QueryCacheMiddleware',
 )
 
 ROOT_URLCONF = 'ccdb.urls'
@@ -72,6 +75,7 @@ INSTALLED_APPS = (
     'typogrify',
     'survey',
     'tinymce',
+    'johnny',
 )
 
 THUMBNAIL_SUBDIR = "thumbs"
