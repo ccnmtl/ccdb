@@ -128,12 +128,16 @@ def add_charge_classification(request,slugs=""):
     snapshot = working_snapshot()
     charge = snapshot.get_charge_by_slugs(slugs)    
     classification = get_object_or_404(Classification,id=request.POST['classification_id'])
-    cc = ChargeClassification.objects.create(charge=charge,classification=classification,
-                                             certainty=request.POST['certainty'])
-    e = Event.objects.create(snapshot=snapshot,
-                             user=request.user,
-                             description="charge **%s** classified as (%s) **%s**" % (cc.charge.label,cc.certainty,cc.classification.label),
-                             note=request.POST.get('comment',''))
+    if ChargeClassification.objects.filter(charge=charge,classification=classification).count() == 0:
+        # only create if one doesn't already exist.
+        # TODO: notify user
+        cc = ChargeClassification.objects.create(charge=charge,classification=classification,
+                                                 certainty=request.POST['certainty'])
+        e = Event.objects.create(snapshot=snapshot,
+                                 user=request.user,
+                                 description="charge **%s** classified as (%s) **%s**" % (cc.charge.label,cc.certainty,cc.classification.label),
+                                 note=request.POST.get('comment',''))
+        
     return HttpResponseRedirect("/edit" + charge.get_absolute_url())
 
 @user_passes_test(lambda u: u.is_staff)
