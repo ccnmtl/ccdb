@@ -176,6 +176,12 @@ a:hover { color: #36F; }
 	background: url('../img/icon_home.gif') 15px center no-repeat;
 }
 
+#idnav-inner ul li.cckc_generic
+{
+	border-left: 1px solid #69f;
+	padding-left: 10px;
+}
+
 #idnav-inner ul li#cckc_home:hover
 {
 	background: url('../img/icon_home_hover.gif') 15px center no-repeat;
