@@ -88,7 +88,7 @@ a:hover { color: #000; }
 #pagebody
 {
 	border: 1px solid #999;
-	background: #fff none;
+	background: #fff none !important;
 }
 
 .alpha
@@ -118,12 +118,6 @@ a:hover { color: #000; }
 .column-content ul.selectedcharges li
 {
 	font-size: 1em !important;
-}
-
-.beta
-{
-	margin: 0 0 0 250px;
-	border-left: 1px dotted #999;
 }
 
 .beta-inner
@@ -223,3 +217,45 @@ td.columbiarow
 	visibility: hidden;
 	display: none;
 }
+
+#idnav, .alpha, .tabbernav
+{
+	display: none !important;
+}
+
+.beta
+{
+	margin: 0;
+	border: 0;
+}
+
+.tabbertab, .offensebox, .tabberlive
+{
+	border: 0 !important;
+}
+
+.cc-yes
+{
+	background-color: #fff !important;
+	font-weight: bold;
+	color: #c00 !important;
+}
+
+.cc-probably
+{
+	background-color: #fff !important;
+	font-weight: bold;
+	color: #c66 !important;
+}
+
+.cc-maybe
+{
+	background-color: #fff !important;
+	font-weight: bold;
+	color: #f99 !important;
+}
+
+ul.ccmenu li { list-style-type: square; padding-left: 0; }
+
+ul.ccmenu ul.selectedcharges li { list-style-type: circle; padding-left: 0; }
+
