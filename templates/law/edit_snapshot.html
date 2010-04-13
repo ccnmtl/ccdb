@@ -6,29 +6,11 @@
 <h2>Snapshot: {{ snapshot.label }}</h2>
 <p>{{ snapshot.description }}</p>
 
-{% if snapshot.cloneable %}
-<form action="clone/" method="post">
-  <fieldset><legend>clone this snapshot</legend>
-    <table>
-      <tr>
-	<th>label of new snapshot:</th>
-	<td><input type="text" name="label" /></td>
-      </tr>
-      <tr>
-	<th>description</th>
-	<td>
-	  <textarea name="description"></textarea>
-	</td>
-      </tr>
-    </table>
-    <input type="submit" value="clone" />
-</fieldset>
-</form>
-{% endif %}
-
 {% ifequal snapshot.status "in progress" %}
 <form action="approve/" method="post">
-<input type="submit" value="promote this snapshot to production" />
+<input type="submit" value="promote this snapshot to production"
+       onclick="addElementClass(this,'hs-hide');removeElementClass('doubleclickstopper','hs-hide');"/>
+<p id="doubleclickstopper" class="hs-hide">Working... Please be patient.</p>
 </form>
 {% endifequal %}
 
