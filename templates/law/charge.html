@@ -191,7 +191,7 @@
 		</div><!--  class="offensetitle" -->
 
 		{% if area.total_count %}
-		<table border="1" width="99%" cellspacing="0" cellpadding="0" class="cc-table" py:if="checked['immigration']">
+		<table border="1" width="99%" cellspacing="0" cellpadding="0" class="cc-table">
 		  {% include 'law/charge_thead.html' %}
 		  <tbody>
 		    {% with "individual" as section %}
@@ -237,7 +237,7 @@
 		  <h3 class="selectedoffense">{{ charge2.penal_code }} {{ charge2.label }}</h3>
 		</div><!--  class="offensetitle" -->
 		{% if area.total_count %}		
-		<table border="1" width="99%" cellspacing="0" cellpadding="0" class="cc-table" py:if="checked['immigration']">
+		<table border="1" width="99%" cellspacing="0" cellpadding="0" class="cc-table">
 		  {% include 'law/charge_thead.html' %}
 		  <tbody>
 		    {% with "individual2" as section %}
