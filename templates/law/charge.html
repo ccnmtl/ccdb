@@ -200,7 +200,10 @@
 		  </tbody>
 		</table>
 		{% else %}
-		<p>There are no {{area.area.label}} consequences for this charge.</p>
+		{% if area.no_consequences %}
+		<p>There are no {{area.area.label}} consequences for
+		this charge.</p>
+		{% endif %}
 		{% endif %}
 
 
@@ -246,7 +249,10 @@
 		  </tbody>
 		</table>
 		{% else %}
-		<p>There are no {{area.area.label}} consequences for this charge.</p>
+		{% if area.no_consequences %}
+		<p>There are no {{area.area.label}} consequences for
+		this charge.</p>
+		{% endif %}
 		{% endif %}
 
 

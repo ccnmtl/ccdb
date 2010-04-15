@@ -466,6 +466,10 @@ class Charge(models.Model):
                 # still need the consequences grouped by their classification
                 area_results[c] = dtolist(cluster_by(lambda x: x.classification,area_results[c]))
             area_results['total_count'] = total_count
+            # a convenient flag for the situation when
+            # this charge has no consequences in an area *AND* it's vetted for the area
+            if total_count == 0 and area in self.yes_areas():
+                area_results['no_consequences'] = True
             results.append(area_results)
         return results
 
