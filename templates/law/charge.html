@@ -111,12 +111,22 @@
 		    {% with "showall" as section %}
 		    {% include 'law/charge_row.html' %}
 		    {% endwith %} 
+		    {% else %}
+		    {% if area.no_consequences %}
+		    <tr valign="top">
+		      <td colspan="3" class="offensesorttype2">
+			{{area.area.label}}: There are no {{area.area.label}} consequences
+			for this charge.
+		      </td>
+		    </tr>
+		    {% endif %}
 		    {% endif %}
 		    {% endfor %}
 		  </tbody>
 		</table>
 		{% endif %} {# /charge.view_all #}
 	      </div> <!-- /offensebox -->
+
 	  {% if not charge.children and charge.no_areas %}
 	  <p class="offensenotvetted">This charge has not been vetted for the following areas:</p>
 
@@ -156,6 +166,15 @@
 		    {% with "compare-showall" as section %}
 		    {% include 'law/charge_row.html' %}
 		    {% endwith %}
+		    {% else %}
+		    {% if area.no_consequences %}
+		    <tr valign="top">
+		      <td colspan="3" class="offensesorttype2">
+			{{area.area.label}}: There are no {{area.area.label}} consequences
+			for this charge.
+		      </td>
+		    </tr>
+		    {% endif %}
 		    {% endif %}
 		    {% endfor %}
 
