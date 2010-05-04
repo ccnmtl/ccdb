@@ -1,5 +1,19 @@
 {% extends "base.html" %}
 {% load markup %}
+{% block js %}
+
+<script type="text/javascript">
+
+function collectFeedback(form) {
+    var role = form.role.value;
+    var message = form.message.value;
+    var additional_message = form.additional_message.value;
+    form.description.value = "Role: " + role + "\n\n" + "Did you have difficulty finding what you were looking for? \n" + message + "\n\n" + "Additional Message: \n" + additional_message;
+}
+
+</script>
+
+{% endblock %}
 {% block content %}
 {{ block.super }}
 
@@ -7,7 +21,9 @@
   <h1>Send Feedback</h1> 
 	<p>Please use this for to send us feedback about missing consequences and inaccuracies as well as about the design and function of the system.</p> 
 	<p>For all other inquiries, please send mail to <a href="mailto:ccnmtl-cckc@columbia.edu">ccnmtl-cckc@columbia.edu</a>.</p> 
-  <form action="http://pmt.ccnmtl.columbia.edu/external_add_item.pl" method="post"> 
+  <form action="http://pmt.ccnmtl.columbia.edu/external_add_item.pl"
+	method="post"
+	onsubmit="collectFeedback(this)"> 
 	<input type="hidden" name="pid" value="343" /> 
 	<input type="hidden" name="mid" value="1690" /> 
 	<input type="hidden" name="redirect_url" value="http://cckc.ccnmtl.columbia.edu/thanks" /> 
@@ -20,13 +36,34 @@
 			<td align="right">Your e-mail: </td> 
 			<td align="left"><input type="text" name="email" /></td> 
 		</tr> 
+
+		<tr valign="middle">
+		  <td align="right">
+How would you describe yourself? Judge, Defense Counsel,
+Prosecutor, Academic or other?</td>
+		  <td align="left"><input type="text" name="role" /></td>
+		</tr>
+
+		<tr valign="middle">
+		  <td align="right">
+Did you have difficulty finding what you were looking for? If
+yes, please describe.</td>
+		  <td align="left">
+		    <textarea rows="10" name="message" cols="60"></textarea>
+		  </td>
+		</tr>
 		<tr valign="top"> 
-			<td align="right">Message: </td> 
-			<td align="left"><textarea rows="10" name="description" cols="60"></textarea></td> 
+			<td align="right">Additional Message: </td> 
+			<td align="left"><textarea rows="10" name="additional_message" cols="60"></textarea></td> 
 		</tr> 
 		<tr valign="top"> 
 			<td align="right">&#xa0;</td> 
-			<td align="left"><input type="submit" class="searchButton" value="Send feedback" /></td> 
+			<td align="left">
+			  <!-- need this to collect multiple fields into one -->
+			  <input type="hidden" name="description"
+			  value="" />
+			  <input type="submit" class="searchButton" value="Send feedback" />
+			</td> 
 		</tr> 
 	</table> 
 </form> 
