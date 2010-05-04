@@ -999,3 +999,8 @@ ul.tabbernav li.tabberactive a
 ul#primarynavtabs li { display: inline;}
 
 #editscreen {background: #fff; margin: 1em;}
+
+.disclaimer_print
+{
+	display: none;
+}

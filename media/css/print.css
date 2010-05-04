@@ -259,3 +259,8 @@ ul.ccmenu li { list-style-type: square; padding-left: 0; }
 
 ul.ccmenu ul.selectedcharges li { list-style-type: circle; padding-left: 0; }
 
+.disclaimer_print
+{
+	display: block !important;
+}
+
