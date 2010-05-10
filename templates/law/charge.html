@@ -38,7 +38,7 @@
 	<div id="comparelist">
 	  <h3 class="comparison">Compare this offense with...</h3>
 	  <ul id="offenses" class="menu"><!-- Begin the charges listed by Offenses -->
-	    {% cache 500 menu %}
+	    {% cache 5000 menu %}
 	    {% for charge in charges %}
 	    {{ charge.as_view_compare_ul|safe}}
 	    {% endfor %}
@@ -58,7 +58,7 @@
 
 	  <h3 class="comparison">Start over with a new offense:</h3>
 	  <ul id="offenses-so" class="menu"><!-- Begin the charges listed by Offenses -->
-	    {% cache 500 menu_compare %}
+	    {% cache 5000 menu_compare %}
 	    {% for charge in charges %}
 	    {{ charge.as_view_ul|safe}}
 	    {% endfor %}

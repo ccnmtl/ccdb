@@ -59,7 +59,7 @@
 	
 	<h3 class="two-categories"><span>Select a criminal offense:</span></h3>
 	<ul id="offenses" class="menu"><!-- Begin the charges listed by Offenses -->
-          {% cache 500 menu_compare %}	  
+          {% cache 5000 menu_compare %}	  
 	  {% for charge in charges %}
 	  {{ charge.as_view_ul|safe}}
 	  {% endfor %}
