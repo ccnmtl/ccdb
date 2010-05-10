@@ -117,7 +117,7 @@ class Snapshot(models.Model):
     def top_level_charges(self):
         """ charges that don't have any parents """
         all_children = sets.Set([c.child_id for c in self.all_chargechildren()])
-        return [c for c in self.charge_set.all().order_by("penal_code") if c.id not in all_children]
+        return [c for c in self.charge_set.all().order_by('numeric_penal_code','penal_code') if c.id not in all_children]
 
 
     def get_charge_by_slugs(self,slugs,acc=None):
@@ -176,9 +176,15 @@ class Charge(models.Model):
     name = models.SlugField(help_text="""unique identifier that appears in the URL. """
                             """must be less than 50 characters long """ 
                             """and no two charges can have the same name""")
+    # for sorting purposes
+    numeric_penal_code = models.FloatField(editable=False,blank=True,null=True)
 
     class Meta:
-        ordering = ('penal_code','label')
+        ordering = ('numeric_penal_code','penal_code','label')
+
+    def save(self, *args, **kwargs):
+        self.numeric_penal_code = re.split('\d+\.?\d*',self.penal_code)[0]
+        super(Charge, self).save(*args, **kwargs) # Call the "real" save() method.
 
     def __unicode__(self):
         return self.label
@@ -195,7 +201,7 @@ class Charge(models.Model):
                                      penal_code=self.penal_code,name=self.name)
 
     def children(self):
-        return [cc.child for cc in ChargeChildren.objects.filter(parent=self).order_by('child__penal_code')]
+        return [cc.child for cc in ChargeChildren.objects.filter(parent=self).order_by('child__numeric_penal_code','child__penal_code')]
 
     def has_children(self):
         return ChargeChildren.objects.filter(parent=self).count() > 0
