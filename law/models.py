@@ -183,8 +183,9 @@ class Charge(models.Model):
         ordering = ('numeric_penal_code','penal_code','label')
 
     def save(self, *args, **kwargs):
-        self.numeric_penal_code = re.split('\d+\.?\d*',self.penal_code)[0]
-        super(Charge, self).save(*args, **kwargs) # Call the "real" save() method.
+        if not self.numeric_penal_code:
+            self.numeric_penal_code = float(re.split('\d+\.?\d*',self.penal_code)[0])
+        return super(Charge, self).save(*args, **kwargs) # Call the "real" save() method.
 
     def __unicode__(self):
         return self.label
