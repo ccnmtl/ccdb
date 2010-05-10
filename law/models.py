@@ -198,7 +198,8 @@ class Charge(models.Model):
 
     def clone_to(self,new_snapshot):
         return Charge.objects.create(snapshot=new_snapshot,label=self.label,
-                                     penal_code=self.penal_code,name=self.name)
+                                     penal_code=self.penal_code,name=self.name,
+                                     numeric_penal_code=self.numeric_penal_code)
 
     def children(self):
         return [cc.child for cc in ChargeChildren.objects.filter(parent=self).order_by('child__numeric_penal_code','child__penal_code')]
