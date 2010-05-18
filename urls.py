@@ -14,6 +14,7 @@ urlpatterns = patterns('',
                        ('^area/(?P<slug>[^\/]+)/(?P<cslug>[^\/]+)/$','ccdb.law.views.view_consequence'),
 
                        ('^edit/$','ccdb.law.views.edit_index'),
+                       ('^edit/graph/$','ccdb.law.views.graph'),
                        ('^edit/snapshots/$','ccdb.law.views.edit_snapshots'),
                        ('^edit/snapshots/(?P<id>\d+)/$','ccdb.law.views.edit_snapshot'),
                        ('^edit/snapshots/(?P<id>\d+)/clone/$','ccdb.law.views.clone_snapshot'),

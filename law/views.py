@@ -75,7 +75,16 @@ def approve_snapshot(request,id):
                                   user=request.user,
                                   description="")
     return HttpResponseRedirect("/edit/snapshots/")
-                                           
+
+
+@rendered_with('law/graph.html')
+def graph(request):
+    snapshot = public_snapshot()
+    return dict(snapshot=snapshot,
+                charges=snapshot.top_level_charges(),
+                all_charges=Charge.objects.filter(snapshot=snapshot).order_by("numeric_penal_code","penal_code","label"),
+                all_classifications=Classification.objects.filter(snapshot=snapshot),
+                all_areas=Area.objects.filter(snapshot=snapshot))
 
 @user_passes_test(lambda u: u.is_staff)
 @rendered_with('law/edit_charge_index.html')

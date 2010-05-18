@@ -1,0 +1,80 @@
+digraph G {
+        graph [rankdir=LR]
+remincross=true;
+mincross=2.0;
+
+subgraph cluster_0 {
+  label="offenses";
+
+{% for charge in all_charges %}"{{charge.penal_code}} {{charge.label}}" [shape=box,color=red];
+{% endfor %}
+
+{% for charge in all_charges %}{% if charge.has_children %}
+  {% for c in charge.children %}
+    "{{charge.penal_code}} {{charge.label}}" -> "{{c.penal_code}} {{c.label}}";{% endfor %}{% endif %}{% endfor %}
+
+
+}
+
+{rank=same; 
+{% for classification in all_classifications %}
+{% if classification.chargeclassification_set.count %}
+"{{classification.label}}" [shape=box];
+{% endif %}
+{% endfor %}
+}
+
+
+{rank=same;
+{% for area in all_areas %}
+{% for consequence in area.consequence_set.all %}
+"{{consequence.label}}"
+{% ifequal area.label "Immigration" %}
+ [shape=box,style=filled,color="#ccccff"];
+{% else %}
+ [shape=box,style=filled,color="#ccffcc"];
+{% endifequal %}
+{% endfor %}
+{% endfor %}
+}
+
+{% for charge in all_charges %}
+{% if charge.chargeclassification_set.count %}
+{% for cc in charge.chargeclassification_set.all %}
+"{{charge.penal_code}} {{charge.label}}" -> "{{cc.classification.label}}"
+{% ifequal cc.certainty "yes" %}
+[color=black]
+{% endifequal %}
+{% ifequal cc.certainty "probably" %}
+[color="#666666"]
+{% endifequal %}
+{% ifequal cc.certainty "maybe" %}
+[color="#cccccc"]
+{% endifequal %};
+
+{% endfor %}
+{% endif %}
+{% endfor %}
+
+{% for classification in all_classifications %}
+{% if classification.chargeclassification_set.count %}
+
+{% for cc in classification.classificationconsequence_set.all %}
+"{{classification.label}}" -> "{{cc.consequence.label}}"
+{% ifequal cc.certainty "yes" %}
+[color=black]
+{% endifequal %}
+{% ifequal cc.certainty "probably" %}
+[color="#666666"]
+{% endifequal %}
+{% ifequal cc.certainty "maybe" %}
+[color="#cccccc"]
+{% endifequal %};
+
+
+{% endfor %}
+{% endif %}
+{% endfor %}
+
+
+}
