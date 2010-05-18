@@ -141,7 +141,7 @@ reparent to: <select name="sibling_id">
     <td>
       <ul>
 	{% for cc in p.yes %}
-	<li><a href="/edit{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a> (<a href="remove_classification/{{cc.classification.id}}/">X</a>)
+	<li><a href="/edit{{cc.classification.get_absolute_url}}">{{ cc.classification.label }}</a>
 	  <ul>
 	    {% for clco in cc.classification.yes_consequences %}
 	    <li><a href="/edit{{clco.consequence.area.get_absolute_url}}">{{ clco.consequence.area.label }}</a>: <a href="/edit{{clco.consequence.get_absolute_url}}">{{ clco.consequence.label }}</a></li>
