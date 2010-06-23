@@ -6,6 +6,8 @@
 <h2>Snapshot: {{ snapshot.label }}</h2>
 <p>{{ snapshot.description }}</p>
 
+
+
 {% ifequal snapshot.status "in progress" %}
 <form action="approve/" method="post">
 <input type="submit" value="promote this snapshot to production"
@@ -13,6 +15,7 @@
 <p id="doubleclickstopper" class="hs-hide">Working... Please be patient.</p>
 </form>
 {% endifequal %}
+
 
 <h2>History</h2>
 
@@ -26,5 +29,31 @@
     <div class="note">{{ event.note|markdown }}</div>
   </div>
   {% endfor %}
+
+
+<hr />
+<form action="delete/" method="post">
+<p><span style="color:red">WARNING</span>: Deleting a snapshot can not
+  be undone. 
+{% if snapshot.is_current_working %}A new working snapshot will
+  be made to replace this, starting from the most recent vetted
+  snapshot.
+{% else %}
+{% if snapshot.is_most_recent_vetted %}
+This snapshot is the most recent vetted snapshot and, therefore, the
+  one used for the public site. Deleting this snapshot will revert the
+  public site to the previous vetted snapshot. Note that due to some
+  caching done to improve performance of the public site, the deletion
+  of this snapshot might not take effect on the public site for five
+  or ten minutes.
+{% endif %}
+{% endif %}
+
+</p>
+
+<input type="submit" value="delete this snapshot"
+       onclick="addElementClass(this,'hs-hide');removeElementClass('doubleclickstopper2','hs-hide');"/>
+<p id="doubleclickstopper2" class="hs-hide">Working... Please be patient.</p>
+</form>
 
 {% endblock %}

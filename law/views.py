@@ -76,6 +76,30 @@ def approve_snapshot(request,id):
                                   description="")
     return HttpResponseRedirect("/edit/snapshots/")
 
+@user_passes_test(lambda u: u.is_staff)
+def delete_snapshot(request,id):
+    snapshot = get_object_or_404(Snapshot,id=id)
+    if request.method != "POST":
+        return HttpResponse("this MUST be a POST request")
+    if snapshot.is_current_working():
+        # create new working snapshot to replace it
+        # cloning the public snapshot
+        public = public_snapshot()
+        n = datetime.now()
+        new_snapshot = snapshot.clone(label="%04d-%02d-%02d %02d:%02d" % (n.year,n.month,n.day,n.hour,n.minute),
+                                      user=request.user,
+                                      description="")
+    else:
+        # there's actually nothing to do here, 
+        # but keep in mind that if this was the current public
+        # snapshot, when it gets deleted, the previous
+        # vetted snapshot takes its place automatically. 
+        pass
+
+    snapshot.delete()
+    return HttpResponseRedirect("/edit/snapshots/")
+
+
 
 @rendered_with('law/graph.html')
 def graph(request):

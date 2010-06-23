@@ -67,14 +67,14 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.flatpages',
     'django.contrib.markup',
-    'sorl.thumbnail',
+#    'sorl.thumbnail',
     'django.contrib.admin',
     'ccdb.law',
     'smartif',
     'template_utils',
     'typogrify',
-    'survey',
-    'tinymce',
+#    'survey',
+#    'tinymce',
     'johnny',
 )
 
