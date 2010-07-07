@@ -214,6 +214,10 @@ def reparent_charge(request,slugs=""):
     cc = ChargeChildren.objects.filter(child=charge)
     cc.delete()
     ncc = ChargeChildren.objects.create(child=charge,parent=new_parent)
+    e = Event.objects.create(snapshot=snapshot,
+                             user=request.user,
+                             description="charge **%s** reparented to **%s**" % (charge.label,new_parent.label),
+                             note='')
     return HttpResponseRedirect("/edit" + charge.get_absolute_url())
 
 @user_passes_test(lambda u: u.is_staff)
@@ -230,7 +234,10 @@ def delete_charge(request,slugs=""):
     except IndexError:
         # top level charge
         pass
-
+    e = Event.objects.create(snapshot=snapshot,
+                             user=request.user,
+                             description="charge **%s** deleted" % (charge.label),
+                             note='')
     charge.delete_self()
     return HttpResponseRedirect(redirect_to)
 
@@ -282,6 +289,11 @@ def edit_charge(request,slugs):
         edit_charge_form = EditChargeForm(request.POST,instance=charge)
         if edit_charge_form.is_valid():
             edit_charge_form.save()
+            e = Event.objects.create(snapshot=snapshot,
+                                     user=request.user,
+                                     description="charge **%s** edited" % (charge.label),
+                                     note=request.POST.get('comment',''))
+
             return HttpResponseRedirect("/edit" + charge.get_absolute_url())
     return dict(charge=charge,
                 edit_charge_form=edit_charge_form,
@@ -346,6 +358,11 @@ def edit_classification(request,slug):
         edit_classification_form = EditClassificationForm(request.POST,instance=classification)
         if edit_classification_form.is_valid():
             edit_classification_form.save()
+            e = Event.objects.create(snapshot=snapshot,
+                                     user=request.user,
+                                     description="classification **%s** edited" % (classification.label),
+                                     note=request.POST.get('comment',''))
+
             return HttpResponseRedirect("/edit" + classification.get_absolute_url())
 
     return dict(classification=classification,
@@ -408,6 +425,11 @@ def edit_area(request,slug):
         edit_area_form = EditAreaForm(request.POST,instance=area)
         if edit_area_form.is_valid():
             edit_area_form.save()
+            e = Event.objects.create(snapshot=snapshot,
+                                     user=request.user,
+                                     description="area **%s** edited" % (area.label),
+                                     note=request.POST.get('comment',''))
+
             return HttpResponseRedirect("/edit" + area.get_absolute_url())
 
     return dict(area=area,add_consequence_form=AddConsequenceForm(),
@@ -472,6 +494,10 @@ def edit_consequence(request,slug,cslug):
         edit_consequence_form = EditConsequenceForm(request.POST,instance=consequence)
         if edit_consequence_form.is_valid():
             edit_consequence_form.save()
+            e = Event.objects.create(snapshot=snapshot,
+                                     user=request.user,
+                                     description="consequence **%s** edited" % (consequence.label),
+                                     note=request.POST.get('comment',''))
             return HttpResponseRedirect("/edit" + consequence.get_absolute_url())
         else:
             return dict(consequence=consequence,
