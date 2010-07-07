@@ -205,12 +205,16 @@ reparent to: <select name="sibling_id">
 
 <div class="tabber">
 <div id="areas-list" class="tabbertab" title="list">
-{% if charge.chargearea_set.all %}
+{% if charge.yes_areas %}
 
 <ul>
-{% for ca in charge.chargearea_set.all %}
-<li><a href="/edit{{ca.area.get_absolute_url}}">{{ca.area.label}}</a>
-(<a href="remove_area/{{ca.id}}/">X</a>)
+{% for area in charge.yes_areas_for_edit_page %}
+<li><a href="/edit{{area.area.get_absolute_url}}">{{area.area.label}}</a>
+{% if area.ca %}
+(<a href="remove_area/{{area.ca.id}}/">X</a>)
+{% else %}
+<span style="color: #999">[inherited from parent]</span>
+{% endif %}
 </li>
 {% endfor %}
 </ul>

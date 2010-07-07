@@ -432,6 +432,22 @@ class Charge(models.Model):
                     parent_areas.append(a)
         return [ca.area for ca in self.chargearea_set.all()] + parent_areas
 
+    def yes_areas_for_edit_page(self):
+        """ same thing but we add a flag to indicate whether
+        it's directly attached or comes down via inheritance """
+        parent_areas = []
+        for p in self.parents():
+            pa = p.yes_areas()
+            if len(pa) > 0:
+                for a in pa:
+                    parent_areas.append(a)
+        direct = dict()
+        for ca in self.chargearea_set.all():
+            direct[ca.area.id] = ca
+        all_yes_areas = [ca.area for ca in self.chargearea_set.all()] + parent_areas
+        all_yes_areas = list(set(all_yes_areas))
+        return [dict(area=area,ca=direct.get(area.id,None)) for area in all_yes_areas] 
+
     def no_areas(self):
         """ list the areas that this charge does not show consequences for """
         yes = self.yes_areas()
