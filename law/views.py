@@ -9,6 +9,8 @@ from django import forms
 from datetime import datetime
 from django.template.defaultfilters import slugify
 import simplejson
+from django.core.mail import send_mail
+from restclient import POST
 
 class rendered_with(object):
     def __init__(self, template_name):
@@ -32,7 +34,23 @@ def index(request):
 
 @rendered_with('law/feedback.html')
 def feedback(request):
-    return dict()
+    if request.method == 'POST':
+        POST("http://pmt.ccnmtl.columbia.edu/external_add_item.pl",
+             params=dict(pid=request.POST['pid'],
+                         mid=request.POST['mid'],
+                         description=request.POST['description']),
+             async=True)
+
+        body = """%s\n\nFrom %s (%s)""" % (request.POST.get('description',''),
+                                           request.POST.get('name'),
+                                           request.POST.get('email'))
+        send_mail('Collateral Consequences Web Feedback', body, 'cckc-ccnmtl@columbia.edu',
+                  ['ccnmtl-cckc@columbia.edu'], fail_silently=False)
+        return HttpResponseRedirect("/thanks/")
+    else:
+        return dict()
+
+
 
 @user_passes_test(lambda u: u.is_staff)
 @rendered_with('law/edit_index.html')
