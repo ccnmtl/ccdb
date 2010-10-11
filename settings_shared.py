@@ -4,9 +4,7 @@ import os.path
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-ADMINS = (
-    ('CCNMTL', 'ccnmtl-sysadmin@columbia.edu'),
-)
+ADMINS = ( )
 
 MANAGERS = ADMINS
 
@@ -67,16 +65,15 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.flatpages',
     'django.contrib.markup',
-#    'sorl.thumbnail',
+    'sentry.client',
     'django.contrib.admin',
     'ccdb.law',
     'smartif',
     'template_utils',
     'typogrify',
-#    'survey',
-#    'tinymce',
     'johnny',
 )
+
 
 THUMBNAIL_SUBDIR = "thumbs"
 EMAIL_SUBJECT_PREFIX = "[ccdb] "
