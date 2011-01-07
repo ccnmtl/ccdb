@@ -72,6 +72,7 @@ INSTALLED_APPS = (
     'template_utils',
     'typogrify',
     'johnny',
+    'munin',
 )
 
 
