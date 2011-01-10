@@ -47,7 +47,7 @@ def feedback(request):
         body = """%s\n\nFrom %s (%s)""" % (request.POST.get('description',''),
                                            request.POST.get('name'),
                                            request.POST.get('email'))
-        send_mail('Collateral Consequences Web Feedback', body, 'ccnmtl-cckc@columbia.edu',
+        send_mail('Collateral Consequences Web Feedback', body, 'ccdb@calculator.law.columbia.edu',
                   ['ccnmtl-cckc@columbia.edu'], fail_silently=False)
         return HttpResponseRedirect("/thanks/")
     else:
