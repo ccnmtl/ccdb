@@ -53,6 +53,7 @@ urlpatterns = patterns('',
                        ('^search/$','ccdb.law.views.search'),
 
                        ('^stats/total_events/$','ccdb.law.views.total_events'),
+                       ('^stats/total_snapshots/$','ccdb.law.views.total_snapshots'),
 
                        ('^feedback/$','ccdb.law.views.feedback'),
                        ('^accounts/',include('djangowind.urls')),

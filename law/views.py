@@ -594,6 +594,13 @@ graph_vlabel events
 def total_events(request):
     return [("events",Event.objects.all().count())]
 
+@muninview(config="""graph_title Total Snapshots
+graph_category ccdb
+graph_vlabel snapshots
+""")
+def total_snapshots(request):
+    return [("snapshots",Snapshot.objects.all().count())]
+
 
 
 
