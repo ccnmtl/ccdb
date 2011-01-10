@@ -35,6 +35,8 @@ def index(request):
 @rendered_with('law/feedback.html')
 def feedback(request):
     if request.method == 'POST':
+        if request.POST.get('email','') == '':
+            return dict()
         POST("http://pmt.ccnmtl.columbia.edu/external_add_item.pl",
              params=dict(pid=request.POST['pid'],
                          mid=request.POST['mid'],

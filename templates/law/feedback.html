@@ -9,6 +9,12 @@ function collectFeedback(form) {
     var message = form.message.value;
     var additional_message = form.additional_message.value;
     form.description.value = "Role: " + role + "\n\n" + "Did you have difficulty finding what you were looking for? \n" + message + "\n\n" + "Additional Message: \n" + additional_message;
+    if (form.email.value == ""||form.email.value == null) {
+       alert("email is required");
+       return false;
+    } else {
+       return true;
+    }
 }
 
 </script>
@@ -23,7 +29,7 @@ function collectFeedback(form) {
 	<p>For all other inquiries, please send mail to <a href="mailto:ccnmtl-cckc@columbia.edu">ccnmtl-cckc@columbia.edu</a>.</p> 
   <form action="."
 	method="post"
-	onsubmit="collectFeedback(this)"> 
+	onsubmit="return collectFeedback(this)"> 
 	<input type="hidden" name="pid" value="343" /> 
 	<input type="hidden" name="mid" value="1690" /> 
 	<input type="hidden" name="redirect_url" value="http://cckc.ccnmtl.columbia.edu/thanks" /> 
@@ -33,7 +39,7 @@ function collectFeedback(form) {
 			<td align="left"><input type="text" name="name" /></td> 
 		</tr> 
 		<tr valign="middle"> 
-			<td align="right">Your e-mail: </td> 
+			<td align="right">Your e-mail (required): </td> 
 			<td align="left"><input type="text" name="email" /></td> 
 		</tr> 
 
