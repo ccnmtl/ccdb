@@ -11,6 +11,7 @@ from django.template.defaultfilters import slugify
 import simplejson
 from django.core.mail import send_mail
 from restclient import POST
+from munin.helpers import muninview
 
 class rendered_with(object):
     def __init__(self, template_name):
@@ -46,7 +47,7 @@ def feedback(request):
         body = """%s\n\nFrom %s (%s)""" % (request.POST.get('description',''),
                                            request.POST.get('name'),
                                            request.POST.get('email'))
-        send_mail('Collateral Consequences Web Feedback', body, 'cckc-ccnmtl@columbia.edu',
+        send_mail('Collateral Consequences Web Feedback', body, 'ccnmtl-cckc@columbia.edu',
                   ['ccnmtl-cckc@columbia.edu'], fail_silently=False)
         return HttpResponseRedirect("/thanks/")
     else:
@@ -585,6 +586,13 @@ def remove_consequence_from_classification(request,slug,consequence_id):
     return HttpResponseRedirect("/edit" + classification.get_absolute_url())
 
 
+
+@muninview(config="""graph_title Total Events
+graph_category ccdb
+graph_vlabel events
+""")
+def total_events(request):
+    return [("events",Event.objects.all().count())]
 
 
 
