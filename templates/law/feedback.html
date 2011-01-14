@@ -13,6 +13,11 @@ function collectFeedback(form) {
        alert("email is required");
        return false;
     } else {
+       if ((form.message.value == "" || form.message.value == null) &&
+           (form.additional_message.value == "" || form.additional_message.value == null)) {
+           alert("please do not submit an empty feedback form");
+           return false;
+        }
        return true;
     }
 }
