@@ -47,17 +47,19 @@ def feedback(request):
         body = """%s\n\nFrom %s (%s)""" % (request.POST.get('description',''),
                                            request.POST.get('name'),
                                            request.POST.get('email'))
-        send_mail('Collateral Consequences Web Feedback', body, 'ccdb@calculator.law.columbia.edu',
+        send_mail('Collateral Consequences Web Feedback', body, 'ccnmtl-cckc@columbia.edu',
                   ['ccnmtl-cckc@columbia.edu'], fail_silently=False)
+        send_mail('Collateral Consequences Web Feedback', body, 'ccnmtl-cckc@columbia.edu',
+                  ['anders@columbia.edu'], fail_silently=False)
         return HttpResponseRedirect("/thanks/")
     else:
         return dict()
 
 def emailtest(request):
-    send_mail('Collateral Consequences Web Feedback', "test 3", 'anders@columbia.edu',
+    send_mail('Collateral Consequences Web Feedback', "test 3", 'ccnmtl-cckc@columbia.edu',
               ['anders@columbia.edu'], fail_silently=False)
-    send_mail('Collateral Consequences Web Feedback', "anders is testing some mail stuff. if you get this, let him know.", 'anders@columbia.edu',
-              ['ccnmtl-cckc@columbia.edu'], fail_silently=False)
+#    send_mail('Collateral Consequences Web Feedback', "anders is testing some mail stuff. if you get this, let him know.", 'anders@columbia.edu',
+#              ['ccnmtl-cckc@columbia.edu'], fail_silently=False)
     return HttpResponse("ok")
 
 
