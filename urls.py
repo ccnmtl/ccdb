@@ -56,6 +56,7 @@ urlpatterns = patterns('',
                        ('^stats/total_snapshots/$','ccdb.law.views.total_snapshots'),
 
                        ('^feedback/$','ccdb.law.views.feedback'),
+                       ('^emailtest/$','ccdb.law.views.emailtest'),
                        ('^accounts/',include('djangowind.urls')),
                        (r'^admin/(.*)', admin.site.root),
                        (r'^munin/',include('munin.urls')),

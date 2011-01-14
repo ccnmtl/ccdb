@@ -53,6 +53,13 @@ def feedback(request):
     else:
         return dict()
 
+def emailtest(request):
+    send_mail('Collateral Consequences Web Feedback', "test 3", 'anders@columbia.edu',
+              ['anders@columbia.edu'], fail_silently=False)
+    send_mail('Collateral Consequences Web Feedback', "anders is testing some mail stuff. if you get this, let him know.", 'anders@columbia.edu',
+              ['ccnmtl-cckc@columbia.edu'], fail_silently=False)
+    return HttpResponse("ok")
+
 
 
 @user_passes_test(lambda u: u.is_staff)
