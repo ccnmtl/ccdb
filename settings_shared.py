@@ -74,6 +74,17 @@ INSTALLED_APPS = (
     'johnny',
     'munin',
 )
+import logging
+from sentry.client.handlers import SentryHandler
+logger = logging.getLogger()
+if SentryHandler not in map(lambda x: x.__class__, logger.handlers):
+    logger.addHandler(SentryHandler())
+    logger = logging.getLogger('sentry.errors')
+    logger.propagate = False
+    logger.addHandler(logging.StreamHandler())
+    SENTRY_REMOTE_URL = 'http://sentry.ccnmtl.columbia.edu/sentry/store/'
+SENTRY_KEY = 'EWv5EELZnZIrOY'
+SENTRY_SITE = 'ccdb' # can't rely on the sites framework when a transaction is aborted
 
 
 THUMBNAIL_SUBDIR = "thumbs"
