@@ -49,20 +49,9 @@ def feedback(request):
                                            request.POST.get('email'))
         send_mail('Collateral Consequences Web Feedback', body, 'ccnmtl-cckc@columbia.edu',
                   ['ccnmtl-cckc@columbia.edu'], fail_silently=False)
-        send_mail('Collateral Consequences Web Feedback', body, 'ccnmtl-cckc@columbia.edu',
-                  ['anders@columbia.edu'], fail_silently=False)
         return HttpResponseRedirect("/thanks/")
     else:
         return dict()
-
-def emailtest(request):
-    send_mail('Collateral Consequences Web Feedback', "test 3", 'ccnmtl-cckc@columbia.edu',
-              ['anders@columbia.edu'], fail_silently=False)
-#    send_mail('Collateral Consequences Web Feedback', "anders is testing some mail stuff. if you get this, let him know.", 'anders@columbia.edu',
-#              ['ccnmtl-cckc@columbia.edu'], fail_silently=False)
-    return HttpResponse("ok")
-
-
 
 @user_passes_test(lambda u: u.is_staff)
 @rendered_with('law/edit_index.html')
