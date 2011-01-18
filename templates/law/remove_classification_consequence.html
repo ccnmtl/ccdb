@@ -1,0 +1,18 @@
+{% extends "law/edit_base.html" %}
+
+{% block content %}
+
+Are you sure?
+
+<form action="." method="post">
+it might be useful to include a comment for the log explaining why: 
+<br />
+<textarea name="comment"></textarea>
+<br />
+<input type="submit" value="yes, remove this consequence from this classification" />
+
+</form>
+
+<a href="../../">nevermind, take me back</a>
+
+{% endblock %}
