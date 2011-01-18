@@ -22,7 +22,8 @@
     <td>
       <ul>
 	{% for cc in classification.yes %}
-	<li><a href="/edit{{cc.charge.get_absolute_url}}">{{ cc.charge.label }}</a></li>
+	<li><a href="/edit{{cc.charge.get_absolute_url}}">{{cc.charge.penal_code}}
+	{{ cc.charge.label }}</a></li>
 	{% endfor %}
       </ul>
     </td>
@@ -30,7 +31,8 @@
     <td>
       <ul>
 	{% for cc in classification.probably %}
-	<li><a href="/edit{{cc.charge.get_absolute_url}}">{{ cc.charge.label }}</a></li>
+	<li><a href="/edit{{cc.charge.get_absolute_url}}">{{cc.charge.penal_code}}
+	{{ cc.charge.label }}</a></li>
 	{% endfor %}
       </ul>
     </td>
@@ -38,7 +40,8 @@
     <td>
       <ul>
 	{% for cc in classification.maybe %}
-	<li><a href="/edit{{cc.charge.get_absolute_url}}">{{ cc.charge.label }}</a></li>
+	<li><a href="/edit{{cc.charge.get_absolute_url}}">{{cc.charge.penal_code}}
+	{{ cc.charge.label }}</a></li>
 	{% endfor %}
       </ul>
     </td>
