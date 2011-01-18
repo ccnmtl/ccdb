@@ -38,6 +38,9 @@ def feedback(request):
     if request.method == 'POST':
         if request.POST.get('email','') == '':
             return dict()
+        if "Role:" not in request.POST.get("description",""):
+            # we know that the javascript was bypassed, so ignore it
+            return dict()
         POST("http://pmt.ccnmtl.columbia.edu/external_add_item.pl",
              params=dict(pid=request.POST['pid'],
                          mid=request.POST['mid'],
