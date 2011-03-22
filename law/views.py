@@ -267,7 +267,9 @@ def delete_charge(request,slugs=""):
 @user_passes_test(lambda u: u.is_staff)
 @rendered_with('law/edit_search.html')
 def edit_search(request):
-    q = request.GET['q']
+    q = request.GET.get('q','')
+    if q == '':
+        return HttpResponseRedirect("/")
     snapshot = working_snapshot()
     return dict(charges=Charge.objects.filter(snapshot=snapshot,label__icontains=q))
 
