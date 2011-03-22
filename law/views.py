@@ -348,7 +348,7 @@ def add_classification(request):
     slug = slugify(request.POST['label'])[:50]
     # need to check for duplicate slugs and fix
     try:
-        ct = Classification.objects.get(name=slug)
+        ct = Classification.objects.filter(name=slug)
         # uh oh. there's already a charge with that slug
         # need to come up with a relatively unique new one
         # this is the most reasonable approach I can think of
