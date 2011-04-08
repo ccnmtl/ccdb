@@ -1,9 +1,9 @@
 <li class="offensecategory">
   {% if cgroup.classification.description %}
   <a target="_blank"
-  href="{{cgroup.classification.get_absolute_url}}">{{cgroup.classification.label}}</a>
+  href="{{cgroup.classification.get_absolute_url}}">{{cgroup.classification.display_label}}</a>
   {% else %}
-  {{cgroup.classification.label}}
+  {{cgroup.classification.display_label}}
   {% endif %}
   <ul class="selectedcharges">
     {% for consequence in cgroup.consequences %}

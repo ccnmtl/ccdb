@@ -524,6 +524,12 @@ class Classification(models.Model):
     def __unicode__(self):
         return self.label
 
+    def display_label(self):
+        if "[" in self.label:
+            return re.sub(r"\s*\[[^\[]+\]","",self.label)
+        else:
+            return self.label
+
     def get_absolute_url(self):
         return "/classification/%s/" % self.name
 
