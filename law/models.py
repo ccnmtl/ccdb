@@ -557,7 +557,7 @@ class Classification(models.Model):
         return [cc.charge for cc in self.chargeclassification_set.all()]
 
     def consequences(self):
-        return [cc.consequence for cc in self.classificationconsequence_set.all()]
+        return [cc.consequence for cc in self.classificationconsequence_set.all().order_by("consequence__label")]
 
     def add_consequence_form(self):
         class AddConsequenceForm(forms.Form):
