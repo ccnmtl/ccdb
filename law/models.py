@@ -482,7 +482,7 @@ class Charge(models.Model):
             for c in certainties:
                 # need to uniquify
                 area_results[c] = list(sets.Set(area_results[c]))
-                
+                area_results[c].sort(key=lambda x: x.consequence.label)
                 # stick counts in here
                 area_results[c + "_count"] = len(area_results[c])
                 total_count += len(area_results[c])
