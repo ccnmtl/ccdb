@@ -574,13 +574,13 @@ class Classification(models.Model):
         return f
 
     def yes_consequences(self):
-        return self.classificationconsequence_set.filter(certainty="yes")
+        return self.classificationconsequence_set.filter(certainty="yes").order_by("consequence__label")
 
     def probably_consequences(self):
-        return self.classificationconsequence_set.filter(certainty="probably")
+        return self.classificationconsequence_set.filter(certainty="probably").order_by("consequence__label")
 
     def maybe_consequences(self):
-        return self.classificationconsequence_set.filter(certainty="maybe")
+        return self.classificationconsequence_set.filter(certainty="maybe").order_by("consequence__label")
 
 
     def all_probably_consequences(self):
