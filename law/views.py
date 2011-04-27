@@ -275,7 +275,10 @@ def edit_search(request):
 
 @rendered_with('law/search.html')
 def search(request):
-    q = request.GET['q']
+    q = request.GET.get('q','')
+    if q == '':
+        return HttpResponseRedirect("/")
+
     snapshot = public_snapshot()
     charges = Charge.objects.filter(snapshot=snapshot,label__icontains=q) | Charge.objects.filter(snapshot=snapshot,penal_code__icontains=q)
     charges = [c for c in charges if c.is_leaf()]
