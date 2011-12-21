@@ -14,3 +14,7 @@ requirements/src/django-sentry-1.5.4.tar.gz
 requirements/src/django-munin-0.1.1.tar.gz
 requirements/src/django-appconf-0.4.1.tar.gz
 requirements/src/django_compressor-1.1.1.tar.gz
+requirements/src/django-modeldict-1.1.6.tar.gz
+requirements/src/nexus-0.2.3.tar.gz
+requirements/src/django-jsonfield-0.5.tar.gz
+requirements/src/gargoyle-0.6.2.tar.gz

@@ -74,6 +74,8 @@ INSTALLED_APPS = (
     'johnny',
     'munin',
     'compressor',
+    'gargoyle',
+    'nexus',
 )
 
 COMPRESS_URL = "/site_media/"
