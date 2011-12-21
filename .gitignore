@@ -4,3 +4,4 @@ pip-log.txt
 *.pyc
 *~
 ve
+CACHE

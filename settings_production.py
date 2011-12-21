@@ -5,6 +5,7 @@ TEMPLATE_DIRS = (
 )
 
 MEDIA_ROOT = '/var/www/ccdb/uploads/'
+COMPRESS_ROOT = '/var/www/ccdb/ccdb/media/'
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG

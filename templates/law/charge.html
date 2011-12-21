@@ -1,9 +1,12 @@
 {% extends "base.html" %}
+{% load compress %}
 {% load cc_extras %}
 {% load cache %}
 {% block title %}{{ charge.penal_code }} {{ charge.label }}{% endblock %}
 {% block js %}
+{% compress js %}
     <script src="/site_media/js/splitanchor.js" type="text/javascript"></script>
+{% endcompress %}
 {% endblock %}
 {% block breadcrumbs %}
 {% for p in charge.parents %}&raquo;<a href="{{p.get_absolute_url}}">{{ p.penal_code }} {{ p.label }}</a>{% endfor %}

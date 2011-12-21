@@ -12,3 +12,5 @@ requirements/src/django-paging-0.2.2.tar.gz
 requirements/src/django-indexer-0.2.1.tar.gz
 requirements/src/django-sentry-1.5.4.tar.gz
 requirements/src/django-munin-0.1.1.tar.gz
+requirements/src/django-appconf-0.4.1.tar.gz
+requirements/src/django_compressor-1.1.1.tar.gz

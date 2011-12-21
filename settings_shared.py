@@ -73,7 +73,12 @@ INSTALLED_APPS = (
     'typogrify',
     'johnny',
     'munin',
+    'compressor',
 )
+
+COMPRESS_URL = "/site_media/"
+COMPRESS_ROOT = "media/"
+
 import logging
 from sentry.client.handlers import SentryHandler
 logger = logging.getLogger()
