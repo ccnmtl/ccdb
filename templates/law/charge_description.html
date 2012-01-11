@@ -5,6 +5,6 @@
 {{ block.super }}
 <div class="beta">
 <h1>Tips/Strategies</h1>
-{{charge.get_description|markdown}}
+{{charge.get_description|markdown|default:"no tips/strategies are available for this charge"}}
 </div>
 {% endblock %}
