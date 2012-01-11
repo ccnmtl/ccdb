@@ -178,7 +178,7 @@ class Charge(models.Model):
     # for sorting purposes
     numeric_penal_code = models.FloatField(editable=False,blank=True,null=True)
     description = models.TextField(blank=True,null=True,default="",
-                                   help_text="""tips/strategies""")
+                                   help_text="""tips/strategies. if this is empty, it will inherit from its parent Charge""")
 
     class Meta:
         ordering = ('numeric_penal_code','penal_code','label')
