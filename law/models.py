@@ -1,4 +1,3 @@
-import sets
 from django.db import models
 from django.contrib.auth.models import User
 from django.http import Http404
@@ -116,7 +115,7 @@ class Snapshot(models.Model):
 
     def top_level_charges(self):
         """ charges that don't have any parents """
-        all_children = sets.Set([c.child_id for c in self.all_chargechildren()])
+        all_children = set([c.child_id for c in self.all_chargechildren()])
         return [c for c in self.charge_set.all().order_by('numeric_penal_code','penal_code') if c.id not in all_children]
 
 
@@ -481,7 +480,7 @@ class Charge(models.Model):
             total_count = 0
             for c in certainties:
                 # need to uniquify
-                area_results[c] = list(sets.Set(area_results[c]))
+                area_results[c] = list(set(area_results[c]))
                 area_results[c].sort(key=lambda x: x.consequence.label)
                 # stick counts in here
                 area_results[c + "_count"] = len(area_results[c])
