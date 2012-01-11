@@ -76,10 +76,13 @@ INSTALLED_APPS = (
     'compressor',
     'gargoyle',
     'nexus',
+    'south',
 )
 
 COMPRESS_URL = "/site_media/"
 COMPRESS_ROOT = "media/"
+
+SOUTH_TESTS_MIGRATE = False
 
 import logging
 from sentry.client.handlers import SentryHandler
