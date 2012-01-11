@@ -338,6 +338,13 @@ def view_charge(request,slugs):
         charge2 = snapshot.get_charge_by_slugs(charge2_path.split("/"))
     return dict(charge=charge,charge2=charge2,charges=snapshot.top_level_charges())
 
+@rendered_with('law/charge_description.html')
+def view_charge_tips(request,slugs):
+    slugs = slugs.split("/")
+    snapshot = public_snapshot()
+    charge = snapshot.get_charge_by_slugs(slugs)
+    return dict(charge=charge)
+
 
 @user_passes_test(lambda u: u.is_staff)
 @rendered_with('law/edit_classification_index.html')

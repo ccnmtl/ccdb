@@ -198,6 +198,16 @@ class Charge(models.Model):
         else:
             return "/charge/" + "/".join([p.name for p in parents]) + "/" + self.name + "/"
 
+    def get_description(self):
+        """ inherit description from parent if it isn't set """
+        if self.description != "":
+            return self.description
+        parents = self.parents()
+        if len(parents) == 0:
+            return ""
+        else:
+            return parents[-1].get_description()
+
     def clone_to(self,new_snapshot):
         return Charge.objects.create(snapshot=new_snapshot,label=self.label,
                                      penal_code=self.penal_code,name=self.name,
@@ -208,6 +218,9 @@ class Charge(models.Model):
 
     def has_children(self):
         return ChargeChildren.objects.filter(parent=self).count() > 0
+
+    def has_parents(self):
+        return ChargeChildren.objects.filter(child=self).count() > 0
 
     def is_leaf(self):
         return not self.has_children()

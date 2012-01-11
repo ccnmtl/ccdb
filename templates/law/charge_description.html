@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load markup %}
+{% block title %}{{ charge.name }}{% endblock %}
+{% block content %}
+{{ block.super }}
+<div class="beta">
+<h1>Tips/Strategies</h1>
+{{charge.get_description|markdown}}
+</div>
+{% endblock %}

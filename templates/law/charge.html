@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load markup %}
 {% load gargoyle_tags %}
 {% load compress %}
 {% load cc_extras %}
@@ -133,6 +134,8 @@
 		{% endif %} {# /charge.view_all #}
 	      </div> <!-- /offensebox -->
 
+	      <p><a target="_blank" href="{{charge.get_absolute_url}}tips/">tips/strategies</a></p>
+
 	  {% if not charge.children and charge.no_areas %}
 	  <p class="offensenotvetted">This charge has not been vetted for the following areas:</p>
 
@@ -187,6 +190,9 @@
 		  </tbody>
 		</table>
 	      </div> <!-- /offensebox -->
+
+	      <p><a target="_blank" href="{{charge2.get_absolute_url}}tips/">tips/strategies</a></p>
+
 	  {% if not charge2.children and charge2.no_areas %}
 	  <p class="offensenotvetted">This charge has not been vetted for the following areas:</p>
 
