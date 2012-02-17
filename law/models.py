@@ -20,6 +20,15 @@ class Snapshot(models.Model):
     def __unicode__(self):
         return self.label
 
+    def to_json(self):
+        return dict(label=self.label,
+                    description=self.description,
+                    status=self.status,
+                    created=str(self.created),
+                    modified=str(self.modified),
+                    id=self.id,
+                    charges=[c.to_json() for c in self.charge_set.all() if not c.has_children()])
+
     def is_most_recent_vetted(self):
         s = public_snapshot()
         return s.id == self.id
@@ -197,6 +206,16 @@ class Charge(models.Model):
             return "/charge/%s/" % self.name
         else:
             return "/charge/" + "/".join([p.name for p in parents]) + "/" + self.name + "/"
+
+    def to_json(self):
+        return dict(
+            label=self.label,
+            penal_code=self.penal_code,
+            slug=self.name,
+            numeric_penal_code=self.numeric_penal_code,
+            description=self.description,
+            consequences=self.all_consequences_by_area_json(),
+            )
 
     def get_description(self):
         """ inherit description from parent if it isn't set """
@@ -467,6 +486,29 @@ class Charge(models.Model):
         yes = self.yes_areas()
         return [area for area in Area.objects.filter(snapshot=self.snapshot) if area not in yes]
 
+    def all_consequences_by_area_json(self):
+        """ get a flat json serialized version of the consequences data"""
+        data = self.all_consequences_by_area()
+        clean_data = []
+        for a in data:
+            clean_a = dict()
+            clean_a['area'] = a['area'].to_json()
+            clean_a['yes'] = [dict(
+                    classification=cc['classification'].to_json(),
+                    consequences=[c.consequence.to_json() for c in cc['consequences']])
+                    for cc in a['yes']]
+            clean_a['probably'] = [dict(
+                    classification=cc['classification'].to_json(),
+                    consequences=[c.consequence.to_json() for c in cc['consequences']])
+                    for cc in a['probably']]
+            clean_a['maybe'] = [dict(
+                    classification=cc['classification'].to_json(),
+                    consequences=[c.consequence.to_json() for c in cc['consequences']])
+                    for cc in a['maybe']]
+            clean_data.append(clean_a)
+        return clean_data
+
+
     def all_consequences_by_area(self):
         """ return all consequences for the charge, organized by Area -> Certainty. 
         for ease of template display. Include ones from parents """
@@ -546,6 +588,11 @@ class Classification(models.Model):
 
     def get_absolute_url(self):
         return "/classification/%s/" % self.name
+
+    def to_json(self):
+        return dict(label=self.display_label(),
+                    slug=self.name,
+                    description=self.description)
 
     def clone_to(self,new_snapshot):
         return Classification.objects.create(snapshot=new_snapshot,
@@ -639,6 +686,11 @@ class Area(models.Model):
         return Area.objects.create(snapshot=new_snapshot,label=self.label,
                                    name=self.name)
 
+    def to_json(self):
+        return dict(label=self.label,
+                    slug=self.name,
+                    id=self.id)
+
 class Consequence(models.Model):
     label = models.CharField(max_length=256)
     description = models.TextField(blank=True)
@@ -653,6 +705,11 @@ class Consequence(models.Model):
             return re.sub(r"\s*\[[^\[]+\]","",self.label)
         else:
             return self.label
+
+    def to_json(self):
+        return dict(label=self.display_label(),
+                    description=self.description,
+                    slug=self.name)
 
     def get_absolute_url(self):
         return self.area.get_absolute_url() + self.name + "/"

@@ -132,6 +132,12 @@ def graph(request):
                 all_classifications=Classification.objects.filter(snapshot=snapshot),
                 all_areas=Area.objects.filter(snapshot=snapshot))
 
+def api_current(request):
+    snapshot = public_snapshot()
+    data = dict()
+    data['snapshot'] = snapshot.to_json()
+    return HttpResponse(simplejson.dumps(data),content_type="application/json")
+
 @user_passes_test(lambda u: u.is_staff)
 @rendered_with('law/edit_charge_index.html')
 def edit_charge_index(request):
