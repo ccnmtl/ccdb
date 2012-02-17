@@ -12,6 +12,8 @@ import simplejson
 from django.core.mail import send_mail
 from restclient import POST
 from munin.helpers import muninview
+from zipfile import ZipFile, ZIP_DEFLATED
+from cStringIO import StringIO
 
 class rendered_with(object):
     def __init__(self, template_name):
@@ -136,7 +138,17 @@ def api_current(request):
     snapshot = public_snapshot()
     data = dict()
     data['snapshot'] = snapshot.to_json()
-    return HttpResponse(simplejson.dumps(data),content_type="application/json")
+    json = simplejson.dumps(data)
+    if request.GET.get('zip',False):
+        buffer = StringIO()
+        zipfile = ZipFile(buffer,"w",ZIP_DEFLATED)
+        zipfile.writestr("snapshot.json",json)
+        zipfile.close()
+        resp = HttpResponse(buffer.getvalue())
+        resp['Content-Disposition'] = "attachment; filename=snapshot.zip" 
+        return resp
+    else:
+        return HttpResponse(json,content_type="application/json")
 
 @user_passes_test(lambda u: u.is_staff)
 @rendered_with('law/edit_charge_index.html')
