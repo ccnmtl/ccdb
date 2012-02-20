@@ -1004,3 +1004,32 @@ ul#primarynavtabs li { display: inline;}
 {
 	display: none;
 }
+
+#videos {
+display: block;
+width: 900px;
+margin-left: auto;
+margin-right: auto;
+}
+
+#first-video {
+float: left;
+width: 450px;
+height: 325px;
+}
+#second-video {
+float: left;
+width: 450px;
+height: 325px;
+}
+
+#videos a {
+text-decoration: none;
+color: #333;
+font-size: 1.2em;
+margin: 1em;
+}
+
+#videos p {
+margin: 1em;
+}
