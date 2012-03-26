@@ -1,0 +1,6 @@
+<ul>
+{% for charge in charges %}
+<li class="autocomplete"><a href="{{charge.get_absolute_url}}">{{ charge.penal_code }} {{ charge.label }}</a></li>
+{% endfor %}
+</ul>
+

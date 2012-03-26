@@ -302,6 +302,17 @@ def search(request):
     charges = [c for c in charges if c.is_leaf()]
     return dict(charges=charges)
 
+@rendered_with('law/autocomplete.html')
+def autocomplete(request):
+    q = request.GET.get('q','')
+    if q == '':
+        return HttpResponseRedirect("/")
+
+    snapshot = public_snapshot()
+    charges = Charge.objects.filter(snapshot=snapshot,label__icontains=q) | Charge.objects.filter(snapshot=snapshot,penal_code__icontains=q)
+    charges = [c for c in charges if c.is_leaf()]
+    return dict(charges=charges)
+
 @user_passes_test(lambda u: u.is_staff)
 def remove_charge_classification(request,slugs="",classification_id=""):
     if slugs[-1] == "/":

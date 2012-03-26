@@ -54,6 +54,8 @@ urlpatterns = patterns('',
                        ('^edit/search/$','ccdb.law.views.edit_search'),
 
                        ('^search/$','ccdb.law.views.search'),
+                       ('^autocomplete/$','ccdb.law.views.autocomplete'),
+                       
 
                        ('^stats/total_events/$','ccdb.law.views.total_events'),
                        ('^stats/total_snapshots/$','ccdb.law.views.total_snapshots'),

@@ -16,6 +16,7 @@ function addEventHandler( node, eventName, eventHandler ){
 }
 
 function autoComplete(e){
+	var dropDiv = document.getElementById('dropdown');
 	//determine if IE is in the mix
 	if (e.target){
 		var node = e.target;
@@ -27,19 +28,21 @@ function autoComplete(e){
 	if(val.length > 2){
 		var ajax= Xhr_request.createXhrObject();//created from resulting object from xhr.js 
 		
-		ajax.open("GET","search?q=" + val,true);
+		ajax.open("GET","/autocomplete?q=" + val,true);
 		ajax.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 		ajax.send(); 
 		//create a ready state handler
 		ajax.onreadystatechange=function(){
 			if (ajax.readyState==4 && ajax.status==200){
-			var q = ajax.responseText;
-			var list = q.getElementByTag('li');
-			console.log(list);
-			return ajax.responseText;
-    		}
-		}
+			var q = ajax.responseText;			
+			dropDiv.innerHTML = '';
+			dropDiv.innerHTML = q;
+			return q;
 			
+    		}
+		}		
+	}else{
+		dropDiv.innerHTML = '';
 	}
 }
 
