@@ -17,6 +17,7 @@ function addEventHandler( node, eventName, eventHandler ){
 
 function autoComplete(e){
 	var dropDiv = document.getElementById('dropdown');
+	var pageBody = document.getElementById('pagebody');
 	//determine if IE is in the mix
 	if (e.target){
 		var node = e.target;
@@ -25,25 +26,22 @@ function autoComplete(e){
 	}
 	//test if the text entered is greater than 2, if so then run the query
 	var val = node.value;
-	if(val.length > 2){
 		var ajax= Xhr_request.createXhrObject();//created from resulting object from xhr.js 
-		
 		ajax.open("GET","/autocomplete?q=" + val,true);
 		ajax.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 		ajax.send(); 
 		//create a ready state handler
 		ajax.onreadystatechange=function(){
 			if (ajax.readyState==4 && ajax.status==200){
-			var q = ajax.responseText;			
-			dropDiv.innerHTML = '';
-			dropDiv.innerHTML = q;
-			return q;
-			
+				var q = ajax.responseText;
+				var evaluate = new Function(q);
+				evaluate();
+				console.log(searchTags);
+				jQuery("#offense_text").autocomplete({
+					source: searchTags
+				});
     		}
-		}		
-	}else{
-		dropDiv.innerHTML = '';
-	}
+		}//end ajax ready state
 }
 
 

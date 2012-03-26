@@ -80,18 +80,18 @@
       
       <p><i><b>Results may take a few seconds to load, please be patient.</b></i></p>
 
-	<h3>Search offense/penal code:</h3> 
+	<h3>Search offense/penal code:</h3>
+	<div class="ui-widget">
 	<form action="/search/" method="get"> 
-	  <input class="textfield" type="text" id="offense_text" name="q" /> 
+	  <input class="textfield" type="text" id="offense_text" autocomplete="off" name="q" /> 
 	  <input type="submit" class="searchButton" value="Search" /> 
 	</form>
-	<div id="dropdown">
-	</div><!--end #dropdown-->
+	</div><!-- end .ui-widget-->
 	<br /> 
 	
 	<h3 class="two-categories"><span>Select a criminal offense:</span></h3>
 	<ul id="offenses" class="menu"><!-- Begin the charges listed by Offenses -->
-          {% cache 5000 menu_compare %}	  
+      {% cache 5000 menu_compare %}	  
 	  {% for charge in charges %}
 	  {{ charge.as_view_ul|safe}}
 	  {% endfor %}

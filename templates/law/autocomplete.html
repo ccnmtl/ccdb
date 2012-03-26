@@ -1,6 +1,7 @@
-<ul>
+{% if charges|length >= 1 %}
+	searchTags = [];
 {% for charge in charges %}
-<li class="autocomplete"><a href="{{charge.get_absolute_url}}">{{ charge.penal_code }} {{ charge.label }}</a></li>
+	searchTags.push('{{ charge.label }}' );
 {% endfor %}
-</ul>
+{% endif %}
 
