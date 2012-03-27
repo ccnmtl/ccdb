@@ -310,8 +310,10 @@ def autocomplete(request):
 
     snapshot = public_snapshot()
     charges = Charge.objects.filter(snapshot=snapshot,label__icontains=q) | Charge.objects.filter(snapshot=snapshot,penal_code__icontains=q)
-    charges = [c for c in charges if c.is_leaf()]
-    return dict(charges=charges)
+    charges = [c.label for c in charges if c.is_leaf()]
+    json=simplejson.dumps(charges)
+    return HttpResponse(json, mimetype='application/json')
+    
 
 @user_passes_test(lambda u: u.is_staff)
 def remove_charge_classification(request,slugs="",classification_id=""):

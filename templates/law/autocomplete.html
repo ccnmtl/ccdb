@@ -1,7 +1,5 @@
-{% if charges|length >= 1 %}
-	searchTags = [];
-{% for charge in charges %}
-	searchTags.push('{{ charge.label }}' );
-{% endfor %}
+{% if json %}
+{{ json }}
 {% endif %}
+
 
