@@ -309,7 +309,7 @@ def autocomplete(request):
 
     snapshot = public_snapshot()
     charges = Charge.objects.filter(snapshot=snapshot,label__icontains=q) | Charge.objects.filter(snapshot=snapshot,penal_code__icontains=q)
-    charges = [c.label for c in charges if c.is_leaf()]
+    charges = list(set([c.label for c in charges if c.is_leaf()]))
     json=simplejson.dumps(charges)
     return HttpResponse(json, mimetype='application/json')
     
