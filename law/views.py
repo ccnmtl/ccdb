@@ -303,10 +303,12 @@ def search(request):
     return dict(charges=charges)
 
 def autocomplete(request):
-    q = request.GET.get('q','')
+    q = request.GET.get('term','')
     if q == '':
         return HttpResponseRedirect("/")
 
+    q = q.lower()
+    q = q.replace("marij","marih") # NYS criminal code always calls it "marihuana" so this is a common issue when searching
     snapshot = public_snapshot()
     charges = Charge.objects.filter(snapshot=snapshot,label__icontains=q) | Charge.objects.filter(snapshot=snapshot,penal_code__icontains=q)
     charges = list(set([c.label for c in charges if c.is_leaf()]))
