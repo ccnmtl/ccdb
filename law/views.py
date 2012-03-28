@@ -302,7 +302,6 @@ def search(request):
     charges = [c for c in charges if c.is_leaf()]
     return dict(charges=charges)
 
-@rendered_with('law/autocomplete.html')
 def autocomplete(request):
     q = request.GET.get('q','')
     if q == '':
