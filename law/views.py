@@ -624,13 +624,14 @@ def remove_consequence_from_classification(request,slug,consequence_id):
     snapshot = working_snapshot()
     consequence = get_object_or_404(Consequence,id=consequence_id)
     classification = get_object_or_404(Classification,snapshot=snapshot,name=slug)
-    cc = get_object_or_404(ClassificationConsequence,consequence=consequence,classification=classification)
+    ccs = ClassificationConsequence.objects.filter(consequence=consequence,classification=classification)
     if request.POST:
-        cc.delete()
-        e = Event.objects.create(snapshot=snapshot,
-                                 user=request.user,
-                                 description="consequence **%s** removed from classification **%s**" % (consequence.label,cc.classification.label),
-                                 note=request.POST.get('comment',''))
+        for cc in ccs:
+            cc.delete()
+            e = Event.objects.create(snapshot=snapshot,
+                                     user=request.user,
+                                     description="consequence **%s** removed from classification **%s**" % (consequence.label,cc.classification.label),
+                                     note=request.POST.get('comment',''))
         return HttpResponseRedirect("/edit" + classification.get_absolute_url())
     return render_to_response("law/remove_classification_consequence.html",dict(consequence=consequence,classification=classification))
 
