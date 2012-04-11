@@ -610,6 +610,9 @@ def add_consequence_to_classification(request,slug):
     snapshot = working_snapshot()
     consequence = get_object_or_404(Consequence,id=request.POST['consequence_id'])
     classification = get_object_or_404(Classification,snapshot=snapshot,name=slug)
+    # first, check if one already exists
+    if ClassificationConsequence.objects.filter(consequence=consequence,classification=classification).count() > 0:
+        return HttpResponse("this consequence is already associated with this classification")
     cc = ClassificationConsequence.objects.create(consequence=consequence,
                                                   classification=classification,
                                                   certainty=request.POST.get('certainty','yes'))
