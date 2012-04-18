@@ -288,7 +288,7 @@ class Charge(models.Model):
         leaf = not self.has_children()
 
         if leaf:
-            link = "<a href=\"?charge2=" + self.get_absolute_url() + "\">"
+            link = "<a class=\"compare\" href=\"?charge2=" + self.get_absolute_url() + "\">"
         else:
             link = "<a href=\"#compare-charge-" + str(self.id) + "\" class=\"hs-control\">"
         parts = ["<li class=\"menuitem\">",link,self.penal_code," ",
@@ -301,7 +301,6 @@ class Charge(models.Model):
             parts.append("</ul>")
         parts.append("</li>")
         return "".join(parts)
-
     
 
     def parents(self,acc=None):

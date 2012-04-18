@@ -306,7 +306,6 @@ def autocomplete(request):
     q = request.GET.get('term','')
     if q == '':
         return HttpResponseRedirect("/")
-
     q = q.lower()
     q = q.replace("marij","marih") # NYS criminal code always calls it "marihuana" so this is a common issue when searching
     snapshot = public_snapshot()
@@ -314,7 +313,7 @@ def autocomplete(request):
     charges = list(set([c.label for c in charges if c.is_leaf()]))
     json=simplejson.dumps(charges)
     return HttpResponse(json, mimetype='application/json')
-    
+
 
 @user_passes_test(lambda u: u.is_staff)
 def remove_charge_classification(request,slugs="",classification_id=""):
@@ -367,8 +366,10 @@ def view_charge(request,slugs):
     if request.GET.get('charge2',''):
         charge2_path = request.GET.get('charge2','')[len("/charge/"):].strip("/")
         charge2_slugs = charge2_path.split("/")
-        charge2 = snapshot.get_charge_by_slugs(charge2_path.split("/"))
+        charge2 = snapshot.get_charge_by_slugs(charge2_slugs)
+        charges=snapshot.top_level_charges()
     return dict(charge=charge,charge2=charge2,charges=snapshot.top_level_charges())
+
 
 @rendered_with('law/charge_description.html')
 def view_charge_tips(request,slugs):

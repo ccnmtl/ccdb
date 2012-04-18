@@ -329,9 +329,25 @@ h3.comparison
 	border: 0;
 	font: bold 12px verdana, 'trebuchet ms', helvetica, arial, sans-serif;
 	color: #369;
-	border-bottom: 1px dotted #999;
+	/*border-bottom: 1px dotted #999;*/
 }
-
+#compare_return
+{
+    float:left;
+}
+#list_chzn
+{
+    width: 180px !important;
+}
+#compare_auto_complete
+{
+    border-bottom: 1px dotted #999;
+}
+#compare_btn
+{
+    float:left;
+    margin: 0 0 10px 10px;
+}
 div.comparison
 {
 	margin: 0;
@@ -743,7 +759,7 @@ div.forthisoffense
 
 .textfield
 {
-	width: 200px;
+	width: 180px;
 }
 
 .searchButton
@@ -756,7 +772,7 @@ div.forthisoffense
 	border-right: 2px solid #666 !important;
 	border-bottom: 2px solid #666 !important;
 	cursor: pointer !important;
-	font: normal 11px/130% arial, verdana, helvetica, sans-serif;
+	font: normal 11px/130% arial, verdana, helvetica, sans-serif !important;
 }
 
 .searchButton:active

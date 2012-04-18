@@ -41,7 +41,19 @@
 
 	<!-- List of charges to compare -->
 	<div id="comparelist">
-	  <h3 class="comparison">Compare this offense with...</h3>
+	  <div id="compare_auto_complete">
+		<h3 class="comparison">Compare this offense with...</h3>
+		<div id="compare_return">
+			<select id="list" data-placeholder="Compare with..." class="chzn-select">
+				<option></option>
+			</select>
+		</div><!--end compare_return-->
+		<div id ="compare_btn">
+			<input type="button" class="searchButton" value="Compare">
+		</div><!--end compare_btn-->
+	  <br style="clear:both" /> 
+	</div><!-- end #compare_auto_complete -->
+	
 	  <ul id="offenses" class="menu"><!-- Begin the charges listed by Offenses -->
 	    {% cache 5000 menu %}
 	    {% for charge in charges %}
@@ -51,15 +63,17 @@
 	  </ul>
 	</div><!-- /comparelist -->
 
-
 	<div id="newsearchlist">
 
 	  <h3>Search offense/penal code:</h3> 
-	  <form action="/search/" method="get"> 
-	    <input class="textfield" type="text" id="offense_text" name="q" /> 
-	    <input type="submit" class="searchButton" autocomplete="on" value="Search" /> 
-	  </form> 
-	  <br /> 
+      </select>
+	    <div class="ui-widget">
+	<form action="/search/" method="get"> 
+	  <input class="textfield" type="text" id="offense_text" autocomplete="on" name="q" /> 
+	  <input type="submit" class="searchButton" value="Search" /> 
+	</form>
+	</div><!-- end .ui-widget-->
+	<br /> 
 
 	  <h3 class="comparison">Start over with a new offense:</h3>
 	  <ul id="offenses-so" class="menu"><!-- Begin the charges listed by Offenses -->
@@ -320,4 +334,11 @@
     </div> <!-- /beta-inner -->
   </div> <!-- /beta -->
   <div style="clear:both" />
+  <script src="/site_media/js/chosen.jquery.js"></script>
+  <script>
+    jQuery(document).ready(function(){
+  	  jQuery(".chzn-select").chosen(); 
+      //jQuery(".chzn-select-deselect").chosen({allow_single_deselect:true});
+   });
+  </script>
 {% endblock %}
