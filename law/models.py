@@ -230,6 +230,7 @@ class Charge(models.Model):
     def clone_to(self,new_snapshot):
         return Charge.objects.create(snapshot=new_snapshot,label=self.label,
                                      penal_code=self.penal_code,name=self.name,
+                                     description=self.description,
                                      numeric_penal_code=self.numeric_penal_code)
 
     def children(self):
