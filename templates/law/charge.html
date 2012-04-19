@@ -41,18 +41,22 @@
 
 	<!-- List of charges to compare -->
 	<div id="comparelist">
+	  {% load gargoyle_tags %}
+      {% ifswitch auto_compare %}
 	  <div id="compare_auto_complete">
-		<h3 class="comparison">Compare this offense with...</h3>
-		<div id="compare_return">
+	    <h3 class="comparison">Compare this offense with...</h3>
+		  <div id="compare_return">
 			<select id="list" data-placeholder="Compare with..." class="chzn-select">
-				<option></option>
+			  <option></option>
 			</select>
-		</div><!--end compare_return-->
-		<div id ="compare_btn">
+		  </div><!--end compare_return-->
+		  <div id ="compare_btn">
 			<input type="button" class="searchButton" value="Compare">
-		</div><!--end compare_btn-->
-	  <br style="clear:both" /> 
-	</div><!-- end #compare_auto_complete -->
+		  </div><!--end compare_btn-->
+	      <br style="clear:both" />
+	  </div><!-- end #compare_auto_complete -->
+	  {% else %}
+	  {% endifswitch %}
 	
 	  <ul id="offenses" class="menu"><!-- Begin the charges listed by Offenses -->
 	    {% cache 5000 menu %}

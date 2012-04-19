@@ -10,6 +10,7 @@ site_media_root = os.path.join(os.path.dirname(__file__),"media")
 
 urlpatterns = patterns('',
                        ('^$','ccdb.law.views.index'),
+                       #('^charge/(.*)', 'ccdb.law.views.view_gargoyle_switch'),
                        ('^charge/(?P<slugs>.+)/tips/$','ccdb.law.views.view_charge_tips'),
                        ('^charge/(?P<slugs>.+)/$','ccdb.law.views.view_charge'),
                        ('^classification/(?P<slug>[^\/]+)/$','ccdb.law.views.view_classification'),
