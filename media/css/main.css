@@ -325,7 +325,7 @@ h3.selectedoffense
 h3.comparison
 {
 	margin: 0;
-	padding: 5px;
+	padding: 4px 0 2px 0;
 	border: 0;
 	font: bold 12px verdana, 'trebuchet ms', helvetica, arial, sans-serif;
 	color: #369;
@@ -337,7 +337,7 @@ h3.comparison
 }
 #list_chzn
 {
-    width: 180px !important;
+    width: 185px !important;
 }
 #compare_auto_complete
 {
@@ -346,7 +346,7 @@ h3.comparison
 #compare_btn
 {
     float:left;
-    margin: 0 0 10px 10px;
+    margin:-1px 0 10px 4px;
 }
 div.comparison
 {

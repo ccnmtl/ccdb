@@ -313,6 +313,8 @@
 	margin: 0;
 	display:block;
 	float: left;
+	max-height: 300px;
+    overflow-y: scroll;
 }
 .ui-menu .ui-menu {
 	margin-top: -3px;
