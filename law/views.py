@@ -14,6 +14,8 @@ from restclient import POST
 from munin.helpers import muninview
 from zipfile import ZipFile, ZIP_DEFLATED
 from cStringIO import StringIO
+from django.conf import settings
+import os.path
 
 class rendered_with(object):
     def __init__(self, template_name):
@@ -90,6 +92,7 @@ def approve_snapshot(request,id):
     snapshot = get_object_or_404(Snapshot,id=id)
     snapshot.status = 'vetted'
     snapshot.save()
+
     e = Event.objects.create(snapshot=snapshot,
                              user=request.user,
                              description="snapshot approved for production")
@@ -98,6 +101,22 @@ def approve_snapshot(request,id):
     new_snapshot = snapshot.clone(label="%04d-%02d-%02d %02d:%02d" % (n.year,n.month,n.day,n.hour,n.minute),
                                   user=request.user,
                                   description="")
+
+    # make a static dump of the vetted one
+    data = dict()
+    data['snapshot'] = snapshot.to_json()
+    json = simplejson.dumps(data)
+    media_dir = settings.MEDIA_ROOT
+    filename_base = snapshot.dump_filename_base()
+    json_full_path = os.path.join(media_dir,"dumps",filename_base + ".json")
+    zip_full_path = os.path.join(media_dir,"dumps",filename_base + ".zip")
+    with open(json_full_path,"w") as jsonfile:
+        jsonfile.write(json)
+
+    zipfile = ZipFile(zip_full_path,"w",ZIP_DEFLATED)
+    zipfile.writestr("snapshot.json",json)
+    zipfile.close()
+
     return HttpResponseRedirect("/edit/snapshots/")
 
 @user_passes_test(lambda u: u.is_staff)
@@ -137,18 +156,11 @@ def graph(request):
 def api_current(request):
     snapshot = public_snapshot()
     data = dict()
-    data['snapshot'] = snapshot.to_json()
+    filename_base = snapshot.dump_filename_base()
+    data['json_url'] = settings.MEDIA_URL + "dumps/" + filename_base + ".json"
+    data['zip_url'] = settings.MEDIA_URL + "dumps/" + filename_base + ".zip"
     json = simplejson.dumps(data)
-    if request.GET.get('zip',False):
-        buffer = StringIO()
-        zipfile = ZipFile(buffer,"w",ZIP_DEFLATED)
-        zipfile.writestr("snapshot.json",json)
-        zipfile.close()
-        resp = HttpResponse(buffer.getvalue())
-        resp['Content-Disposition'] = "attachment; filename=snapshot.zip" 
-        return resp
-    else:
-        return HttpResponse(json,content_type="application/json")
+    return HttpResponse(json,content_type="application/json")
 
 @user_passes_test(lambda u: u.is_staff)
 @rendered_with('law/edit_charge_index.html')

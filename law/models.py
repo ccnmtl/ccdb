@@ -20,6 +20,13 @@ class Snapshot(models.Model):
     def __unicode__(self):
         return self.label
 
+    def dump_filename_base(self):
+        """ filename base for json/zip dumps """
+        datestring = "%04d-%02d-%02dT%02d:%02d:%02d" % (self.created.year, self.created.month, 
+                                                        self.created.day, self.created.hour, 
+                                                        self.created.minute, self.created.second)
+        return "%04d-%s" % (self.id,datestring)
+
     def to_json(self):
         return dict(label=self.label,
                     description=self.description,
