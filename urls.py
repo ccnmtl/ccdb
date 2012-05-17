@@ -65,7 +65,7 @@ urlpatterns = patterns('',
 
                        ('^feedback/$','ccdb.law.views.feedback'),
                        ('^accounts/',include('djangowind.urls')),
-                       (r'^admin/(.*)', admin.site.root),
+                       (r'^admin/', include(admin.site.urls)),
                        (r'^nexus/', include(nexus.site.urls)),
                        (r'^munin/',include('munin.urls')),
                        (r'^site_media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': site_media_root}),
