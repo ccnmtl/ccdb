@@ -19,3 +19,4 @@ requirements/src/nexus-0.2.3.tar.gz
 requirements/src/django-jsonfield-0.5.tar.gz
 requirements/src/gargoyle-0.6.2.tar.gz
 requirements/src/South-0.7.3.tar.gz
+requirements/src/django-statsd-mozilla-0.3.3.tar.gz

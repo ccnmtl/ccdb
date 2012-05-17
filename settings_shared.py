@@ -38,6 +38,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     )
 
 MIDDLEWARE_CLASSES = (
+    'django_statsd.middleware.GraphiteRequestTimingMiddleware',
+    'django_statsd.middleware.GraphiteMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -77,7 +79,14 @@ INSTALLED_APPS = (
     'gargoyle',
     'nexus',
     'south',
+    'django_statsd',
 )
+
+STATSD_CLIENT = 'statsd.client'
+STATSD_PREFIX = 'ccdb'
+STATSD_HOST = 'localhost'
+STATSD_PORT = 8125
+STATSD_PATCHES = ['django_statsd.patches.db', ]
 
 COMPRESS_URL = "/site_media/"
 COMPRESS_ROOT = "media/"
