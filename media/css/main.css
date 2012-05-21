@@ -523,6 +523,7 @@ h3.newsearch
 	padding: 0;
 	background: none;
 	border: 0;
+	min-height: 210px;
 }
 
 .beta-inner
@@ -1019,6 +1020,12 @@ ul#primarynavtabs li { display: inline;}
 .disclaimer_print
 {
 	display: none;
+}
+#disclaimer_tips_strategies{
+    float:left;
+    width:225px;
+    padding:8px;
+    font-size:10px;
 }
 
 #videos {
