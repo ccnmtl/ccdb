@@ -265,13 +265,13 @@ class Charge(models.Model):
         leaf = not self.has_children()
 
         if leaf:
-            link = "<a href=\"" + link_prefix + self.get_absolute_url() + "\">"
+            link = "<span class=\"charge\" href=\"" + link_prefix + self.get_absolute_url() + "\"></span>"
         else:
             if not hs:
                 link = "<a href=\"" + link_prefix + self.get_absolute_url() + "\">"
             else:
                 link = "<a href=\"#charge-" + str(self.id) + "\" class=\"" + "hs-control" + "\">"
-        parts = ["<li class=\"menuitem\">",link,self.penal_code," ",
+        parts = ["<li class=\"menuitem leaf\">",link,self.penal_code," ",
                  self.label,"</a>"]
 
         if not leaf:
@@ -296,7 +296,7 @@ class Charge(models.Model):
         leaf = not self.has_children()
 
         if leaf:
-            link = "<a class=\"compare\" href=\"?charge2=" + self.get_absolute_url() + "\">"
+            link = "<span class=\"compare\" href=\"?charge2=" + self.get_absolute_url() + "\"></span>"
         else:
             link = "<a href=\"#compare-charge-" + str(self.id) + "\" class=\"hs-control\">"
         parts = ["<li class=\"menuitem\">",link,self.penal_code," ",

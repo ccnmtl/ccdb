@@ -1,7 +1,23 @@
 var hs_controls = new Array();
-
-var hs_ids = {};
 var HS_COOKIE_PREFIX = "hsstate_";
+var url_params = window.location.href.split('&')
+url_params.shift()
+
+//if urls params are defined, let create the hs_ids object form them
+if (url_params[0] === undefined){
+    var hs_ids = {};
+    //console.log('url params is undefined');
+}
+else{
+    var hs_ids = {};
+    for (url in url_params){
+        var keyValPair = url_params[url].split('=');
+        var key = keyValPair[0];
+        var val = keyValPair[1];
+        hs_ids[key] = val;
+    }
+    //console.log('url params is already defined');
+}
 
 function cookie_name(el) {
     var name =  HS_COOKIE_PREFIX + document.location;
@@ -199,6 +215,33 @@ function hs_init() {
         excerpt($('ainstr'));
         $('comment_form_textarea').focus();
     }
+    
+    //click handler for creating the url params from the hs_ids object on the start over and home page side
+    jQuery('span.charge').parent().each(function(){
+         jQuery(this).click(function(){
+            var loc = jQuery(this).children().attr('href');
+            var hs_ids2 = {}; 
+            for (key in hs_ids){
+                hs_ids2["compare-" + key] = hs_ids[key];
+             }
+            //create the new url string with the compare attribute. 
+            var urlStr = loc + '?start=1&' + jQuery.param(hs_ids2);
+            window.open(urlStr, '_self', false);
+        });
+    });
+    //click handler for creating the url params from the hs_ids object on the compare side
+    jQuery('span.compare').parent().each(function(){
+         jQuery(this).click(function(){
+            var loc = jQuery(this).children().attr('href');
+            var urlStr = loc + '&' + jQuery.param(hs_ids);
+            window.open(urlStr, '_self', false);
+        });
+    });
+    
 }
 
 addLoadEvent(hs_init);
+
+
+   
+
