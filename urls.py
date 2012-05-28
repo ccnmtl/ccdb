@@ -1,6 +1,7 @@
 from django.conf.urls.defaults import *
 from django.contrib import admin
 from django.conf import settings
+from django.views.generic.simple import direct_to_template
 import os.path
 import nexus
 admin.autodiscover()
@@ -68,6 +69,7 @@ urlpatterns = patterns('',
                        (r'^admin/', include(admin.site.urls)),
                        (r'^nexus/', include(nexus.site.urls)),
                        (r'^munin/',include('munin.urls')),
+                       ('^stats/',direct_to_template, {'template': 'law/stats.html'}),
                        (r'^site_media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': site_media_root}),
                        (r'^uploads/(?P<path>.*)$','django.views.static.serve',{'document_root' : settings.MEDIA_ROOT}),
 )
