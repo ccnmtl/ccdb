@@ -63,6 +63,17 @@ class Snapshot(models.Model):
         for event in self.event_set.all():
             event.delete()
 
+    def clone_parent_child_relationships(self, charge_map):
+        # clone parent-child relationships
+        for charge in self.charge_set.all():
+            newparent = charge_map[charge.id]
+            for cc in ChargeChildren.objects.filter(parent=charge):
+                newchild = charge_map[cc.child.id]
+                ChargeChildren.objects.create(parent=newparent,
+                                              child=newchild)
+        return charge_map
+
+
     def clone(self, label, user, description=""):
         new_snapshot = Snapshot.objects.create(label=label,
                                                description=description)
@@ -73,6 +84,8 @@ class Snapshot(models.Model):
         area_map = dict()
         classification_map = dict()
         consequence_map = dict()
+
+        charge_map = self.clone_parent_child_relationships(charge_map)
 
         for charge in self.charge_set.all():
             nc = charge.clone_to(new_snapshot)
@@ -88,13 +101,6 @@ class Snapshot(models.Model):
             nc = classification.clone_to(new_snapshot)
             classification_map[classification.id] = nc
 
-        # clone parent-child relationships
-        for charge in self.charge_set.all():
-            newparent = charge_map[charge.id]
-            for cc in ChargeChildren.objects.filter(parent=charge):
-                newchild = charge_map[cc.child.id]
-                ChargeChildren.objects.create(parent=newparent,
-                                              child=newchild)
 
         # clone charges -> classifications
 
