@@ -561,17 +561,9 @@ class Charge(models.Model):
             clean_data.append(clean_a)
         return clean_data
 
-    def all_consequences_by_area(self):
-        """ return all consequences for the charge, organized by
-        Area -> Certainty. for ease of template display.
-        Include ones from parents """
-
-        certainties = ["yes", "probably", "maybe"]
-
+    def gather_all_consequences(self):
         all_classifications = self.view_all()
         all_consequences = []
-
-        all_areas = self.snapshot.area_set.all()
 
         for cc in all_classifications:
             ccs = cc.classification.classificationconsequence_set.all()
@@ -583,6 +575,17 @@ class Charge(models.Model):
         all_consequences.sort(
             key=lambda x: (x['consequence'].consequence.area.label,
                            x['certainty']))
+        return all_consequences
+
+    def all_consequences_by_area(self):
+        """ return all consequences for the charge, organized by
+        Area -> Certainty. for ease of template display.
+        Include ones from parents """
+
+        certainties = ["yes", "probably", "maybe"]
+        all_areas = self.snapshot.area_set.all()
+        all_consequences = self.gather_all_consequences()
+
         results = []
         for area in all_areas:
             area_results = dict(area=area)
