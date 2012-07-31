@@ -63,6 +63,24 @@ class Snapshot(models.Model):
         for event in self.event_set.all():
             event.delete()
 
+    def clone_charges(self, new_snapshot):
+        charge_map = dict()
+        for charge in self.charge_set.all():
+            nc = charge.clone_to(new_snapshot)
+            charge_map[charge.id] = nc
+        return charge_map
+
+    def clone_areas(self, new_snapshot):
+        area_map = dict()
+        consequence_map = dict()
+        for area in self.area_set.all():
+            na = area.clone_to(new_snapshot)
+            area_map[area.id] = na
+            for consequence in area.consequence_set.all():
+                new_consequence = consequence.clone_to(na)
+                consequence_map[consequence.id] = new_consequence
+        return area_map, consequence_map
+
     def clone_parent_child_relationships(self, charge_map):
         # clone parent-child relationships
         for charge in self.charge_set.all():
@@ -71,8 +89,6 @@ class Snapshot(models.Model):
                 newchild = charge_map[cc.child.id]
                 ChargeChildren.objects.create(parent=newparent,
                                               child=newchild)
-        return charge_map
-
 
     def clone(self, label, user, description=""):
         new_snapshot = Snapshot.objects.create(label=label,
@@ -80,27 +96,15 @@ class Snapshot(models.Model):
         Event.objects.create(snapshot=new_snapshot, user=user,
                              description="snapshot created")
 
-        charge_map = dict()
-        area_map = dict()
+        charge_map = self.clone_charges(new_snapshot)
+        area_map, consequence_map = self.clone_areas(new_snapshot)
         classification_map = dict()
-        consequence_map = dict()
-
-        charge_map = self.clone_parent_child_relationships(charge_map)
-
-        for charge in self.charge_set.all():
-            nc = charge.clone_to(new_snapshot)
-            charge_map[charge.id] = nc
-        for area in self.area_set.all():
-            na = area.clone_to(new_snapshot)
-            area_map[area.id] = na
-            for consequence in area.consequence_set.all():
-                new_consequence = consequence.clone_to(na)
-                consequence_map[consequence.id] = new_consequence
 
         for classification in self.classification_set.all():
             nc = classification.clone_to(new_snapshot)
             classification_map[classification.id] = nc
 
+        self.clone_parent_child_relationships(charge_map)
 
         # clone charges -> classifications
 
