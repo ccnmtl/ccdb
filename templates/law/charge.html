@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% load markup %}
-{% load gargoyle_tags %}
 {% load compress %}
 {% load cc_extras %}
 {% load cache %}
@@ -40,8 +39,6 @@
 
 	<!-- List of charges to compare -->
 	<div id="comparelist">
-	  {% load gargoyle_tags %}
-      {% ifswitch auto_compare %}
 	  <div id="compare_auto_complete">
 	    <h3 class="comparison">Compare this offense with...</h3>
 		  <div id="compare_return">
@@ -54,8 +51,6 @@
 		  </div><!--end compare_btn-->
 	      <br style="clear:both" />
 	  </div><!-- end #compare_auto_complete -->
-	  {% else %}
-	  {% endifswitch %}
 	
 	  <ul id="offenses" class="menu"><!-- Begin the charges listed by Offenses -->
 	    {% cache 5000 menu %}

@@ -3,14 +3,11 @@
 {% block title %}{{ charge.name }}{% endblock %}
 {% block content %}
 {{ block.super }}
-{% load gargoyle_tags %}
 
-{% ifswitch tips_strategies_disclaimer %}
 	<div id="disclaimer_tips_strategies">
 	    <h4>Disclaimer:</h4>
 	    <p>The information provided herein cannot replace the advice of competent legal counsel. The Calculator's results are designed provide a launch pad for substantive legal research and analysis tailored for an individual defendant on a case-by-case basis. These are by no means an exhaustive list of strategies advocates may pursue.</p>
 	</div>
-{% endifswitch %}
 
 <div class="beta">
     <h1>Tips/Strategies</h1>
