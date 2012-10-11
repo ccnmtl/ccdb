@@ -8,24 +8,14 @@
 {% endblock %}
 {% block content %}
 
-  <div id="disclaimer">
+<div id="disclaimer">
 
-<p>Welcome to the Collateral Consequences of Criminal Charges Calculator.</p>
+	<div id="disclaimerContainer">
+	
+<h2>Welcome to the Collateral Consequences of Criminal Charges Calculator.</h2>
 
-
-<div id="videos">
-  <div id="first-video">
-    <a href="http://media.law.columbia.edu/LDA/Judge_Lippman_120120_pt1.html"
-        target="_new">
-      <img src="/site_media/img/lippman.jpg" width="402" height="249" alt="Chief Judge Lippman">
-    </a>
-    <p>
-      <a href="http://media.law.columbia.edu/LDA/Judge_Lippman_120120_pt1.html"
-	 target="_new">Click here
-	to watch a video<br />
-	introduction by Chief Judge Lippman</a>
-    </p>
-  </div>
+  
+  <!--
   <div id="second-video">
     <a href="/tutorial/"  target="_new">
       <img src="/site_media/img/cc_tutorial_poster.jpg" width="402"
@@ -37,8 +27,20 @@
 	use the Collateral Consequences Calculator</a>
     </p>
   </div>
-</div>
-<br style="clear:both" />
+  	-->
+
+
+  <div id="first-video">
+    <a href="http://media.law.columbia.edu/LDA/Judge_Lippman_120120_pt1.html"
+        target="_new">
+      <img src="/site_media/img/lippman.jpg" width="402" height="249" alt="Chief Judge Lippman">
+    </a>
+	<p class="videoCaption">
+      <a href="http://media.law.columbia.edu/LDA/Judge_Lippman_120120_pt1.html"
+	 target="_new">Click here to watch a video introduction by Chief Judge Lippman</a>
+	 </p>
+
+  </div>
 
 <h3>Purpose</h3>
 
@@ -60,10 +62,12 @@
 
 <p>We welcome your <a href="feedback">feedback</a> about the content, format and functionality of the Calculator.</p>
 
-    <p><a href="feedback" class="searchButton">Send feedback</a>
-    &nbsp;
-    <a href="javascript:hideDisclaimer()" class="searchButton">Go to Calculator's homepage</a>
+<div id="goCalculator">
+<span class="red">I have read the above disclaimer.</span>
+    <a href="javascript:hideDisclaimer()" class="btn">Go to Calculator's homepage</a>
     </p>
+
+</div>
 
   </div>
 
@@ -132,6 +136,8 @@
 <p>Also, in the interest of making sure that defendants are aware of all possible risks, the Calculator may warn of probable or possible potential negative consequences even where there may be good arguments that conviction of a particular offense should not trigger these consequences. A skilled advocate may be able to overcome some of the potential consequences. Therefore, the information provided through the Calculator should not be taken as an absolute limitation on what such advocacy might achieve.</p>
 
 <p>We welcome your <a href="feedback">feedback</a> about the content, format and functionality of the Calculator.</p>
+
+</div>
 
 </div><!-- id=column-content -->
     </div><!-- id=beta-inner -->
