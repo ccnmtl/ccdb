@@ -774,6 +774,7 @@ div.forthisoffense
 #disclaimer h2 { 
 	font-family: Arial, helvetica, sans-serif;
 	text-align: center;
+	margin: 30px 0 35px 0;
 }
 
 #disclaimer h3 { 
@@ -1181,7 +1182,6 @@ margin-right: auto;
 }
 
 #first-video {
-    background-color: #F5F5F5;
     float: left;
     margin: 0 20px 20px 0;
     padding: 20px 10px 10px 20px;
