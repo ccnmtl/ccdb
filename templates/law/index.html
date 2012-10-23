@@ -63,9 +63,13 @@
 <p>We welcome your <a href="feedback">feedback</a> about the content, format and functionality of the Calculator.</p>
 
 <div id="goCalculator">
-<span class="red">I have read the above disclaimer.</span>
-    <a href="javascript:hideDisclaimer()" class="btn">Go to Calculator's homepage</a>
-    </p>
+<span class="red">
+  <label onclick="enableButton()">
+  <input type="checkbox" id="disclaimer-checkbox" />
+  I have read the above disclaimer.</label></span>
+  <input type="button" class="btn"
+    disabled="disabled" id="disclaimer-button" value="Go to Calculator's homepage" />
+
 
 </div>
 

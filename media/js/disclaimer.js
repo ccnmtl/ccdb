@@ -19,4 +19,10 @@ function showDisclaimer() {
       }
 }
 
+function enableButton() {
+    var b = document.getElementById('disclaimer-button');
+    b.disabled = false;
+    b.onclick = function() { hideDisclaimer(); return false; };
+}
+
 addLoadEvent(showDisclaimer);
