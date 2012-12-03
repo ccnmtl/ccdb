@@ -1,5 +1,6 @@
 # Django settings for ccdb project.
 import os.path
+import sys
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -19,6 +20,25 @@ DATABASES = {
         }
 }
 
+if 'test' in sys.argv:
+    DATABASES = {
+        'default' : {
+            'ENGINE' : 'django.db.backends.sqlite3',
+            'NAME' : ':memory:',
+            'HOST' : '',
+            'PORT' : '',
+            'USER' : '',
+            'PASSWORD' : '',
+            }
+    }
+
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+NOSE_ARGS = [
+    '--with-coverage',
+    '--cover-package=law',
+]
+
 CACHE_BACKEND = 'johnny.backends.locmem:///'
 JOHNNY_MIDDLEWARE_KEY_PREFIX = 'jc_ccdb'
 
@@ -29,7 +49,7 @@ USE_I18N = False
 MEDIA_ROOT = "/var/www/ccdb/uploads/"
 MEDIA_URL = '/uploads/'
 ADMIN_MEDIA_PREFIX = '/media/'
-SECRET_KEY = ')ng#)ef_u@_^zvvu@dxm7ql-yb^_!a6%v3v^j3b(mp+)l+5%@h'
+SECRET_KEY = 'dummy-key-)ng#)ef_u@_^zvvu@dxm7ql-yb^_!a6%v3v^j3b(mp+)l+5%@h'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.load_template_source',
     'django.template.loaders.app_directories.load_template_source',
@@ -80,6 +100,7 @@ INSTALLED_APPS = (
     'nexus',
     'south',
     'django_statsd',
+    'django_nose',
 )
 
 STATSD_CLIENT = 'statsd.client'
