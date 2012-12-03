@@ -4,23 +4,23 @@ import os.path
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
-ADMINS = ( )
+ADMINS = ()
 
 MANAGERS = ADMINS
 
 DATABASES = {
-    'default' : {
-        'ENGINE' : 'django.db.backends.postgresql_psycopg2',
-        'NAME' : 'ccdb',
-        'HOST' : '',
-        'PORT' : 5432,
-        'USER' : '',
-        'PASSWORD' : '',
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'ccdb',
+        'HOST': '',
+        'PORT': 5432,
+        'USER': '',
+        'PASSWORD': '',
         }
 }
 
 CACHE_BACKEND = 'johnny.backends.locmem:///'
-JOHNNY_MIDDLEWARE_KEY_PREFIX='jc_ccdb'
+JOHNNY_MIDDLEWARE_KEY_PREFIX = 'jc_ccdb'
 
 TIME_ZONE = 'America/New_York'
 LANGUAGE_CODE = 'en-us'
@@ -56,12 +56,8 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'ccdb.urls'
 
 TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-    # Put application templates before these fallback ones:
     "/var/www/ccdb/templates/",
-    os.path.join(os.path.dirname(__file__),"templates"),
+    os.path.join(os.path.dirname(__file__), "templates"),
 )
 
 INSTALLED_APPS = (
@@ -107,7 +103,7 @@ if SentryHandler not in map(lambda x: x.__class__, logger.handlers):
     logger.addHandler(logging.StreamHandler())
     SENTRY_REMOTE_URL = 'http://sentry.ccnmtl.columbia.edu/sentry/store/'
 SENTRY_KEY = 'EWv5EELZnZIrOY'
-SENTRY_SITE = 'ccdb' # can't rely on the sites framework when a transaction is aborted
+SENTRY_SITE = 'ccdb'
 
 
 THUMBNAIL_SUBDIR = "thumbs"
@@ -117,26 +113,32 @@ SERVER_EMAIL = "ccdb@ccnmtl.columbia.edu"
 
 # WIND settings
 
-AUTHENTICATION_BACKENDS = ('djangowind.auth.WindAuthBackend','django.contrib.auth.backends.ModelBackend',)
+AUTHENTICATION_BACKENDS = ('djangowind.auth.WindAuthBackend',
+                           'django.contrib.auth.backends.ModelBackend',)
 WIND_BASE = "https://wind.columbia.edu/"
 WIND_SERVICE = "cnmtl_full_np"
 WIND_PROFILE_HANDLERS = ['djangowind.auth.CDAPProfileHandler']
-WIND_AFFIL_HANDLERS = ['djangowind.auth.AffilGroupMapper','djangowind.auth.StaffMapper','djangowind.auth.SuperuserMapper']
-WIND_STAFF_MAPPER_GROUPS = ['tlc.cunix.local:columbia.edu','caj5','av2285','alm2165','pld2109','kac2160']
-WIND_SUPERUSER_MAPPER_GROUPS = ['anp8','jb2410','zm4','sbd12','egr2107','kmh2124','sld2131','amm8','mar227','ed2198']
+WIND_AFFIL_HANDLERS = ['djangowind.auth.AffilGroupMapper',
+                       'djangowind.auth.StaffMapper',
+                       'djangowind.auth.SuperuserMapper']
+WIND_STAFF_MAPPER_GROUPS = ['tlc.cunix.local:columbia.edu', 'caj5',
+                            'av2285', 'alm2165', 'pld2109', 'kac2160']
+WIND_SUPERUSER_MAPPER_GROUPS = ['anp8', 'jb2410', 'zm4', 'sbd12', 'egr2107',
+                                'kmh2124', 'sld2131', 'amm8', 'mar227',
+                                'ed2198']
 
 # TinyMCE settings
 
 TINYMCE_JS_URL = '/site_media/js/tiny_mce/tiny_mce.js'
 TINYMCE_JS_ROOT = 'media/js/tiny_mce'
 
-# if you set this to True, you may have to 
+# if you set this to True, you may have to
 # override TINYMCE_JS_ROOT with the full path on production
-TINYMCE_COMPRESSOR = False 
+TINYMCE_COMPRESSOR = False
 TINYMCE_SPELLCHECKER = True
 
-TINYMCE_DEFAULT_CONFIG = {'cols': 80, 
+TINYMCE_DEFAULT_CONFIG = {'cols': 80,
                           'rows': 30,
-                          'plugins':'table,spellchecker,paste,searchreplace',
-                          'theme' : 'simple',
+                          'plugins': 'table,spellchecker,paste,searchreplace',
+                          'theme': 'simple',
                           }
