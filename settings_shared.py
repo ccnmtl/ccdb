@@ -87,7 +87,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.flatpages',
     'django.contrib.markup',
-    'sentry.client',
+    'raven.contrib.django',
     'django.contrib.admin',
     'ccdb.law',
     'smartif',
