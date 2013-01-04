@@ -89,7 +89,7 @@ INSTALLED_APPS = (
     'django.contrib.markup',
     'raven.contrib.django',
     'django.contrib.admin',
-    'ccdb.law',
+    'law',
     'smartif',
     'template_utils',
     'typogrify',
@@ -108,6 +108,8 @@ STATSD_PREFIX = 'ccdb'
 STATSD_HOST = 'localhost'
 STATSD_PORT = 8125
 STATSD_PATCHES = ['django_statsd.patches.db', ]
+if 'test' in sys.argv:
+    STATSD_HOST = '127.0.0.1'
 
 COMPRESS_URL = "/site_media/"
 COMPRESS_ROOT = "media/"
