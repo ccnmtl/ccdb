@@ -5,13 +5,13 @@ from models import ClassificationConsequence
 from forms import AddChargeForm, EditChargeForm, AddClassificationForm
 from forms import EditClassificationForm, AddAreaForm, EditAreaForm
 from forms import AddConsequenceForm, EditConsequenceForm
-from django.template import RequestContext
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render_to_response, get_object_or_404
 from datetime import datetime
 from django.template.defaultfilters import slugify
 import simplejson
+from annoying import render_to
 from django.core.mail import send_mail
 from restclient import POST
 from munin.helpers import muninview
@@ -20,30 +20,13 @@ from django.conf import settings
 import os.path
 
 
-class rendered_with(object):
-    def __init__(self, template_name):
-        self.template_name = template_name
-
-    def __call__(self, func):
-        def rendered_func(request, *args, **kwargs):
-            items = func(request, *args, **kwargs)
-            if type(items) == type({}):
-                return render_to_response(
-                    self.template_name, items,
-                    context_instance=RequestContext(request))
-            else:
-                return items
-
-        return rendered_func
-
-
-@rendered_with('law/index.html')
+@render_to('law/index.html')
 def index(request):
     snapshot = public_snapshot()
     return dict(charges=snapshot.top_level_charges())
 
 
-@rendered_with('law/feedback.html')
+@render_to('law/feedback.html')
 def feedback(request):
     if request.method == 'POST':
         if request.POST.get('email', '') == '':
@@ -70,7 +53,7 @@ def feedback(request):
 
 
 @user_passes_test(lambda u: u.is_staff)
-@rendered_with('law/edit_index.html')
+@render_to('law/edit_index.html')
 def edit_index(request):
     return dict(snapshots=Snapshot.objects.all(),
                 working_snapshot=working_snapshot(),
@@ -78,13 +61,13 @@ def edit_index(request):
 
 
 @user_passes_test(lambda u: u.is_staff)
-@rendered_with('law/edit_snapshots_index.html')
+@render_to('law/edit_snapshots_index.html')
 def edit_snapshots(request):
     return dict(snapshots=Snapshot.objects.all().order_by("-created"))
 
 
 @user_passes_test(lambda u: u.is_staff)
-@rendered_with('law/edit_snapshot.html')
+@render_to('law/edit_snapshot.html')
 def edit_snapshot(request, id):
     return dict(snapshot=get_object_or_404(Snapshot, id=id))
 
@@ -157,7 +140,7 @@ def delete_snapshot(request, id):
     return HttpResponseRedirect("/edit/snapshots/")
 
 
-@rendered_with('law/graph.html')
+@render_to('law/graph.html')
 def graph(request):
     snapshot = public_snapshot()
     return dict(
@@ -181,7 +164,7 @@ def api_current(request):
 
 
 @user_passes_test(lambda u: u.is_staff)
-@rendered_with('law/edit_charge_index.html')
+@render_to('law/edit_charge_index.html')
 def edit_charge_index(request):
     snapshot = working_snapshot()
     return dict(working_snapshot=snapshot,
@@ -331,7 +314,7 @@ def delete_charge(request, slugs=""):
 
 
 @user_passes_test(lambda u: u.is_staff)
-@rendered_with('law/edit_search.html')
+@render_to('law/edit_search.html')
 def edit_search(request):
     q = request.GET.get('q', '')
     if q == '':
@@ -341,7 +324,7 @@ def edit_search(request):
                                               label__icontains=q))
 
 
-@rendered_with('law/search.html')
+@render_to('law/search.html')
 def search(request):
     q = request.GET.get('q', '')
     if q == '':
@@ -402,7 +385,7 @@ def remove_charge_classification(request, slugs="", classification_id=""):
 
 
 @user_passes_test(lambda u: u.is_staff)
-@rendered_with('law/edit_charge.html')
+@render_to('law/edit_charge.html')
 def edit_charge(request, slugs):
     slugs = slugs.split("/")
     snapshot = working_snapshot()
@@ -424,7 +407,7 @@ def edit_charge(request, slugs):
                 add_charge_form=AddChargeForm())
 
 
-@rendered_with('law/charge.html')
+@render_to('law/charge.html')
 def view_charge(request, slugs):
     slugs = slugs.split("/")
     snapshot = public_snapshot()
@@ -439,7 +422,7 @@ def view_charge(request, slugs):
                 charges=snapshot.top_level_charges())
 
 
-@rendered_with('law/charge_description.html')
+@render_to('law/charge_description.html')
 def view_charge_tips(request, slugs):
     slugs = slugs.split("/")
     snapshot = public_snapshot()
@@ -448,7 +431,7 @@ def view_charge_tips(request, slugs):
 
 
 @user_passes_test(lambda u: u.is_staff)
-@rendered_with('law/edit_classification_index.html')
+@render_to('law/edit_classification_index.html')
 def edit_classification_index(request):
     snapshot = working_snapshot()
     return dict(
@@ -485,7 +468,7 @@ def add_classification(request):
 
 
 @user_passes_test(lambda u: u.is_staff)
-@rendered_with('law/edit_classification.html')
+@render_to('law/edit_classification.html')
 def edit_classification(request, slug):
     snapshot = working_snapshot()
     classification = get_object_or_404(Classification, snapshot=snapshot,
@@ -512,7 +495,7 @@ def edit_classification(request, slug):
                 edit_classification_form=edit_classification_form)
 
 
-@rendered_with('law/view_classification.html')
+@render_to('law/view_classification.html')
 def view_classification(request, slug):
     snapshot = public_snapshot()
     classification = get_object_or_404(Classification, snapshot=snapshot,
@@ -520,7 +503,7 @@ def view_classification(request, slug):
     return dict(classification=classification)
 
 
-@rendered_with('law/view_classification.html')
+@render_to('law/view_classification.html')
 def preview_classification(request, slug):
     snapshot = working_snapshot()
     classification = get_object_or_404(Classification, snapshot=snapshot,
@@ -543,7 +526,7 @@ def delete_classification(request, slug):
 
 
 @user_passes_test(lambda u: u.is_staff)
-@rendered_with('law/edit_area_index.html')
+@render_to('law/edit_area_index.html')
 def edit_area_index(request):
     snapshot = working_snapshot()
     return dict(areas=Area.objects.filter(snapshot=snapshot),
@@ -565,7 +548,7 @@ def add_area(request):
 
 
 @user_passes_test(lambda u: u.is_staff)
-@rendered_with('law/edit_area.html')
+@render_to('law/edit_area.html')
 def edit_area(request, slug):
     snapshot = working_snapshot()
     area = get_object_or_404(Area, snapshot=snapshot, name=slug)
@@ -587,7 +570,7 @@ def edit_area(request, slug):
                 edit_area_form=edit_area_form)
 
 
-@rendered_with('law/view_area.html')
+@render_to('law/view_area.html')
 def view_area(request, slug):
     snapshot = public_snapshot()
     area = get_object_or_404(Area, snapshot=snapshot, name=slug)
@@ -639,7 +622,7 @@ def add_consequence(request, slug):
 
 
 @user_passes_test(lambda u: u.is_staff)
-@rendered_with('law/edit_consequence.html')
+@render_to('law/edit_consequence.html')
 def edit_consequence(request, slug, cslug):
     snapshot = working_snapshot()
     area = get_object_or_404(Area, snapshot=snapshot, name=slug)
@@ -665,7 +648,7 @@ def edit_consequence(request, slug, cslug):
                 edit_consequence_form=edit_consequence_form)
 
 
-@rendered_with('law/view_consequence.html')
+@render_to('law/view_consequence.html')
 def view_consequence(request, slug, cslug):
     snapshot = public_snapshot()
     area = get_object_or_404(Area, snapshot=snapshot, name=slug)
