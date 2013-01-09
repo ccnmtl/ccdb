@@ -237,7 +237,7 @@ def add_charge_classification(request, slugs=""):
     classification = get_object_or_404(Classification,
                                        id=request.POST['classification_id'])
     if ChargeClassification.objects.filter(
-        charge=charge, classification=classification).count() == 0:
+            charge=charge, classification=classification).count() == 0:
         # only create if one doesn't already exist.
         # TODO: notify user
         cc = ChargeClassification.objects.create(
@@ -715,7 +715,8 @@ def add_consequence_to_classification(request, slug):
                                        name=slug)
     # first, check if one already exists
     if ClassificationConsequence.objects.filter(
-        consequence=consequence, classification=classification).count() > 0:
+            consequence=consequence,
+            classification=classification).count() > 0:
         return HttpResponse(
             "this consequence is already associated with this classification")
     ClassificationConsequence.objects.create(

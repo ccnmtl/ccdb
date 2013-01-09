@@ -115,8 +115,7 @@ class Snapshot(models.Model):
                 ChargeClassification.objects.create(
                     charge=newcharge,
                     classification=newclassification,
-                    certainty=cc.certainty,
-                    )
+                    certainty=cc.certainty)
             for ca in charge.chargearea_set.all():
                 newarea = area_map[ca.area.id]
                 ChargeArea.objects.create(
@@ -250,8 +249,7 @@ class Charge(models.Model):
             slug=self.name,
             numeric_penal_code=self.numeric_penal_code,
             description=self.description,
-            consequences=self.all_consequences_by_area_json(),
-            )
+            consequences=self.all_consequences_by_area_json())
 
     def get_description(self):
         """ inherit description from parent if it isn't set """
@@ -400,13 +398,14 @@ class Charge(models.Model):
     # (matching the certainty)
 
     def probably(self):
-        plain = list(self.chargeclassification_set.filter(
+        plain = list(
+            self.chargeclassification_set.filter(
                 certainty="probably"))
         # also include any Charge -> YES -> Classification -> PROBABLY
         #   -> Consequences
         for cc in self.yes():
             if cc.classification.classificationconsequence_set.filter(
-                certainty="probably").count() > 0:
+                    certainty="probably").count() > 0:
                 plain.append(cc)
         return plain
 
@@ -416,13 +415,13 @@ class Charge(models.Model):
         #   -> Consequences
         for cc in self.yes():
             if cc.classification.classificationconsequence_set.filter(
-                certainty="maybe").count() > 0:
+                    certainty="maybe").count() > 0:
                 plain.append(cc)
         # also include any Charge -> PROBABLY -> Classification -> MAYBE
         #   -> Consequences
         for cc in self.probably():
             if cc.classification.classificationconsequence_set.filter(
-                certainty="probably").count() > 0:
+                    certainty="probably").count() > 0:
                 plain.append(cc)
         return plain
 
@@ -507,8 +506,7 @@ class Charge(models.Model):
         class AddAreaForm(forms.Form):
             area_id = forms.IntegerField(
                 widget=forms.Select(
-                    choices=[(a.id, a.label) for a in self.no_areas()])
-                )
+                    choices=[(a.id, a.label) for a in self.no_areas()]))
             comment = forms.CharField(widget=forms.Textarea)
         f = AddAreaForm()
         return f
@@ -553,21 +551,24 @@ class Charge(models.Model):
         for a in data:
             clean_a = dict()
             clean_a['area'] = a['area'].to_json()
-            clean_a['yes'] = [dict(
+            clean_a['yes'] = [
+                dict(
                     classification=cc['classification'].to_json(),
                     consequences=[c.consequence.to_json() for c in
                                   cc['consequences']])
-                    for cc in a['yes']]
-            clean_a['probably'] = [dict(
+                for cc in a['yes']]
+            clean_a['probably'] = [
+                dict(
                     classification=cc['classification'].to_json(),
                     consequences=[c.consequence.to_json() for c in
                                   cc['consequences']])
-                    for cc in a['probably']]
-            clean_a['maybe'] = [dict(
+                for cc in a['probably']]
+            clean_a['maybe'] = [
+                dict(
                     classification=cc['classification'].to_json(),
                     consequences=[c.consequence.to_json() for c in
                                   cc['consequences']])
-                    for cc in a['maybe']]
+                for cc in a['maybe']]
             clean_data.append(clean_a)
         return clean_data
 
@@ -705,13 +706,11 @@ class Classification(models.Model):
             consequence_id = forms.IntegerField(
                 widget=forms.Select(
                     choices=[(c.id, "%s: %s" % (c.area.label, c.label))
-                             for c in self.no_consequences()])
-                )
+                             for c in self.no_consequences()]))
             certainty = forms.CharField(
                 widget=forms.Select(choices=[('yes', 'Yes'),
                                              ('probably', 'Probably'),
-                                             ('maybe', 'Maybe')])
-                )
+                                             ('maybe', 'Maybe')]))
             comment = forms.CharField(widget=forms.Textarea)
         f = AddConsequenceForm()
         return f
@@ -817,13 +816,11 @@ class Consequence(models.Model):
         class AddClassificationForm(forms.Form):
             classification_id = forms.IntegerField(
                 widget=forms.Select(
-                    choices=[(c.id, c.label) for c in self.no()])
-                )
+                    choices=[(c.id, c.label) for c in self.no()]))
             certainty = forms.CharField(
                 widget=forms.Select(choices=[('yes', 'Yes'),
                                              ('probably', 'Probably'),
-                                             ('maybe', 'Maybe')])
-                )
+                                             ('maybe', 'Maybe')]))
             comment = forms.CharField(widget=forms.Textarea)
         f = AddClassificationForm()
         return f
