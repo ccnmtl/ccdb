@@ -4,7 +4,6 @@ python:
   - "2.7"
 install:
   - ./bootstrap.py
-  - pip install flake8 --use-mirrors
 script:
-  - flake8 law
+  - ./ve/bin/flake8 law
   - ./manage.py test
