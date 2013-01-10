@@ -11,9 +11,17 @@ COMPRESS_ROOT = '/var/www/ccdb/ccdb/media/'
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
-#CACHE_BACKEND = 'locmem:///'
-CACHE_BACKEND = 'file:///var/www/ccdb/cache/'
+
 JOHNNY_MIDDLEWARE_KEY_PREFIX='jc_ccdb'
+
+CACHES = {
+    'default': dict(
+        BACKEND='johnny.backends.filebased.FileBasedCache',
+        LOCATION='file:///var/www/ccdb/cache/',
+        JOHNNY_CACHE=True,
+    )
+}
+
 
 DATABASES = {
     'default' : {
