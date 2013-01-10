@@ -7,7 +7,7 @@ import nexus
 admin.autodiscover()
 nexus.autodiscover()
 
-site_media_root = os.path.join(os.path.dirname(__file__),"media")
+site_media_root = os.path.join(os.path.dirname(__file__),"../media")
 
 urlpatterns = patterns('',
                        ('^$','ccdb.law.views.index'),

@@ -1,5 +1,5 @@
-from law.models import Charge, Classification, Consequence, Area, Snapshot
-from law.models import Event
+from ccdb.law.models import Charge, Classification, Consequence, Area, Snapshot
+from ccdb.law.models import Event
 from django.contrib import admin
 
 
