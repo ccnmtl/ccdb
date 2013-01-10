@@ -2,8 +2,9 @@
 from settings_shared import *
 
 TEMPLATE_DIRS = (
-    "/var/www/ccdb/ccdb/templates",
+    "/var/www/ccdb/ccdb/ccdb/templates",
 )
+
 
 MEDIA_ROOT = '/var/www/ccdb/uploads/'
 COMPRESS_ROOT = '/var/www/ccdb/ccdb/media/'
