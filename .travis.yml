@@ -5,5 +5,5 @@ python:
 install:
   - ./bootstrap.py
 script:
-  - ./ve/bin/flake8 law
+  - ./ve/bin/flake8 ccdb
   - ./manage.py test

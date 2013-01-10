@@ -16,21 +16,18 @@ DATABASES = {
         'HOST': '',
         'PORT': 5432,
         'USER': '',
-        'PASSWORD': '',
-        }
+        'PASSWORD': '', }
 }
 
 if 'test' in sys.argv:
     DATABASES = {
-        'default' : {
-            'ENGINE' : 'django.db.backends.sqlite3',
-            'NAME' : ':memory:',
-            'HOST' : '',
-            'PORT' : '',
-            'USER' : '',
-            'PASSWORD' : '',
-            }
-    }
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': ':memory:',
+            'HOST': '',
+            'PORT': '',
+            'USER': '',
+            'PASSWORD': '', }}
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
@@ -58,8 +55,7 @@ TEMPLATE_LOADERS = (
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'django.core.context_processors.debug',
-    'django.core.context_processors.request',
-    )
+    'django.core.context_processors.request', )
 
 MIDDLEWARE_CLASSES = (
     'django_statsd.middleware.GraphiteRequestTimingMiddleware',
