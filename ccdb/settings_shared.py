@@ -36,8 +36,15 @@ NOSE_ARGS = [
     '--cover-package=ccdb.law',
 ]
 
-CACHE_BACKEND = 'johnny.backends.locmem:///'
 JOHNNY_MIDDLEWARE_KEY_PREFIX = 'jc_ccdb'
+
+CACHES = {
+    'default': dict(
+        BACKEND='johnny.backends.locmem.LocMemCache',
+        LOCATION='',
+        JOHNNY_CACHE=True,
+    )
+}
 
 TIME_ZONE = 'America/New_York'
 LANGUAGE_CODE = 'en-us'
@@ -66,8 +73,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
     'johnny.middleware.LocalStoreClearMiddleware',
-    'johnny.middleware.QueryCacheMiddleware',
-)
+    'johnny.middleware.QueryCacheMiddleware', )
 
 ROOT_URLCONF = 'ccdb.urls'
 
@@ -89,7 +95,6 @@ INSTALLED_APPS = (
     'smartif',
     'template_utils',
     'typogrify',
-    'johnny',
     'munin',
     'compressor',
     'gargoyle',
