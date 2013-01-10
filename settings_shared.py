@@ -101,6 +101,7 @@ INSTALLED_APPS = (
     'south',
     'django_statsd',
     'django_nose',
+    'smoketest',
 )
 
 STATSD_CLIENT = 'statsd.client'

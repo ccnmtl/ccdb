@@ -59,6 +59,7 @@ urlpatterns = patterns('',
                        ('^autocomplete/$','ccdb.law.views.autocomplete'),
                        
 
+                       ('smoketest/', include('smoketest.urls')),
                        ('^stats/total_events/$','ccdb.law.views.total_events'),
                        ('^stats/total_snapshots/$','ccdb.law.views.total_snapshots'),
 
