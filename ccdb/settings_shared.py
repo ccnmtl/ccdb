@@ -24,7 +24,7 @@ DATABASES = {
         'PASSWORD': '', }
 }
 
-if 'test' in sys.argv:
+if 'test' in sys.argv or 'jenkins' in sys.argv:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -40,6 +40,16 @@ NOSE_ARGS = [
     '--with-coverage',
     '--cover-package=ccdb.law',
 ]
+
+JENKINS_TASKS = (
+    'django_jenkins.tasks.run_pylint',
+    'django_jenkins.tasks.with_coverage',
+    'django_jenkins.tasks.django_tests',
+    'django_jenkins.tasks.run_pep8',
+    'django_jenkins.tasks.run_pyflakes',
+)
+
+PROJECT_APPS = ['ccdb', ]
 
 JOHNNY_MIDDLEWARE_KEY_PREFIX = 'jc_ccdb'
 
@@ -110,6 +120,7 @@ INSTALLED_APPS = (
     'django_nose',
     'smoketest',
     'debug_toolbar',
+    'django_jenkins',
 )
 
 INTERNAL_IPS = ('127.0.0.1', )
@@ -131,7 +142,7 @@ STATSD_PREFIX = 'ccdb'
 STATSD_HOST = 'localhost'
 STATSD_PORT = 8125
 STATSD_PATCHES = ['django_statsd.patches.db', ]
-if 'test' in sys.argv:
+if 'test' in sys.argv or 'jenkins' in sys.argv:
     STATSD_HOST = '127.0.0.1'
 
 COMPRESS_URL = "/site_media/"
