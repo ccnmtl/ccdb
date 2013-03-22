@@ -89,6 +89,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'django.middleware.transaction.TransactionMiddleware',
+    'impersonate.middleware.ImpersonateMiddleware',
     'waffle.middleware.WaffleMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'johnny.middleware.LocalStoreClearMiddleware',
@@ -123,6 +124,7 @@ INSTALLED_APPS = (
     'debug_toolbar',
     'django_jenkins',
     'waffle',
+    'impersonate',
 )
 
 INTERNAL_IPS = ('127.0.0.1', )
@@ -191,3 +193,4 @@ TINYMCE_DEFAULT_CONFIG = {'cols': 80,
 
 SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 SESSION_COOKIE_HTTPONLY = True
+LOGIN_REDIRECT_URL = "/"
