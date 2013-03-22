@@ -113,8 +113,6 @@ INSTALLED_APPS = (
     'typogrify',
     'munin',
     'compressor',
-    'gargoyle',
-    'nexus',
     'south',
     'django_statsd',
     'django_nose',

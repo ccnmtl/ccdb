@@ -12,7 +12,6 @@ site_media_root = os.path.join(os.path.dirname(__file__), "../media")
 urlpatterns = patterns(
     '',
     ('^$', 'ccdb.law.views.index'),
-    #('^charge/(.*)', 'ccdb.law.views.view_gargoyle_switch'),
     ('^charge/(?P<slugs>.+)/tips/$', 'ccdb.law.views.view_charge_tips'),
     ('^charge/(?P<slugs>.+)/$', 'ccdb.law.views.view_charge'),
     ('^classification/(?P<slug>[^\/]+)/$',
@@ -86,7 +85,6 @@ urlpatterns = patterns(
     ('^feedback/$', 'ccdb.law.views.feedback'),
     ('^accounts/', include('djangowind.urls')),
     (r'^admin/', include(admin.site.urls)),
-    (r'^nexus/', include(nexus.site.urls)),
     (r'^munin/', include('munin.urls')),
     ('^stats/', direct_to_template, {'template': 'law/stats.html'}),
     (r'^site_media/(?P<path>.*)$',
