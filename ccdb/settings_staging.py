@@ -11,6 +11,7 @@ COMPRESS_ROOT = '/var/www/ccdb/ccdb/media/'
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
+STAGING_ENV = True
 STATSD_PREFIX = 'ccdb-staging'
 
 JOHNNY_MIDDLEWARE_KEY_PREFIX='jc_ccdb'

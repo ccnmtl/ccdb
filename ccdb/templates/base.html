@@ -186,6 +186,13 @@ var tabberOptions = {
 <p>We welcome your feedback about the content, format and functionality of the Calculator.</p>
 
 </div><!-- class="disclaimer_print" -->
+{% if STAGING_ENV %}
+<div class="alert alert-error" style="position: fixed; bottom: 0px;">
+<h4>Warning: Staging Site</h4>
+<p>You are viewing a staging version of this site, not the production site.</p>
+<p>This site was last updated on: <b>{{STAGING_DEPLOY_TIME}}</b></p>
+</div>
+{% endif %}
 <script type="text/javascript" src="/site_media/js/autocomplete.js"></script>
 </body>
 </html>
