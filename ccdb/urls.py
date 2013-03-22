@@ -3,9 +3,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.views.generic.simple import direct_to_template
 import os.path
-import nexus
 admin.autodiscover()
-nexus.autodiscover()
 
 site_media_root = os.path.join(os.path.dirname(__file__), "../media")
 
