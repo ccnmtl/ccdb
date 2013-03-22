@@ -49,7 +49,7 @@ JENKINS_TASKS = (
     'django_jenkins.tasks.run_pyflakes',
 )
 
-PROJECT_APPS = ['ccdb', ]
+PROJECT_APPS = ['ccdb.law', ]
 
 JOHNNY_MIDDLEWARE_KEY_PREFIX = 'jc_ccdb'
 
