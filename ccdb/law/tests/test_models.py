@@ -148,7 +148,7 @@ class TestConsequence(TestCase):
         self.assertEquals(self.cons.no(), [])
 
     def test_add_classification_form(self):
-        f = self.cons.add_classification_form()
+        self.cons.add_classification_form()
 
     def test_clone_to(self):
         new_area = Area.objects.create(
