@@ -1,6 +1,3 @@
-from django.test import TestCase
-
-
-class DummyTest(TestCase):
-    def test_something(self):
-        assert True
+# flake8: noqa
+from .test_models import *
+from .test_views import *
