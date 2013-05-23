@@ -1,7 +1,7 @@
 from ccdb.law.models import Snapshot, public_snapshot
 from ccdb.law.models import effective_certainty, cluster_by, dtolist
 from ccdb.law.models import Area, Consequence
-from ccdb.law.models import Classification
+from ccdb.law.models import Classification, Charge
 from django.test import TestCase
 from django.contrib.auth.models import User
 
@@ -283,3 +283,159 @@ class TestClassification(TestCase):
 
     def test_in_areas(self):
         self.assertTrue(self.c.in_areas([]))
+
+
+class TestCharge(TestCase):
+    def setUp(self):
+        self.s = Snapshot.objects.create(
+            label="test snapshot",
+            status="vetted")
+        self.c = Charge.objects.create(
+            label="Test Charge",
+            penal_code="127.0.1",
+            snapshot=self.s,
+            name="127-0-1-test-charge",
+            numeric_penal_code=127.0,
+            description="a description")
+
+    def tearDown(self):
+        self.c.delete()
+        self.s.delete()
+
+    def test_unicode(self):
+        self.assertEquals(str(self.c), "Test Charge")
+
+    def test_get_absolute_url(self):
+        self.assertEquals(
+            self.c.get_absolute_url(),
+            "/charge/127-0-1-test-charge/")
+
+    def test_to_json(self):
+        json = self.c.to_json()
+        self.assertEquals(json['label'], self.c.label)
+        self.assertEquals(json['penal_code'], self.c.penal_code)
+        self.assertEquals(json['slug'], self.c.name)
+        self.assertEquals(json['numeric_penal_code'],
+                          self.c.numeric_penal_code)
+        self.assertEquals(json['description'], self.c.description)
+
+    def test_get_description(self):
+        self.assertEquals(self.c.get_description(), self.c.description)
+
+    def test_clone_to(self):
+        new_snapshot = Snapshot.objects.create(
+            label="New Snapshot",
+            status="in progress")
+        na = self.c.clone_to(new_snapshot)
+        self.assertEquals(na.label, self.c.label)
+        self.assertEquals(na.name, self.c.name)
+        na.delete_self()
+        new_snapshot.delete()
+
+    def test_children(self):
+        self.assertEquals(self.c.children(), [])
+
+    def test_has_children(self):
+        self.assertFalse(self.c.has_children())
+
+    def test_has_parents(self):
+        self.assertFalse(self.c.has_parents())
+
+    def test_is_leaf(self):
+        self.assertTrue(self.c.is_leaf())
+
+    def test_as_ul(self):
+        self.assertEqual(
+            self.c.as_ul(),
+            ('<li class="menuitem leaf"><span class="charge" '
+             'href="/charge/127-0-1-test-charge/"></span>127.'
+             '0.1 Test Charge</a></li>'))
+        self.assertEqual(
+            self.c.as_ul(hs=False),
+            ('<li class="menuitem leaf"><span class="charge" '
+             'href="/charge/127-0-1-test-charge/"></span>127.'
+             '0.1 Test Charge</a></li>'))
+
+    def test_as_view_ul(self):
+        self.assertEqual(self.c.as_ul(), self.c.as_view_ul())
+
+    def test_as_edit_ul(self):
+        self.assertEqual(
+            self.c.as_edit_ul(),
+            ('<li class="menuitem leaf"><span class="charge" '
+             'href="/edit/charge/127-0-1-test-charge/"></span>127.'
+             '0.1 Test Charge</a></li>'))
+
+    def test_as_compare_ul(self):
+        self.assertEqual(
+            self.c.as_compare_ul(),
+            ('<li class="menuitem"><span class="compare" '
+             'href="?charge2=/charge/127-0-1-test-charge/"></span>127.'
+             '0.1 Test Charge</a></li>'))
+
+    def test_as_view_compare_ul(self):
+        self.assertEqual(self.c.as_compare_ul(),
+                         self.c.as_view_compare_ul())
+
+    def test_rparents(self):
+        self.assertEqual(self.c.rparents(), [])
+
+    def test_siblings(self):
+        self.assertEqual(self.c.siblings(), [])
+
+    def test_add_classification_form(self):
+        self.c.add_classification_form()
+
+    def test_yes(self):
+        self.assertEqual(self.c.yes(), [])
+
+    def test_probably(self):
+        self.assertEqual(self.c.probably(), [])
+
+    def test_maybe(self):
+        self.assertEqual(self.c.maybe(), [])
+
+    def test_all_yes(self):
+        self.assertEqual(self.c.all_yes(), [])
+
+    def test_all_probably(self):
+        self.assertEqual(self.c.all_probably(), [])
+
+    def test_all_maybe(self):
+        self.assertEqual(self.c.all_maybe(), [])
+
+    def test_view_yes(self):
+        self.assertEqual(self.c.view_yes(), [])
+
+    def test_view_probably(self):
+        self.assertEqual(self.c.view_probably(), [])
+
+    def test_view_maybe(self):
+        self.assertEqual(self.c.view_maybe(), [])
+
+    def test_view_all(self):
+        self.assertEqual(self.c.view_all(), [])
+
+    def test_no(self):
+        self.assertEqual(self.c.no(), [])
+
+    def test_add_area_form(self):
+        self.c.add_area_form()
+
+    def test_yes_areas(self):
+        self.assertEqual(self.c.yes_areas(), [])
+
+    def test_no_areas(self):
+        self.assertEqual(self.c.no_areas(), [])
+
+    def test_yes_areas_for_edit_page(self):
+        self.assertEqual(self.c.yes_areas_for_edit_page(), [])
+
+    def test_all_consequences_by_area(self):
+        self.assertEqual(self.c.all_consequences_by_area(), [])
+
+    def test_all_consequences_by_area_json(self):
+        self.assertEqual(self.c.all_consequences_by_area_json(), [])
+
+    def test_gather_all_consequences(self):
+        self.assertEqual(self.c.gather_all_consequences(), [])
