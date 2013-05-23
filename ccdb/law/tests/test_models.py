@@ -2,6 +2,7 @@ from ccdb.law.models import Snapshot, public_snapshot
 from ccdb.law.models import effective_certainty, cluster_by, dtolist
 from ccdb.law.models import Area, Consequence
 from ccdb.law.models import Classification, Charge
+from ccdb.law.models import ChargeChildren
 from django.test import TestCase
 from django.contrib.auth.models import User
 
@@ -184,6 +185,13 @@ class TestConsequence(TestCase):
         c.delete()
         new_area.delete()
 
+    def test_clone_snapshot(self):
+        u = User.objects.create(username="testuser")
+        new_snapshot = self.s.clone(label="test clone", user=u)
+        self.assertEqual(new_snapshot.label, "test clone")
+        new_snapshot.clear()
+        new_snapshot.delete()
+
 
 class TestClassification(TestCase):
     def setUp(self):
@@ -239,6 +247,13 @@ class TestClassification(TestCase):
         na.delete()
         new_snapshot.delete()
 
+    def test_clone_snapshot(self):
+        u = User.objects.create(username="testuser")
+        new_snapshot = self.s.clone(label="test clone", user=u)
+        self.assertEqual(new_snapshot.label, "test clone")
+        new_snapshot.clear()
+        new_snapshot.delete()
+
     def test_yes(self):
         self.assertEquals(self.c.yes().count(), 0)
 
@@ -290,6 +305,8 @@ class TestCharge(TestCase):
         self.s = Snapshot.objects.create(
             label="test snapshot",
             status="vetted")
+
+        # an isolated solo charge
         self.c = Charge.objects.create(
             label="Test Charge",
             penal_code="127.0.1",
@@ -298,7 +315,27 @@ class TestCharge(TestCase):
             numeric_penal_code=127.0,
             description="a description")
 
+        # a parent/child set
+        self.c2 = Charge.objects.create(
+            label="Test Charge 2",
+            penal_code="128",
+            snapshot=self.s,
+            name="128-test-charge-2",
+            numeric_penal_code=128.0,
+            description="c2's description")
+        self.c3 = Charge.objects.create(
+            label="Test Charge 3",
+            penal_code="128.1",
+            snapshot=self.s,
+            name="128-1-test-charge-3",
+            numeric_penal_code=128.1,
+            description="")
+        ChargeChildren.objects.create(
+            parent=self.c2,
+            child=self.c3)
+
     def tearDown(self):
+        self.c2.delete_self()
         self.c.delete()
         self.s.delete()
 
@@ -309,6 +346,17 @@ class TestCharge(TestCase):
         self.assertEquals(
             self.c.get_absolute_url(),
             "/charge/127-0-1-test-charge/")
+        self.assertEquals(
+            self.c3.get_absolute_url(),
+            "/charge/128-test-charge-2/128-1-test-charge-3/")
+
+        self.assertEquals(
+            self.s.get_charge_by_slugs(["127-0-1-test-charge"]),
+            self.c)
+        self.assertEquals(
+            self.s.get_charge_by_slugs(
+                ["128-test-charge-2", "128-1-test-charge-3"]),
+            self.c3)
 
     def test_to_json(self):
         json = self.c.to_json()
@@ -321,6 +369,7 @@ class TestCharge(TestCase):
 
     def test_get_description(self):
         self.assertEquals(self.c.get_description(), self.c.description)
+        self.assertEquals(self.c3.get_description(), "c2's description")
 
     def test_clone_to(self):
         new_snapshot = Snapshot.objects.create(
@@ -332,17 +381,31 @@ class TestCharge(TestCase):
         na.delete_self()
         new_snapshot.delete()
 
+    def test_clone_snapshot(self):
+        u = User.objects.create(username="testuser")
+        new_snapshot = self.s.clone(label="test clone", user=u)
+        self.assertEqual(new_snapshot.label, "test clone")
+        new_snapshot.clear()
+        new_snapshot.delete()
+
     def test_children(self):
         self.assertEquals(self.c.children(), [])
+        self.assertEquals(self.c2.children(), [self.c3])
 
     def test_has_children(self):
         self.assertFalse(self.c.has_children())
+        self.assertFalse(self.c3.has_children())
+        self.assertTrue(self.c2.has_children())
 
     def test_has_parents(self):
         self.assertFalse(self.c.has_parents())
+        self.assertFalse(self.c2.has_parents())
+        self.assertTrue(self.c3.has_parents())
 
     def test_is_leaf(self):
         self.assertTrue(self.c.is_leaf())
+        self.assertTrue(self.c3.is_leaf())
+        self.assertFalse(self.c2.is_leaf())
 
     def test_as_ul(self):
         self.assertEqual(
@@ -355,6 +418,23 @@ class TestCharge(TestCase):
             ('<li class="menuitem leaf"><span class="charge" '
              'href="/charge/127-0-1-test-charge/"></span>127.'
              '0.1 Test Charge</a></li>'))
+
+        self.assertEqual(
+            self.c2.as_ul(),
+            ('<li class="menuitem leaf"><a href="#charge-2" '
+             'class="hs-control">128 Test Charge 2</a><ul '
+             'id="charge-2" class="hs-init-hide menu"><li '
+             'class="menuitem leaf"><span class="charge" '
+             'href="/charge/128-test-charge-2/128-1-test-charge-3/'
+             '"></span>128.1 Test Charge 3</a></li></ul></li>'))
+        self.assertEqual(
+            self.c2.as_ul(hs=False),
+            ('<li class="menuitem leaf"><a href="/charge/128-test-'
+             'charge-2/">128 Test Charge 2</a><ul id="charge-2" '
+             'class=" menu"><li class="menuitem leaf"><span '
+             'class="charge" href="/charge/128-test-charge-2/'
+             '128-1-test-charge-3/"></span>128.1 Test Charge 3'
+             '</a></li></ul></li>'))
 
     def test_as_view_ul(self):
         self.assertEqual(self.c.as_ul(), self.c.as_view_ul())
@@ -373,12 +453,24 @@ class TestCharge(TestCase):
              'href="?charge2=/charge/127-0-1-test-charge/"></span>127.'
              '0.1 Test Charge</a></li>'))
 
+        self.assertEqual(
+            self.c2.as_compare_ul(),
+            ('<li class="menuitem"><a href="#compare-charge-2" '
+             'class="hs-control">128 Test Charge 2</a><ul id="'
+             'compare-charge-2" class="hs-init-hide menu"><li '
+             'class="menuitem"><span class="compare" '
+             'href="?charge2=/charge/128-test-charge-2/128-1-test-charge-3/'
+             '"></span>128.1 Test Charge 3</a></li></ul></li>'))
+
     def test_as_view_compare_ul(self):
         self.assertEqual(self.c.as_compare_ul(),
                          self.c.as_view_compare_ul())
+        self.assertEqual(self.c2.as_compare_ul(),
+                         self.c2.as_view_compare_ul())
 
     def test_rparents(self):
         self.assertEqual(self.c.rparents(), [])
+        self.assertEqual(self.c3.rparents(), [self.c2])
 
     def test_siblings(self):
         self.assertEqual(self.c.siblings(), [])
