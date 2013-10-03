@@ -26,7 +26,7 @@ logilab-astng==0.24.1
 pylint==0.26.0
 
 django-smartif==0.1
-djangowind==0.10.3
+djangowind==0.11.0
 template_utils==0.4p2
 typogrify==1.0
 django-tinymce==1.5
