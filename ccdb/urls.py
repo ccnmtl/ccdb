@@ -85,7 +85,7 @@ urlpatterns = patterns(
     (r'^admin/', include(admin.site.urls)),
     url(r'^impersonate/', include('impersonate.urls')),
     (r'^munin/', include('munin.urls')),
-    (r'^stats/$', TemplateView.as_view(template_name="stats.html")),
+    (r'^stats/$', TemplateView.as_view(template_name="law/stats.html")),
     (r'^site_media/(?P<path>.*)$',
      'django.views.static.serve', {'document_root': site_media_root}),
     (r'^uploads/(?P<path>.*)$',
