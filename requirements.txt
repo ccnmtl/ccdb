@@ -42,7 +42,7 @@ django-jsonfield==0.5
 South==0.8.1
 django-statsd-mozilla==0.3.8.7
 django-nose==1.2
-raven==0.7.0
+raven==4.0.3
 django-annoying==0.7.6
 django-smoketest==0.1.3
 django-debug-toolbar==0.9.4
