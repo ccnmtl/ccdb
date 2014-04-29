@@ -80,9 +80,10 @@ var tabberOptions = {
     <script src="/site_media/js/tabber.js" type="text/javascript"></script>
     <script src="/site_media/js/sniffer.js" type="text/javascript"></script>
 
+{% if GA_CODE %}
 <script type="text/javascript">
   var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-311226-21']);
+  _gaq.push(['_setAccount', '{{GA_CODE}}']);
   _gaq.push(['_trackPageview']);
 
   (function() {
@@ -91,6 +92,7 @@ var tabberOptions = {
     var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
   })();
 </script>
+{% endif %}
     <script src="/site_media/js/hs.js" type="text/javascript"></script>
 {% endcompress %}
 
