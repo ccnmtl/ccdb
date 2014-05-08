@@ -44,7 +44,6 @@ NOSE_ARGS = [
 JENKINS_TASKS = (
     'django_jenkins.tasks.run_pylint',
     'django_jenkins.tasks.with_coverage',
-    'django_jenkins.tasks.django_tests',
     'django_jenkins.tasks.run_pep8',
     'django_jenkins.tasks.run_pyflakes',
 )
@@ -80,6 +79,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
     'stagingcontext.staging_processor',
     'gacontext.ga_processor',
+    'django.core.context_processors.static',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -109,14 +109,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.flatpages',
-    'django.contrib.markup',
     'raven.contrib.django',
     'django.contrib.admin',
     'ccdb.law',
     'smartif',
     'template_utils',
     'typogrify',
-    'munin',
     'compressor',
     'south',
     'django_statsd',
@@ -126,19 +124,19 @@ INSTALLED_APPS = [
     'django_jenkins',
     'waffle',
     'impersonate',
+    'django_markwhat',
+    'django.contrib.staticfiles',
 ]
 
 INTERNAL_IPS = ('127.0.0.1', )
 DEBUG_TOOLBAR_PANELS = (
     'debug_toolbar.panels.version.VersionDebugPanel',
     'debug_toolbar.panels.timer.TimerDebugPanel',
-    'debug_toolbar.panels.settings_vars.SettingsVarsDebugPanel',
     'debug_toolbar.panels.headers.HeaderDebugPanel',
     'debug_toolbar.panels.request_vars.RequestVarsDebugPanel',
     'debug_toolbar.panels.template.TemplateDebugPanel',
     'debug_toolbar.panels.sql.SQLDebugPanel',
     'debug_toolbar.panels.signals.SignalDebugPanel',
-    'debug_toolbar.panels.logger.LoggingPanel',
 )
 
 
@@ -146,7 +144,7 @@ STATSD_CLIENT = 'statsd.client'
 STATSD_PREFIX = 'ccdb'
 STATSD_HOST = 'localhost'
 STATSD_PORT = 8125
-STATSD_PATCHES = ['django_statsd.patches.db', ]
+
 if 'test' in sys.argv or 'jenkins' in sys.argv:
     STATSD_HOST = '127.0.0.1'
 
@@ -159,6 +157,18 @@ THUMBNAIL_SUBDIR = "thumbs"
 EMAIL_SUBJECT_PREFIX = "[ccdb] "
 EMAIL_HOST = 'localhost'
 SERVER_EMAIL = "ccdb@ccnmtl.columbia.edu"
+
+STATIC_URL = "/media/"
+STATICFILES_DIRS = (
+    os.path.abspath(os.path.join(os.path.dirname(__file__), "../media/")),
+)
+STATIC_ROOT = ""
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'compressor.finders.CompressorFinder',
+)
+
 
 # WIND settings
 

@@ -14,7 +14,6 @@ import simplejson
 from annoying.decorators import render_to
 from django.core.mail import send_mail
 from restclient import POST
-from munin.helpers import muninview
 from zipfile import ZipFile, ZIP_DEFLATED
 from django.conf import settings
 import os.path
@@ -738,19 +737,3 @@ def remove_consequence_from_classification(request, slug, consequence_id):
     return render_to_response("law/remove_classification_consequence.html",
                               dict(consequence=consequence,
                                    classification=classification))
-
-
-@muninview(config="""graph_title Total Events
-graph_category ccdb
-graph_vlabel events
-""")
-def total_events(request):
-    return [("events", Event.objects.all().count())]
-
-
-@muninview(config="""graph_title Total Snapshots
-graph_category ccdb
-graph_vlabel snapshots
-""")
-def total_snapshots(request):
-    return [("snapshots", Snapshot.objects.all().count())]

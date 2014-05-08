@@ -1,4 +1,4 @@
-from django.conf.urls.defaults import patterns, include, url
+from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.conf import settings
 from django.views.generic import TemplateView
@@ -75,8 +75,6 @@ urlpatterns = patterns(
     ('^autocomplete/$', 'ccdb.law.views.autocomplete'),
 
     ('smoketest/', include('smoketest.urls')),
-    ('^stats/total_events/$', 'ccdb.law.views.total_events'),
-    ('^stats/total_snapshots/$', 'ccdb.law.views.total_snapshots'),
 
     ('^api/current/$', 'ccdb.law.views.api_current'),
 
@@ -84,7 +82,6 @@ urlpatterns = patterns(
     ('^accounts/', include('djangowind.urls')),
     (r'^admin/', include(admin.site.urls)),
     url(r'^impersonate/', include('impersonate.urls')),
-    (r'^munin/', include('munin.urls')),
     (r'^stats/$', TemplateView.as_view(template_name="law/stats.html")),
     (r'^site_media/(?P<path>.*)$',
      'django.views.static.serve', {'document_root': site_media_root}),
