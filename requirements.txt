@@ -27,7 +27,7 @@ pylint==0.26.0
 sqlparse==0.1.11
 
 django-smartif==0.1
-djangowind==0.12.1
+djangowind==0.13.2
 template_utils==0.4p2
 typogrify==1.0
 django-tinymce==1.5.2
