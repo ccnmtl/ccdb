@@ -42,7 +42,6 @@ NOSE_ARGS = [
 ]
 
 JENKINS_TASKS = (
-    'django_jenkins.tasks.run_pylint',
     'django_jenkins.tasks.with_coverage',
     'django_jenkins.tasks.run_pep8',
     'django_jenkins.tasks.run_pyflakes',
@@ -113,11 +112,9 @@ INSTALLED_APPS = [
     'raven.contrib.django',
     'django.contrib.admin',
     'ccdb.law',
-    'smartif',
     'template_utils',
     'typogrify',
     'compressor',
-    'south',
     'django_statsd',
     'django_nose',
     'smoketest',
@@ -151,8 +148,6 @@ if 'test' in sys.argv or 'jenkins' in sys.argv:
 
 COMPRESS_URL = "/site_media/"
 COMPRESS_ROOT = "media/"
-
-SOUTH_TESTS_MIGRATE = False
 
 THUMBNAIL_SUBDIR = "thumbs"
 EMAIL_SUBJECT_PREFIX = "[ccdb] "
