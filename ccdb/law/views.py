@@ -353,7 +353,7 @@ def autocomplete(request):
                                                     penal_code__icontains=q)
     charges = list(set([c.label for c in charges if c.is_leaf()]))
     json = simplejson.dumps(charges)
-    return HttpResponse(json, mimetype='application/json')
+    return HttpResponse(json, content_type='application/json')
 
 
 @user_passes_test(lambda u: u.is_staff)

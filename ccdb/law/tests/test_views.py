@@ -20,3 +20,20 @@ class SimpleViewTest(TestCase):
     def test_smoke(self):
         response = self.c.get("/smoketest/")
         self.assertEquals(response.status_code, 200)
+
+
+class TestAutoComplete(TestCase):
+    def setUp(self):
+        self.c = Client()
+
+    def test_empty(self):
+        r = self.c.get("/autocomplete/?term=")
+        self.assertEquals(r.status_code, 302)
+
+    def test_real(self):
+        self.s = Snapshot.objects.create(
+            label="test snapshot",
+            status="vetted")
+        r = self.c.get("/autocomplete/?term=nothing")
+        self.assertEquals(r.status_code, 200)
+        self.assertEquals(r.content, '[]')
