@@ -49,4 +49,4 @@ django-waffle==0.10.1
 django-ga-context==0.1.0
 django-stagingcontext==0.1.0
 django-impersonate==0.9
-django-markwhat==1.0
+django-markwhat==2014.9.20
