@@ -271,7 +271,7 @@ class Charge(models.Model):
     def children(self):
         return [cc.child for cc in
                 ChargeChildren.objects.filter(parent=self).order_by(
-                'child__numeric_penal_code', 'child__penal_code')]
+                    'child__numeric_penal_code', 'child__penal_code')]
 
     def has_children(self):
         return ChargeChildren.objects.filter(parent=self).count() > 0
@@ -699,7 +699,7 @@ class Classification(models.Model):
     def consequences(self):
         return [cc.consequence for cc in
                 self.classificationconsequence_set.all().order_by(
-                "consequence__label")]
+                    "consequence__label")]
 
     def add_consequence_form(self):
         class AddConsequenceForm(forms.Form):
