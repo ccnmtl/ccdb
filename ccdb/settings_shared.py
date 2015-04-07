@@ -145,8 +145,9 @@ STATSD_PORT = 8125
 if 'test' in sys.argv or 'jenkins' in sys.argv:
     STATSD_HOST = '127.0.0.1'
 
-COMPRESS_URL = "/site_media/"
+COMPRESS_URL = "/media/"
 COMPRESS_ROOT = "media/"
+AWS_QUERYSTRING_AUTH = False
 
 THUMBNAIL_SUBDIR = "thumbs"
 EMAIL_SUBJECT_PREFIX = "[ccdb] "
@@ -157,7 +158,7 @@ STATIC_URL = "/media/"
 STATICFILES_DIRS = (
     os.path.abspath(os.path.join(os.path.dirname(__file__), "../media/")),
 )
-STATIC_ROOT = ""
+STATIC_ROOT = "/tmp/ccdb/static"
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
