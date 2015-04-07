@@ -2,9 +2,9 @@
 
 {% block js %}
 {{ block.super }}
-<script type="text/javascript" src="/site_media/js/mochikit/MochiKit/MochiKit.js"></script> 
-<script type="text/javascript" src="/site_media/js/tabber.js"></script>
-<script type="text/javascript" src="/site_media/js/hs.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/mochikit/MochiKit/MochiKit.js"></script> 
+<script type="text/javascript" src="{{STATIC_URL}}js/tabber.js"></script>
+<script type="text/javascript" src="{{STATIC_URL}}js/hs.js"></script>
 {% endblock %}
 
 {% block primarynavtabs %}

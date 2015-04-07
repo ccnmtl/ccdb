@@ -6,7 +6,7 @@
 {% block title %}{{ charge.penal_code }} {{ charge.label }}{% endblock %}
 {% block js %}
 {% compress js %}
-    <script src="/site_media/js/splitanchor.js" type="text/javascript"></script>
+    <script src="{{STATIC_URL}}js/splitanchor.js" type="text/javascript"></script>
 {% endcompress %}
 {% endblock %}
 {% block breadcrumbs %}
@@ -332,7 +332,7 @@
     </div> <!-- /beta-inner -->
   </div> <!-- /beta -->
   <div style="clear:both" />
-  <script src="/site_media/js/chosen.jquery.js"></script>
+  <script src="{{STATIC_URL}}js/chosen.jquery.js"></script>
   <script>
     jQuery(document).ready(function(){
   	  jQuery(".chzn-select").chosen(); 

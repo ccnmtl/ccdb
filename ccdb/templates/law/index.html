@@ -3,7 +3,7 @@
 {% load cache %}
 {% block js %}
 
-    <script src="/site_media/js/disclaimer.js" type="text/javascript"></script>
+    <script src="{{STATIC_URL}}js/disclaimer.js" type="text/javascript"></script>
 
 {% endblock %}
 {% block content %}
@@ -18,7 +18,7 @@
   <!--
   <div id="second-video">
     <a href="/tutorial/"  target="_new">
-      <img src="/site_media/img/cc_tutorial_poster.jpg" width="402"
+      <img src="{{STATIC_URL}}img/cc_tutorial_poster.jpg" width="402"
 	height="249" alt="tutorial">
     </a>
     <p>
@@ -33,7 +33,7 @@
   <div id="first-video">
     <a href="http://media.law.columbia.edu/LDA/Judge_Lippman_120120_pt1.html"
         target="_new">
-      <img src="/site_media/img/lippman.jpg" width="402" height="249" alt="Chief Judge Lippman">
+      <img src="{{STATIC_URL}}img/lippman.jpg" width="402" height="249" alt="Chief Judge Lippman">
     </a>
 	<p class="videoCaption">
       <a href="http://media.law.columbia.edu/LDA/Judge_Lippman_120120_pt1.html"
