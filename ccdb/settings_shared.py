@@ -109,7 +109,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.flatpages',
-    'raven.contrib.django',
     'django.contrib.admin',
     'ccdb.law',
     'template_utils',
