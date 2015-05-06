@@ -123,6 +123,7 @@ INSTALLED_APPS = [
     'impersonate',
     'django_markwhat',
     'django.contrib.staticfiles',
+    'gunicorn',
 ]
 
 INTERNAL_IPS = ('127.0.0.1', )
