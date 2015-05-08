@@ -6,3 +6,5 @@ install:
 script:
   - ./ve/bin/flake8 ccdb
   - ./manage.py jenkins
+notifications:
+  slack: ccnmtl:GizSNscLWJLldjQrffB8mwgm
