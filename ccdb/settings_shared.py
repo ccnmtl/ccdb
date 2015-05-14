@@ -34,12 +34,7 @@ if 'test' in sys.argv or 'jenkins' in sys.argv:
             'USER': '',
             'PASSWORD': '', }}
 
-TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
-
-NOSE_ARGS = [
-    '--with-coverage',
-    '--cover-package=ccdb.law',
-]
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 JENKINS_TASKS = (
     'django_jenkins.tasks.with_coverage',
@@ -115,7 +110,6 @@ INSTALLED_APPS = [
     'typogrify',
     'compressor',
     'django_statsd',
-    'django_nose',
     'smoketest',
     'debug_toolbar',
     'django_jenkins',
