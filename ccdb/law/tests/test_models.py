@@ -435,6 +435,9 @@ class TestCharge(TestCase):
         c = ChargeFactory()
         self.assertEqual(c.siblings(), [])
 
+        cc = ChargeChildrenFactory()
+        self.assertEqual(cc.child.siblings(), [])
+
     def test_add_classification_form(self):
         c = ChargeFactory()
         c.add_classification_form()
@@ -454,14 +457,20 @@ class TestCharge(TestCase):
     def test_all_yes(self):
         c = ChargeFactory()
         self.assertEqual(c.all_yes(), [])
+        cc = ChargeChildrenFactory()
+        self.assertEqual(cc.child.all_yes(), [])
 
     def test_all_probably(self):
         c = ChargeFactory()
         self.assertEqual(c.all_probably(), [])
+        cc = ChargeChildrenFactory()
+        self.assertEqual(cc.child.all_probably(), [])
 
     def test_all_maybe(self):
         c = ChargeFactory()
         self.assertEqual(c.all_maybe(), [])
+        cc = ChargeChildrenFactory()
+        self.assertEqual(cc.child.all_maybe(), [])
 
     def test_view_yes(self):
         c = ChargeFactory()
@@ -490,14 +499,20 @@ class TestCharge(TestCase):
     def test_yes_areas(self):
         c = ChargeFactory()
         self.assertEqual(c.yes_areas(), [])
+        cc = ChargeChildrenFactory()
+        self.assertEqual(cc.child.yes_areas(), [])
 
     def test_no_areas(self):
         c = ChargeFactory()
         self.assertEqual(c.no_areas(), [])
+        cc = ChargeChildrenFactory()
+        self.assertEqual(cc.child.no_areas(), [])
 
     def test_yes_areas_for_edit_page(self):
         c = ChargeFactory()
         self.assertEqual(c.yes_areas_for_edit_page(), [])
+        cc = ChargeChildrenFactory()
+        self.assertEqual(cc.child.yes_areas_for_edit_page(), [])
 
     def test_all_consequences_by_area(self):
         c = ChargeFactory()
