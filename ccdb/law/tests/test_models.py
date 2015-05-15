@@ -3,7 +3,7 @@ from .factories import (
     ClassificationFactory, UserFactory, ChargeFactory,
     ChargeChildrenFactory,
 )
-from ccdb.law.models import public_snapshot
+from ccdb.law.models import public_snapshot, working_snapshot
 from ccdb.law.models import effective_certainty, cluster_by, dtolist
 from django.test import TestCase
 
@@ -45,6 +45,13 @@ class SnapshotModelTest(TestCase):
     def test_public_snapshot(self):
         s = SnapshotFactory()
         self.assertEqual(public_snapshot(), s)
+
+    def test_working_snapshot(self):
+        self.assertIsNone(working_snapshot())
+        SnapshotFactory()
+        self.assertIsNone(working_snapshot())
+        s2 = SnapshotFactory(status='in progress')
+        self.assertEqual(working_snapshot(), s2)
 
     def test_clone(self):
         u = UserFactory()
