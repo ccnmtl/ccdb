@@ -2,13 +2,13 @@ MANAGE=./manage.py
 APP=ccdb
 FLAKE8=./ve/bin/flake8
 
-jenkins: ./ve/bin/python validate test flake8
+jenkins: ./ve/bin/python flake8 validate test
 
 ./ve/bin/python: requirements.txt bootstrap.py virtualenv.py
 	./bootstrap.py
 
 test: ./ve/bin/python
-	$(MANAGE) jenkins --pep8-exclude=migrations
+	$(MANAGE) jenkins --pep8-exclude=migrations --enable-coverage --coverage-rcfile=.coveragerc
 
 flake8: ./ve/bin/python
 	$(FLAKE8) $(APP) --max-complexity=10
