@@ -1,52 +1,62 @@
-from ccdb.law.models import Snapshot, public_snapshot
+from .factories import (
+    SnapshotFactory, AreaFactory, ConsequenceFactory,
+    ClassificationFactory, UserFactory, ChargeFactory,
+    ChargeChildrenFactory,
+)
+from ccdb.law.models import public_snapshot, working_snapshot
 from ccdb.law.models import effective_certainty, cluster_by, dtolist
-from ccdb.law.models import Area, Consequence
-from ccdb.law.models import Classification, Charge
-from ccdb.law.models import ChargeChildren
 from django.test import TestCase
-from django.contrib.auth.models import User
 
 
 class SnapshotModelTest(TestCase):
-    def setUp(self):
-        self.s = Snapshot.objects.create(
-            label="test snapshot",
-            status="vetted")
-
-    def tearDown(self):
-        self.s.delete()
-
     def test_unicode(self):
-        self.assertEquals(unicode(self.s), "test snapshot")
+        s = SnapshotFactory()
+        self.assertTrue(unicode(s).startswith("test snapshot"))
 
     def test_dump_filename_base(self):
-        assert "T" in self.s.dump_filename_base()
+        s = SnapshotFactory()
+        assert "T" in s.dump_filename_base()
 
     def test_to_json(self):
-        self.assertEqual(self.s.to_json()['label'], self.s.label)
+        s = SnapshotFactory()
+        self.assertEqual(s.to_json()['label'], s.label)
 
     def test_is_most_recent_vetted(self):
-        self.assertTrue(self.s.is_most_recent_vetted())
+        s = SnapshotFactory()
+        self.assertTrue(s.is_most_recent_vetted())
 
     def test_is_current_working(self):
-        self.assertFalse(self.s.is_current_working())
+        s = SnapshotFactory()
+        self.assertFalse(s.is_current_working())
 
     def test_cloneable(self):
-        self.assertTrue(self.s.cloneable())
+        s = SnapshotFactory()
+        self.assertTrue(s.cloneable())
 
     def test_get_absolute_url(self):
-        self.assertEquals(self.s.get_absolute_url(),
-                          "/snapshots/%d/" % self.s.id)
+        s = SnapshotFactory()
+        self.assertEquals(s.get_absolute_url(),
+                          "/snapshots/%d/" % s.id)
 
     def test_clear(self):
-        self.s.clear()
+        s = SnapshotFactory()
+        s.clear()
 
     def test_public_snapshot(self):
-        self.assertEqual(public_snapshot(), self.s)
+        s = SnapshotFactory()
+        self.assertEqual(public_snapshot(), s)
+
+    def test_working_snapshot(self):
+        self.assertIsNone(working_snapshot())
+        SnapshotFactory()
+        self.assertIsNone(working_snapshot())
+        s2 = SnapshotFactory(status='in progress')
+        self.assertEqual(working_snapshot(), s2)
 
     def test_clone(self):
-        u = User.objects.create(username="testuser")
-        new_snapshot = self.s.clone(label="test clone", user=u)
+        u = UserFactory()
+        s = SnapshotFactory()
+        new_snapshot = s.clone(label="test clone", user=u)
         self.assertEqual(new_snapshot.label, "test clone")
         new_snapshot.delete()
 
@@ -90,444 +100,428 @@ class TestDToList(TestCase):
 
 
 class TestArea(TestCase):
-    def setUp(self):
-        self.s = Snapshot.objects.create(
-            label="test snapshot",
-            status="vetted")
-        self.a = Area.objects.create(
-            label="Test Area",
-            name="test",
-            snapshot=self.s)
-
-    def tearDown(self):
-        self.a.delete()
-        self.s.delete()
-
-    def test_unicode(self):
-        self.assertEquals(str(self.a), "Test Area")
-
     def test_get_absolute_url(self):
+        a = AreaFactory()
         self.assertEquals(
-            self.a.get_absolute_url(), "/area/test/",
+            a.get_absolute_url(), "/area/test/",
         )
 
     def test_to_json(self):
-        json = self.a.to_json()
-        self.assertEquals(json['label'], self.a.label)
-        self.assertEquals(json['slug'], self.a.name)
-        self.assertEquals(json['id'], self.a.id)
+        a = AreaFactory()
+        json = a.to_json()
+        self.assertEquals(json['label'], a.label)
+        self.assertEquals(json['slug'], a.name)
+        self.assertEquals(json['id'], a.id)
 
     def test_clone_to(self):
-        new_snapshot = Snapshot.objects.create(
+        a = AreaFactory()
+        new_snapshot = SnapshotFactory(
             label="New Snapshot",
             status="in progress")
-        na = self.a.clone_to(new_snapshot)
-        self.assertEquals(na.label, self.a.label)
-        self.assertEquals(na.name, self.a.name)
-        na.delete()
-        new_snapshot.delete()
+        na = a.clone_to(new_snapshot)
+        self.assertEquals(na.label, a.label)
+        self.assertEquals(na.name, a.name)
 
 
 class TestConsequence(TestCase):
-    def setUp(self):
-        self.s = Snapshot.objects.create(
-            label="test snapshot",
-            status="vetted")
-        self.a = Area.objects.create(
-            label="Test Area",
-            name="test",
-            snapshot=self.s)
-        self.cons = Consequence.objects.create(
-            label="Test Consequence",
-            area=self.a,
-            name="test",
-        )
-
-    def tearDown(self):
-        self.cons.delete()
-        self.a.delete()
-        self.s.delete()
-
     def test_unicode(self):
-        self.assertEquals(str(self.cons), "Test Consequence")
+        cons = ConsequenceFactory()
+        self.assertEquals(str(cons), cons.label)
 
     def test_display_label(self):
-        self.assertEquals(self.cons.display_label(), "Test Consequence")
-        self.cons.label = "Test Consequence [foo]"
-        self.cons.save()
-        self.assertEquals(self.cons.display_label(), "Test Consequence")
-        self.cons.label = "Test Consequence"
-        self.cons.save()
+        cons = ConsequenceFactory()
+        self.assertEquals(cons.display_label(), cons.label)
+        cons.label = "Test Consequence [foo]"
+        cons.save()
+        self.assertEquals(cons.display_label(), "Test Consequence")
 
     def test_to_json(self):
-        json = self.cons.to_json()
-        self.assertEquals(json['label'], self.cons.label)
-        self.assertEquals(json['slug'], self.cons.name)
-        self.assertEquals(json['description'], self.cons.description)
+        cons = ConsequenceFactory()
+        json = cons.to_json()
+        self.assertEquals(json['label'], cons.label)
+        self.assertEquals(json['slug'], cons.name)
+        self.assertEquals(json['description'], cons.description)
 
     def test_get_absolute_url(self):
-        self.assertEquals(self.cons.get_absolute_url(), "/area/test/test/")
+        cons = ConsequenceFactory()
+        self.assertEquals(cons.get_absolute_url(), "/area/test/test/")
 
     def test_no(self):
-        self.assertEquals(self.cons.no(), [])
+        cons = ConsequenceFactory()
+        self.assertEquals(cons.no(), [])
 
     def test_add_classification_form(self):
-        self.cons.add_classification_form()
+        cons = ConsequenceFactory()
+        cons.add_classification_form()
 
     def test_clone_to(self):
-        new_area = Area.objects.create(
+        cons = ConsequenceFactory()
+        new_area = AreaFactory(
             label="New Area",
             name="new",
-            snapshot=self.s)
-        c = self.cons.clone_to(new_area)
-        self.assertEquals(c.label, self.cons.label)
-        self.assertEquals(c.name, self.cons.name)
-        c.delete()
-        new_area.delete()
+            snapshot=cons.area.snapshot)
+        c = cons.clone_to(new_area)
+        self.assertEquals(c.label, cons.label)
+        self.assertEquals(c.name, cons.name)
 
     def test_clone_snapshot(self):
-        u = User.objects.create(username="testuser")
-        new_snapshot = self.s.clone(label="test clone", user=u)
+        u = UserFactory()
+        cons = ConsequenceFactory()
+        new_snapshot = cons.area.snapshot.clone(label="test clone", user=u)
         self.assertEqual(new_snapshot.label, "test clone")
-        new_snapshot.clear()
-        new_snapshot.delete()
 
 
 class TestClassification(TestCase):
-    def setUp(self):
-        self.s = Snapshot.objects.create(
-            label="test snapshot",
-            status="vetted")
-        self.c = Classification.objects.create(
-            snapshot=self.s,
-            label="Test Classification",
-            name="test",
-        )
-
-    def tearDown(self):
-        self.c.delete()
-        self.s.delete()
-
     def test_unicode(self):
-        self.assertEquals(str(self.c), "Test Classification")
+        c = ClassificationFactory()
+        self.assertEquals(str(c), c.label)
 
     def test_display_label(self):
+        c = ClassificationFactory()
+        self.assertEquals(c.display_label(), c.label)
+        c.label = "Test Classification [foo]"
         self.assertEquals(
-            self.c.display_label(),
+            c.display_label(),
             "Test Classification"
         )
-        self.c.label = "Test Classification [foo]"
-        self.c.save()
-        self.assertEquals(
-            self.c.display_label(),
-            "Test Classification"
-        )
-        self.c.label = "Test Classification"
-        self.c.save()
 
     def test_get_absolute_url(self):
+        c = ClassificationFactory()
         self.assertEquals(
-            self.c.get_absolute_url(),
+            c.get_absolute_url(),
             "/classification/test/"
         )
 
     def test_json(self):
-        json = self.c.to_json()
-        self.assertEquals(json['label'], self.c.label)
-        self.assertEquals(json['slug'], self.c.name)
-        self.assertEquals(json['description'], self.c.description)
+        c = ClassificationFactory()
+        json = c.to_json()
+        self.assertEquals(json['label'], c.label)
+        self.assertEquals(json['slug'], c.name)
+        self.assertEquals(json['description'], c.description)
 
     def test_clone_to(self):
-        new_snapshot = Snapshot.objects.create(
+        c = ClassificationFactory()
+        new_snapshot = SnapshotFactory(
             label="New Snapshot",
             status="in progress")
-        na = self.c.clone_to(new_snapshot)
-        self.assertEquals(na.label, self.c.label)
-        self.assertEquals(na.name, self.c.name)
-        na.delete()
-        new_snapshot.delete()
+        na = c.clone_to(new_snapshot)
+        self.assertEquals(na.label, c.label)
+        self.assertEquals(na.name, c.name)
 
     def test_clone_snapshot(self):
-        u = User.objects.create(username="testuser")
-        new_snapshot = self.s.clone(label="test clone", user=u)
+        c = ClassificationFactory()
+        u = UserFactory()
+        new_snapshot = c.snapshot.clone(label="test clone", user=u)
         self.assertEqual(new_snapshot.label, "test clone")
-        new_snapshot.clear()
-        new_snapshot.delete()
 
     def test_yes(self):
-        self.assertEquals(self.c.yes().count(), 0)
+        c = ClassificationFactory()
+        self.assertEquals(c.yes().count(), 0)
 
     def test_probably(self):
-        self.assertEquals(self.c.probably().count(), 0)
+        c = ClassificationFactory()
+        self.assertEquals(c.probably().count(), 0)
 
     def test_maybe(self):
-        self.assertEquals(self.c.maybe().count(), 0)
+        c = ClassificationFactory()
+        self.assertEquals(c.maybe().count(), 0)
 
     def test_no(self):
-        self.assertEquals(len(self.c.no()), 0)
+        c = ClassificationFactory()
+        self.assertEquals(len(c.no()), 0)
 
     def test_all_charges(self):
-        self.assertEquals(self.c.all_charges(), [])
+        c = ClassificationFactory()
+        self.assertEquals(c.all_charges(), [])
 
     def test_consequences(self):
-        self.assertEquals(self.c.consequences(), [])
+        c = ClassificationFactory()
+        self.assertEquals(c.consequences(), [])
 
     def test_add_consequence_form(self):
-        self.c.add_consequence_form()
+        c = ClassificationFactory()
+        c.add_consequence_form()
 
     def test_yes_consequences(self):
-        self.assertEquals(self.c.yes_consequences().count(), 0)
+        c = ClassificationFactory()
+        self.assertEquals(c.yes_consequences().count(), 0)
 
     def test_probably_consequences(self):
-        self.assertEquals(self.c.probably_consequences().count(), 0)
+        c = ClassificationFactory()
+        self.assertEquals(c.probably_consequences().count(), 0)
 
     def test_maybe_consequences(self):
-        self.assertEquals(self.c.maybe_consequences().count(), 0)
+        c = ClassificationFactory()
+        self.assertEquals(c.maybe_consequences().count(), 0)
 
     def test_all_probably_consequences(self):
-        self.assertEquals(self.c.all_probably_consequences(), [])
+        c = ClassificationFactory()
+        self.assertEquals(c.all_probably_consequences(), [])
 
     def test_all_maybe_consequences(self):
-        self.assertEquals(self.c.all_maybe_consequences(), [])
+        c = ClassificationFactory()
+        self.assertEquals(c.all_maybe_consequences(), [])
 
     def test_all_consequences(self):
-        self.assertEquals(self.c.all_consequences(), [])
+        c = ClassificationFactory()
+        self.assertEquals(c.all_consequences(), [])
 
     def test_no_consequences(self):
-        self.assertEquals(self.c.no_consequences(), [])
+        c = ClassificationFactory()
+        self.assertEquals(c.no_consequences(), [])
 
     def test_in_areas(self):
-        self.assertTrue(self.c.in_areas([]))
+        c = ClassificationFactory()
+        self.assertTrue(c.in_areas([]))
 
 
 class TestCharge(TestCase):
-    def setUp(self):
-        self.s = Snapshot.objects.create(
-            label="test snapshot",
-            status="vetted")
-
-        # an isolated solo charge
-        self.c = Charge.objects.create(
-            label="Test Charge",
-            penal_code="127.0.1",
-            snapshot=self.s,
-            name="127-0-1-test-charge",
-            numeric_penal_code=127.0,
-            description="a description")
-
-        # a parent/child set
-        self.c2 = Charge.objects.create(
-            label="Test Charge 2",
-            penal_code="128",
-            snapshot=self.s,
-            name="128-test-charge-2",
-            numeric_penal_code=128.0,
-            description="c2's description")
-        self.c3 = Charge.objects.create(
-            label="Test Charge 3",
-            penal_code="128.1",
-            snapshot=self.s,
-            name="128-1-test-charge-3",
-            numeric_penal_code=128.1,
-            description="")
-        ChargeChildren.objects.create(
-            parent=self.c2,
-            child=self.c3)
-
-    def tearDown(self):
-        self.c2.delete_self()
-        self.c.delete()
-        self.s.delete()
-
     def test_unicode(self):
-        self.assertEquals(str(self.c), "Test Charge")
+        c = ChargeFactory()
+        self.assertEquals(str(c), c.label)
 
     def test_get_absolute_url(self):
+        c = ChargeFactory()
+        self.assertTrue(
+            c.get_absolute_url().startswith("/charge/127-0"))
+        cc = ChargeChildrenFactory()
         self.assertEquals(
-            self.c.get_absolute_url(),
-            "/charge/127-0-1-test-charge/")
-        self.assertEquals(
-            self.c3.get_absolute_url(),
-            "/charge/128-test-charge-2/128-1-test-charge-3/")
+            cc.child.get_absolute_url(),
+            cc.parent.get_absolute_url() + cc.child.name + "/")
 
+        self.assertEquals(c.snapshot.get_charge_by_slugs([c.name]), c)
         self.assertEquals(
-            self.s.get_charge_by_slugs(["127-0-1-test-charge"]),
-            self.c)
-        self.assertEquals(
-            self.s.get_charge_by_slugs(
-                ["128-test-charge-2", "128-1-test-charge-3"]),
-            self.c3)
+            cc.parent.snapshot.get_charge_by_slugs(
+                [cc.parent.name, cc.child.name]),
+            cc.child)
 
     def test_to_json(self):
-        json = self.c.to_json()
-        self.assertEquals(json['label'], self.c.label)
-        self.assertEquals(json['penal_code'], self.c.penal_code)
-        self.assertEquals(json['slug'], self.c.name)
+        c = ChargeFactory()
+        json = c.to_json()
+        self.assertEquals(json['label'], c.label)
+        self.assertEquals(json['penal_code'], c.penal_code)
+        self.assertEquals(json['slug'], c.name)
         self.assertEquals(json['numeric_penal_code'],
-                          self.c.numeric_penal_code)
-        self.assertEquals(json['description'], self.c.description)
+                          c.numeric_penal_code)
+        self.assertEquals(json['description'], c.description)
 
     def test_get_description(self):
-        self.assertEquals(self.c.get_description(), self.c.description)
-        self.assertEquals(self.c3.get_description(), "c2's description")
+        c = ChargeFactory()
+        self.assertEquals(c.get_description(), c.description)
+        cc = ChargeChildrenFactory()
+        cc.child.description = ""
+        self.assertEquals(cc.child.get_description(), cc.parent.description)
 
     def test_clone_to(self):
-        new_snapshot = Snapshot.objects.create(
+        c = ChargeFactory()
+        new_snapshot = SnapshotFactory(
             label="New Snapshot",
             status="in progress")
-        na = self.c.clone_to(new_snapshot)
-        self.assertEquals(na.label, self.c.label)
-        self.assertEquals(na.name, self.c.name)
-        na.delete_self()
-        new_snapshot.delete()
+        na = c.clone_to(new_snapshot)
+        self.assertEquals(na.label, c.label)
+        self.assertEquals(na.name, c.name)
 
     def test_clone_snapshot(self):
-        u = User.objects.create(username="testuser")
-        new_snapshot = self.s.clone(label="test clone", user=u)
+        u = UserFactory()
+        c = ChargeFactory()
+        new_snapshot = c.snapshot.clone(label="test clone", user=u)
         self.assertEqual(new_snapshot.label, "test clone")
-        new_snapshot.clear()
-        new_snapshot.delete()
 
     def test_children(self):
-        self.assertEquals(self.c.children(), [])
-        self.assertEquals(self.c2.children(), [self.c3])
+        c = ChargeFactory()
+        self.assertEquals(c.children(), [])
+        cc = ChargeChildrenFactory()
+        self.assertEquals(cc.parent.children(), [cc.child])
 
     def test_has_children(self):
-        self.assertFalse(self.c.has_children())
-        self.assertFalse(self.c3.has_children())
-        self.assertTrue(self.c2.has_children())
+        c = ChargeFactory()
+        self.assertFalse(c.has_children())
+        cc = ChargeChildrenFactory()
+        self.assertFalse(cc.child.has_children())
+        self.assertTrue(cc.parent.has_children())
 
     def test_has_parents(self):
-        self.assertFalse(self.c.has_parents())
-        self.assertFalse(self.c2.has_parents())
-        self.assertTrue(self.c3.has_parents())
+        c = ChargeFactory()
+        self.assertFalse(c.has_parents())
+        cc = ChargeChildrenFactory()
+        self.assertFalse(cc.parent.has_parents())
+        self.assertTrue(cc.child.has_parents())
 
     def test_is_leaf(self):
-        self.assertTrue(self.c.is_leaf())
-        self.assertTrue(self.c3.is_leaf())
-        self.assertFalse(self.c2.is_leaf())
+        c = ChargeFactory()
+        self.assertTrue(c.is_leaf())
+        cc = ChargeChildrenFactory()
+        self.assertTrue(cc.child.is_leaf())
+        self.assertFalse(cc.parent.is_leaf())
 
     def test_as_ul(self):
-        self.assertEqual(
-            self.c.as_ul(),
-            ('<li class="menuitem leaf"><span class="charge" '
-             'href="/charge/127-0-1-test-charge/"></span>127.'
-             '0.1 Test Charge</a></li>'))
-        self.assertEqual(
-            self.c.as_ul(hs=False),
-            ('<li class="menuitem leaf"><span class="charge" '
-             'href="/charge/127-0-1-test-charge/"></span>127.'
-             '0.1 Test Charge</a></li>'))
-
-        self.assertEqual(
-            self.c2.as_ul(),
-            ('<li class="menuitem leaf"><a href="#charge-2" '
-             'class="hs-control">128 Test Charge 2</a><ul '
-             'id="charge-2" class="hs-init-hide menu"><li '
-             'class="menuitem leaf"><span class="charge" '
-             'href="/charge/128-test-charge-2/128-1-test-charge-3/'
-             '"></span>128.1 Test Charge 3</a></li></ul></li>'))
-        self.assertEqual(
-            self.c2.as_ul(hs=False),
-            ('<li class="menuitem leaf"><a href="/charge/128-test-'
-             'charge-2/">128 Test Charge 2</a><ul id="charge-2" '
-             'class=" menu"><li class="menuitem leaf"><span '
-             'class="charge" href="/charge/128-test-charge-2/'
-             '128-1-test-charge-3/"></span>128.1 Test Charge 3'
-             '</a></li></ul></li>'))
+        c = ChargeFactory()
+        ul = c.as_ul()
+        self.assertTrue(
+            '<li class="menuitem leaf">' in ul)
+        self.assertTrue(
+            '<span class="charge"' in ul)
+        self.assertTrue(
+            c.get_absolute_url() in ul)
+        ul = c.as_ul(hs=False)
+        self.assertTrue(
+            '<li class="menuitem leaf">' in ul)
+        self.assertTrue(
+            '<span class="charge"' in ul)
+        self.assertTrue(
+            c.get_absolute_url() in ul)
+        cc = ChargeChildrenFactory()
+        ul = cc.parent.as_ul()
+        self.assertTrue(
+            '<li class="menuitem leaf">' in ul)
+        self.assertTrue(
+            '<span class="charge"' in ul)
+        self.assertTrue(
+            cc.parent.get_absolute_url() in ul)
+        ul = cc.parent.as_ul(hs=False)
+        self.assertTrue(
+            '<li class="menuitem leaf">' in ul)
+        self.assertTrue(
+            '<span class="charge"' in ul)
+        self.assertTrue(
+            cc.parent.get_absolute_url() in ul)
 
     def test_as_view_ul(self):
-        self.assertEqual(self.c.as_ul(), self.c.as_view_ul())
+        c = ChargeFactory()
+        self.assertEqual(c.as_ul(), c.as_view_ul())
 
     def test_as_edit_ul(self):
-        self.assertEqual(
-            self.c.as_edit_ul(),
-            ('<li class="menuitem leaf"><span class="charge" '
-             'href="/edit/charge/127-0-1-test-charge/"></span>127.'
-             '0.1 Test Charge</a></li>'))
+        c = ChargeFactory()
+        ul = c.as_edit_ul()
+        self.assertTrue(
+            '<li class="menuitem leaf">' in ul)
+        self.assertTrue(
+            '<span class="charge"' in ul)
 
     def test_as_compare_ul(self):
-        self.assertEqual(
-            self.c.as_compare_ul(),
-            ('<li class="menuitem"><span class="compare" '
-             'href="?charge2=/charge/127-0-1-test-charge/"></span>127.'
-             '0.1 Test Charge</a></li>'))
+        c = ChargeFactory()
+        ul = c.as_compare_ul()
+        self.assertTrue(
+            '<li class="menuitem"><span class="compare" '
+            in ul)
+        self.assertTrue(
+            'href="?charge2=' + c.get_absolute_url()
+            in ul)
 
-        self.assertEqual(
-            self.c2.as_compare_ul(),
-            ('<li class="menuitem"><a href="#compare-charge-2" '
-             'class="hs-control">128 Test Charge 2</a><ul id="'
-             'compare-charge-2" class="hs-init-hide menu"><li '
-             'class="menuitem"><span class="compare" '
-             'href="?charge2=/charge/128-test-charge-2/128-1-test-charge-3/'
-             '"></span>128.1 Test Charge 3</a></li></ul></li>'))
+        cc = ChargeChildrenFactory()
+        ul = cc.parent.as_compare_ul()
+        self.assertTrue(
+            '<li class="menuitem"><span class="compare" '
+            in ul)
+        self.assertTrue(
+            'href="?charge2=' + cc.parent.get_absolute_url()
+            in ul)
 
     def test_as_view_compare_ul(self):
-        self.assertEqual(self.c.as_compare_ul(),
-                         self.c.as_view_compare_ul())
-        self.assertEqual(self.c2.as_compare_ul(),
-                         self.c2.as_view_compare_ul())
+        c = ChargeFactory()
+        self.assertEqual(c.as_compare_ul(),
+                         c.as_view_compare_ul())
+        cc = ChargeChildrenFactory()
+        self.assertEqual(cc.parent.as_compare_ul(),
+                         cc.parent.as_view_compare_ul())
 
     def test_rparents(self):
-        self.assertEqual(self.c.rparents(), [])
-        self.assertEqual(self.c3.rparents(), [self.c2])
+        c = ChargeFactory()
+        self.assertEqual(c.rparents(), [])
+        cc = ChargeChildrenFactory()
+        self.assertEqual(cc.child.rparents(), [cc.parent])
 
     def test_siblings(self):
-        self.assertEqual(self.c.siblings(), [])
+        c = ChargeFactory()
+        self.assertEqual(c.siblings(), [])
+
+        cc = ChargeChildrenFactory()
+        self.assertEqual(cc.child.siblings(), [])
 
     def test_add_classification_form(self):
-        self.c.add_classification_form()
+        c = ChargeFactory()
+        c.add_classification_form()
 
     def test_yes(self):
-        self.assertEqual(self.c.yes(), [])
+        c = ChargeFactory()
+        self.assertEqual(c.yes(), [])
 
     def test_probably(self):
-        self.assertEqual(self.c.probably(), [])
+        c = ChargeFactory()
+        self.assertEqual(c.probably(), [])
 
     def test_maybe(self):
-        self.assertEqual(self.c.maybe(), [])
+        c = ChargeFactory()
+        self.assertEqual(c.maybe(), [])
 
     def test_all_yes(self):
-        self.assertEqual(self.c.all_yes(), [])
+        c = ChargeFactory()
+        self.assertEqual(c.all_yes(), [])
+        cc = ChargeChildrenFactory()
+        self.assertEqual(cc.child.all_yes(), [])
 
     def test_all_probably(self):
-        self.assertEqual(self.c.all_probably(), [])
+        c = ChargeFactory()
+        self.assertEqual(c.all_probably(), [])
+        cc = ChargeChildrenFactory()
+        self.assertEqual(cc.child.all_probably(), [])
 
     def test_all_maybe(self):
-        self.assertEqual(self.c.all_maybe(), [])
+        c = ChargeFactory()
+        self.assertEqual(c.all_maybe(), [])
+        cc = ChargeChildrenFactory()
+        self.assertEqual(cc.child.all_maybe(), [])
 
     def test_view_yes(self):
-        self.assertEqual(self.c.view_yes(), [])
+        c = ChargeFactory()
+        self.assertEqual(c.view_yes(), [])
 
     def test_view_probably(self):
-        self.assertEqual(self.c.view_probably(), [])
+        c = ChargeFactory()
+        self.assertEqual(c.view_probably(), [])
 
     def test_view_maybe(self):
-        self.assertEqual(self.c.view_maybe(), [])
+        c = ChargeFactory()
+        self.assertEqual(c.view_maybe(), [])
 
     def test_view_all(self):
-        self.assertEqual(self.c.view_all(), [])
+        c = ChargeFactory()
+        self.assertEqual(c.view_all(), [])
 
     def test_no(self):
-        self.assertEqual(self.c.no(), [])
+        c = ChargeFactory()
+        self.assertEqual(c.no(), [])
 
     def test_add_area_form(self):
-        self.c.add_area_form()
+        c = ChargeFactory()
+        c.add_area_form()
 
     def test_yes_areas(self):
-        self.assertEqual(self.c.yes_areas(), [])
+        c = ChargeFactory()
+        self.assertEqual(c.yes_areas(), [])
+        cc = ChargeChildrenFactory()
+        self.assertEqual(cc.child.yes_areas(), [])
 
     def test_no_areas(self):
-        self.assertEqual(self.c.no_areas(), [])
+        c = ChargeFactory()
+        self.assertEqual(c.no_areas(), [])
+        cc = ChargeChildrenFactory()
+        self.assertEqual(cc.child.no_areas(), [])
 
     def test_yes_areas_for_edit_page(self):
-        self.assertEqual(self.c.yes_areas_for_edit_page(), [])
+        c = ChargeFactory()
+        self.assertEqual(c.yes_areas_for_edit_page(), [])
+        cc = ChargeChildrenFactory()
+        self.assertEqual(cc.child.yes_areas_for_edit_page(), [])
 
     def test_all_consequences_by_area(self):
-        self.assertEqual(self.c.all_consequences_by_area(), [])
+        c = ChargeFactory()
+        self.assertEqual(c.all_consequences_by_area(), [])
 
     def test_all_consequences_by_area_json(self):
-        self.assertEqual(self.c.all_consequences_by_area_json(), [])
+        c = ChargeFactory()
+        self.assertEqual(c.all_consequences_by_area_json(), [])
 
     def test_gather_all_consequences(self):
-        self.assertEqual(self.c.gather_all_consequences(), [])
+        c = ChargeFactory()
+        self.assertEqual(c.gather_all_consequences(), [])

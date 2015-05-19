@@ -181,10 +181,7 @@ def public_snapshot():
 
 def working_snapshot():
     # should only ever be one in progress
-    try:
-        return Snapshot.objects.filter(status="in progress")[0]
-    except Snapshot.DoesNotExist:
-        return None
+    return Snapshot.objects.filter(status="in progress").first()
 
 
 def is_working_snapshot():
