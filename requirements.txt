@@ -27,7 +27,7 @@ python-dateutil==2.4.2
 gunicorn==19.3.0
 factory_boy==2.5.2
 
-djangowind==0.13.2
+djangowind==0.13.3
 template_utils==0.4p2
 typogrify==1.0
 django-tinymce==1.5.3
