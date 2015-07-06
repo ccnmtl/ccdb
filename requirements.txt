@@ -34,8 +34,7 @@ django-tinymce==1.5.3
 johnny-cache==1.6a
 django-templatetag-sugar==0.1
 django-indexer==0.3.0
-django-paging==0.2.5
-django-appconf==0.6
+django-appconf==1.0.1
 django-compressor==1.5
 django-modeldict==1.1.6
 django-jsonfield==0.5
