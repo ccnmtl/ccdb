@@ -38,7 +38,6 @@ django-indexer==0.3.0
 django-appconf==0.6
 django-compressor==1.5
 django-modeldict==1.1.6
-django-jsonfield==0.5
 django-statsd-mozilla==0.3.14
 raven==5.2.0
 django-annoying==0.8.1
