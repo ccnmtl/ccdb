@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render_to_response, get_object_or_404
 from datetime import datetime
 from django.template.defaultfilters import slugify
-import simplejson
+from json import dumps
 from annoying.decorators import render_to
 from django.core.mail import send_mail
 from restclient import POST
@@ -99,7 +99,7 @@ def approve_snapshot(request, id):
     # make a static dump of the vetted one
     data = dict()
     data['snapshot'] = snapshot.to_json()
-    json = simplejson.dumps(data)
+    json = dumps(data)
     media_dir = settings.MEDIA_ROOT
     filename_base = snapshot.dump_filename_base()
     json_full_path = os.path.join(media_dir, "dumps", filename_base + ".json")
@@ -158,7 +158,7 @@ def api_current(request):
     filename_base = snapshot.dump_filename_base()
     data['json_url'] = settings.MEDIA_URL + "dumps/" + filename_base + ".json"
     data['zip_url'] = settings.MEDIA_URL + "dumps/" + filename_base + ".zip"
-    json = simplejson.dumps(data)
+    json = dumps(data)
     return HttpResponse(json, content_type="application/json")
 
 
@@ -352,7 +352,7 @@ def autocomplete(request):
         label__icontains=q) | Charge.objects.filter(snapshot=snapshot,
                                                     penal_code__icontains=q)
     charges = list(set([c.label for c in charges if c.is_leaf()]))
-    json = simplejson.dumps(charges)
+    json = dumps(charges)
     return HttpResponse(json, content_type='application/json')
 
 
