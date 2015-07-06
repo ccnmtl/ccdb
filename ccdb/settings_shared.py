@@ -106,7 +106,6 @@ INSTALLED_APPS = [
     'django.contrib.admin',
     'ccdb.law',
     'template_utils',
-    'typogrify',
     'compressor',
     'django_statsd',
     'smoketest',
