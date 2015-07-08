@@ -105,8 +105,6 @@ INSTALLED_APPS = [
     'django.contrib.flatpages',
     'django.contrib.admin',
     'ccdb.law',
-    'template_utils',
-    'typogrify',
     'compressor',
     'django_statsd',
     'smoketest',
