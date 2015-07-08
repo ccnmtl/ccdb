@@ -24,11 +24,6 @@ gunicorn==19.3.0
 factory_boy==2.5.2
 
 djangowind==0.13.3
-<<<<<<< HEAD
-template_utils==0.4p2
-=======
-typogrify==2.0.7
->>>>>>> master
 django-tinymce==1.5.3
 johnny-cache==1.6a
 django-indexer==0.3.0
