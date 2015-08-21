@@ -11,21 +11,25 @@ class AddChargeForm(forms.Form):
 class EditChargeForm(ModelForm):
     class Meta:
         model = Charge
+        exclude = []
 
 
 class EditAreaForm(ModelForm):
     class Meta:
         model = Area
+        exclude = []
 
 
 class EditClassificationForm(ModelForm):
     class Meta:
         model = Classification
+        exclude = []
 
 
 class EditConsequenceForm(ModelForm):
     class Meta:
         model = Consequence
+        exclude = []
 
 
 class AddClassificationForm(forms.Form):
