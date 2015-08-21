@@ -14,13 +14,10 @@ COMPRESS_ROOT = '/var/www/ccdb/ccdb/media/'
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
-JOHNNY_MIDDLEWARE_KEY_PREFIX='jc_ccdb'
-
 CACHES = {
     'default': dict(
-        BACKEND='johnny.backends.filebased.FileBasedCache',
+        BACKEND='django.core.cache.backends.filebased.FileBasedCache',
         LOCATION='file:///var/www/ccdb/cache/',
-        JOHNNY_CACHE=True,
     )
 }
 
