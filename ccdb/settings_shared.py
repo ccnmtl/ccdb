@@ -43,13 +43,10 @@ JENKINS_TASKS = (
 
 PROJECT_APPS = ['ccdb.law', ]
 
-JOHNNY_MIDDLEWARE_KEY_PREFIX = 'jc_ccdb'
-
 CACHES = {
     'default': dict(
-        BACKEND='johnny.backends.locmem.LocMemCache',
-        LOCATION='',
-        JOHNNY_CACHE=True,
+        BACKEND='django.core.cache.backends.locmem.LocMemCache',
+        LOCATION='ccdb-unique-snowflake',
     )
 }
 
@@ -76,7 +73,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'djangowind.context.context_processor',
 )
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE_CLASSES = [
     'django_statsd.middleware.GraphiteRequestTimingMiddleware',
     'django_statsd.middleware.GraphiteMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -87,8 +84,7 @@ MIDDLEWARE_CLASSES = (
     'impersonate.middleware.ImpersonateMiddleware',
     'waffle.middleware.WaffleMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'johnny.middleware.LocalStoreClearMiddleware',
-    'johnny.middleware.QueryCacheMiddleware', )
+]
 
 ROOT_URLCONF = 'ccdb.urls'
 
@@ -136,6 +132,11 @@ STATSD_PORT = 8125
 
 if 'test' in sys.argv or 'jenkins' in sys.argv:
     STATSD_HOST = '127.0.0.1'
+    CACHES = {
+        'default': dict(
+            BACKEND='django.core.cache.backends.dummy.DummyCache',
+        )
+    }
 
 COMPRESS_URL = "/media/"
 COMPRESS_ROOT = "media/"
