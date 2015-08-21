@@ -28,7 +28,6 @@ ndg-httpsclient==0.4.0
 
 djangowind==0.13.3
 django-tinymce==1.5.3
-johnny-cache==1.6a
 django-indexer==0.3.0
 django-appconf==1.0.1
 django-compressor==1.5
