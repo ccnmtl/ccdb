@@ -21,7 +21,9 @@ DATABASES = {
         'HOST': '',
         'PORT': 5432,
         'USER': '',
-        'PASSWORD': '', }
+        'PASSWORD': '',
+        'ATOMIC_REQUESTS': True,
+    }
 }
 
 if 'test' in sys.argv or 'jenkins' in sys.argv:
@@ -32,7 +34,10 @@ if 'test' in sys.argv or 'jenkins' in sys.argv:
             'HOST': '',
             'PORT': '',
             'USER': '',
-            'PASSWORD': '', }}
+            'PASSWORD': '',
+            'ATOMIC_REQUESTS': True,
+        }
+    }
 
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
@@ -65,11 +70,11 @@ TEMPLATE_LOADERS = (
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
-    'django.core.context_processors.debug',
-    'django.core.context_processors.request',
+    'django.template.context_processors.debug',
+    'django.template.context_processors.request',
     'stagingcontext.staging_processor',
     'gacontext.ga_processor',
-    'django.core.context_processors.static',
+    'django.template.context_processors.static',
     'djangowind.context.context_processor',
 )
 
@@ -80,7 +85,6 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
-    'django.middleware.transaction.TransactionMiddleware',
     'impersonate.middleware.ImpersonateMiddleware',
     'waffle.middleware.WaffleMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
