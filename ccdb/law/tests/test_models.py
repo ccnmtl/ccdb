@@ -80,7 +80,10 @@ class TestEffectiveCertainty(TestCase):
 class TestClusterBy(TestCase):
     def test_basics(self):
         alist = [1, 2, 3]
-        f = lambda x: x + 4
+
+        def f(x):
+            return x + 4
+
         self.assertEquals(
             cluster_by(f, alist),
             {5: [1], 6: [2], 7: [3]})
