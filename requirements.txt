@@ -26,7 +26,7 @@ pyasn1==0.1.8
 pyOpenSSL==0.15.1
 ndg-httpsclient==0.4.0
 
-djangowind==0.13.3
+djangowind==0.14.1
 django-tinymce==1.5.3
 django-indexer==0.3.0
 django-appconf==1.0.1
