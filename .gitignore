@@ -8,3 +8,4 @@ CACHE
 .coverage
 cover/
 reports/
+node_modules
