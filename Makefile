@@ -25,6 +25,18 @@ check: ./ve/bin/python
 shell: ./ve/bin/python
 	$(MANAGE) shell_plus
 
+jshint: node_modules/jshint/bin/jshint
+	./node_modules/jshint/bin/jshint --config=.jshintrc media/js/autocomplete.js media/js/hs.js media/js/disclaimer.js media/js/splitanchor.js
+
+jscs: node_modules/jscs/bin/jscs
+	./node_modules/jscs/bin/jscs media/js/autocomplete.js media/js/hs.js media/js/disclaimer.js media/js/splitanchor.js
+
+node_modules/jshint/bin/jshint:
+	npm install jshint --prefix .
+
+node_modules/jscs/bin/jscs:
+	npm install jscs --prefix .
+
 clean:
 	rm -rf ve
 	rm -rf media/CACHE
