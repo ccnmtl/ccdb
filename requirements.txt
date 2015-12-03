@@ -32,7 +32,7 @@ django-tinymce==1.5.3
 django-indexer==0.3.0
 django-appconf==1.0.1
 django-compressor==1.5
-django-statsd-mozilla==0.3.15
+django-statsd-mozilla==0.3.16
 raven==5.8.1
 django-annoying==0.8.3
 django-smoketest==0.3.0
