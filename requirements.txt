@@ -27,6 +27,7 @@ factory_boy==2.6.0
 pyasn1==0.1.9
 pyOpenSSL==0.15.1
 ndg-httpsclient==0.4.0
+contextlib2==0.5.1
 
 djangowind==0.14.3
 django-tinymce==1.5.3
