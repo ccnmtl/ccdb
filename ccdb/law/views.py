@@ -7,11 +7,10 @@ from forms import EditClassificationForm, AddAreaForm, EditAreaForm
 from forms import AddConsequenceForm, EditConsequenceForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import user_passes_test
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response, get_object_or_404, render
 from datetime import datetime
 from django.template.defaultfilters import slugify
 from json import dumps
-from annoying.decorators import render_to
 from django.core.mail import send_mail
 from restclient import POST
 from zipfile import ZipFile, ZIP_DEFLATED
@@ -19,13 +18,12 @@ from django.conf import settings
 import os.path
 
 
-@render_to('law/index.html')
 def index(request):
     snapshot = public_snapshot()
-    return dict(charges=snapshot.top_level_charges())
+    return render(request, 'law/index.html',
+                  dict(charges=snapshot.top_level_charges()))
 
 
-@render_to('law/feedback.html')
 def feedback(request):
     if request.method == 'POST':
         if request.POST.get('email', '') == '':
@@ -48,27 +46,27 @@ def feedback(request):
             ['ccnmtl-cckc@columbia.edu'], fail_silently=False)
         return HttpResponseRedirect("/thanks/")
     else:
-        return dict()
+        return render(request, 'law/feedback.html', dict())
 
 
 @user_passes_test(lambda u: u.is_staff)
-@render_to('law/edit_index.html')
 def edit_index(request):
-    return dict(snapshots=Snapshot.objects.all(),
-                working_snapshot=working_snapshot(),
-                public_snapshot=public_snapshot())
+    return render(request, 'law/edit_index.html',
+                  dict(snapshots=Snapshot.objects.all(),
+                       working_snapshot=working_snapshot(),
+                       public_snapshot=public_snapshot()))
 
 
 @user_passes_test(lambda u: u.is_staff)
-@render_to('law/edit_snapshots_index.html')
 def edit_snapshots(request):
-    return dict(snapshots=Snapshot.objects.all().order_by("-created"))
+    return render(request, 'law/edit_snapshots_index.html',
+                  dict(snapshots=Snapshot.objects.all().order_by("-created")))
 
 
 @user_passes_test(lambda u: u.is_staff)
-@render_to('law/edit_snapshot.html')
 def edit_snapshot(request, id):
-    return dict(snapshot=get_object_or_404(Snapshot, id=id))
+    return render(request, 'law/edit_snapshot.html',
+                  dict(snapshot=get_object_or_404(Snapshot, id=id)))
 
 
 @user_passes_test(lambda u: u.is_staff)
@@ -139,17 +137,19 @@ def delete_snapshot(request, id):
     return HttpResponseRedirect("/edit/snapshots/")
 
 
-@render_to('law/graph.html')
 def graph(request):
     snapshot = public_snapshot()
-    return dict(
-        snapshot=snapshot,
-        charges=snapshot.top_level_charges(),
-        all_charges=Charge.objects.filter(
-            snapshot=snapshot).order_by("numeric_penal_code", "penal_code",
-                                        "label"),
-        all_classifications=Classification.objects.filter(snapshot=snapshot),
-        all_areas=Area.objects.filter(snapshot=snapshot))
+    return render(
+        request, 'law/graph.html',
+        dict(
+            snapshot=snapshot,
+            charges=snapshot.top_level_charges(),
+            all_charges=Charge.objects.filter(
+                snapshot=snapshot).order_by("numeric_penal_code", "penal_code",
+                                            "label"),
+            all_classifications=Classification.objects.filter(
+                snapshot=snapshot),
+            all_areas=Area.objects.filter(snapshot=snapshot)))
 
 
 def api_current(request):
@@ -163,12 +163,14 @@ def api_current(request):
 
 
 @user_passes_test(lambda u: u.is_staff)
-@render_to('law/edit_charge_index.html')
 def edit_charge_index(request):
     snapshot = working_snapshot()
-    return dict(working_snapshot=snapshot,
-                charges=snapshot.top_level_charges(),
-                add_charge_form=AddChargeForm())
+    return render(
+        request,
+        'law/edit_charge_index.html',
+        dict(working_snapshot=snapshot,
+             charges=snapshot.top_level_charges(),
+             add_charge_form=AddChargeForm()))
 
 
 @user_passes_test(lambda u: u.is_staff)
@@ -313,17 +315,18 @@ def delete_charge(request, slugs=""):
 
 
 @user_passes_test(lambda u: u.is_staff)
-@render_to('law/edit_search.html')
 def edit_search(request):
     q = request.GET.get('q', '')
     if q == '':
         return HttpResponseRedirect("/")
     snapshot = working_snapshot()
-    return dict(charges=Charge.objects.filter(snapshot=snapshot,
-                                              label__icontains=q))
+    return render(
+        request,
+        'law/edit_search.html',
+        dict(charges=Charge.objects.filter(snapshot=snapshot,
+                                           label__icontains=q)))
 
 
-@render_to('law/search.html')
 def search(request):
     q = request.GET.get('q', '')
     if q == '':
@@ -335,7 +338,7 @@ def search(request):
         label__icontains=q) | Charge.objects.filter(snapshot=snapshot,
                                                     penal_code__icontains=q)
     charges = [c for c in charges if c.is_leaf()]
-    return dict(charges=charges)
+    return render(request, 'law/search.html', dict(charges=charges))
 
 
 def autocomplete(request):
@@ -384,7 +387,6 @@ def remove_charge_classification(request, slugs="", classification_id=""):
 
 
 @user_passes_test(lambda u: u.is_staff)
-@render_to('law/edit_charge.html')
 def edit_charge(request, slugs):
     slugs = slugs.split("/")
     snapshot = working_snapshot()
@@ -401,12 +403,12 @@ def edit_charge(request, slugs):
                 note=request.POST.get('comment', ''))
 
             return HttpResponseRedirect("/edit" + charge.get_absolute_url())
-    return dict(charge=charge,
-                edit_charge_form=edit_charge_form,
-                add_charge_form=AddChargeForm())
+    return render(request, 'law/edit_charge.html',
+                  dict(charge=charge,
+                       edit_charge_form=edit_charge_form,
+                       add_charge_form=AddChargeForm()))
 
 
-@render_to('law/charge.html')
 def view_charge(request, slugs):
     slugs = slugs.split("/")
     snapshot = public_snapshot()
@@ -417,25 +419,24 @@ def view_charge(request, slugs):
             'charge2', '')[len("/charge/"):].strip("/")
         charge2_slugs = charge2_path.split("/")
         charge2 = snapshot.get_charge_by_slugs(charge2_slugs)
-    return dict(charge=charge, charge2=charge2,
-                charges=snapshot.top_level_charges())
+    return render(request, 'law/charge.html',
+                  dict(charge=charge, charge2=charge2,
+                       charges=snapshot.top_level_charges()))
 
 
-@render_to('law/charge_description.html')
 def view_charge_tips(request, slugs):
     slugs = slugs.split("/")
     snapshot = public_snapshot()
     charge = snapshot.get_charge_by_slugs(slugs)
-    return dict(charge=charge)
+    return render(request, 'law/charge_description.html', dict(charge=charge))
 
 
 @user_passes_test(lambda u: u.is_staff)
-@render_to('law/edit_classification_index.html')
 def edit_classification_index(request):
     snapshot = working_snapshot()
-    return dict(
+    return render(request, 'law/edit_classification_index.html', dict(
         classifications=Classification.objects.filter(snapshot=snapshot),
-        add_classification_form=AddClassificationForm())
+        add_classification_form=AddClassificationForm()))
 
 
 @user_passes_test(lambda u: u.is_staff)
@@ -467,7 +468,6 @@ def add_classification(request):
 
 
 @user_passes_test(lambda u: u.is_staff)
-@render_to('law/edit_classification.html')
 def edit_classification(request, slug):
     snapshot = working_snapshot()
     classification = get_object_or_404(Classification, snapshot=snapshot,
@@ -490,24 +490,25 @@ def edit_classification(request, slug):
             return HttpResponseRedirect(
                 "/edit" + classification.get_absolute_url())
 
-    return dict(classification=classification,
-                edit_classification_form=edit_classification_form)
+    return render(request, 'law/edit_classification.html',
+                  dict(classification=classification,
+                       edit_classification_form=edit_classification_form))
 
 
-@render_to('law/view_classification.html')
 def view_classification(request, slug):
     snapshot = public_snapshot()
     classification = get_object_or_404(Classification, snapshot=snapshot,
                                        name=slug)
-    return dict(classification=classification)
+    return render(request, 'law/view_classification.html',
+                  dict(classification=classification))
 
 
-@render_to('law/view_classification.html')
 def preview_classification(request, slug):
     snapshot = working_snapshot()
     classification = get_object_or_404(Classification, snapshot=snapshot,
                                        name=slug)
-    return dict(classification=classification)
+    return render(request, 'law/view_classification.html',
+                  dict(classification=classification))
 
 
 @user_passes_test(lambda u: u.is_staff)
@@ -525,11 +526,11 @@ def delete_classification(request, slug):
 
 
 @user_passes_test(lambda u: u.is_staff)
-@render_to('law/edit_area_index.html')
 def edit_area_index(request):
     snapshot = working_snapshot()
-    return dict(areas=Area.objects.filter(snapshot=snapshot),
-                add_area_form=AddAreaForm())
+    return render(request, 'law/edit_area_index.html',
+                  dict(areas=Area.objects.filter(snapshot=snapshot),
+                       add_area_form=AddAreaForm()))
 
 
 @user_passes_test(lambda u: u.is_staff)
@@ -547,7 +548,6 @@ def add_area(request):
 
 
 @user_passes_test(lambda u: u.is_staff)
-@render_to('law/edit_area.html')
 def edit_area(request, slug):
     snapshot = working_snapshot()
     area = get_object_or_404(Area, snapshot=snapshot, name=slug)
@@ -565,15 +565,16 @@ def edit_area(request, slug):
 
             return HttpResponseRedirect("/edit" + area.get_absolute_url())
 
-    return dict(area=area, add_consequence_form=AddConsequenceForm(),
-                edit_area_form=edit_area_form)
+    return render(request, 'law/edit_area.html',
+                  dict(area=area, add_consequence_form=AddConsequenceForm(),
+                       edit_area_form=edit_area_form))
 
 
-@render_to('law/view_area.html')
 def view_area(request, slug):
     snapshot = public_snapshot()
     area = get_object_or_404(Area, snapshot=snapshot, name=slug)
-    return dict(area=area, add_consequence_form=AddConsequenceForm())
+    return render(request, 'law/view_area.html',
+                  dict(area=area, add_consequence_form=AddConsequenceForm()))
 
 
 @user_passes_test(lambda u: u.is_staff)
@@ -621,7 +622,6 @@ def add_consequence(request, slug):
 
 
 @user_passes_test(lambda u: u.is_staff)
-@render_to('law/edit_consequence.html')
 def edit_consequence(request, slug, cslug):
     snapshot = working_snapshot()
     area = get_object_or_404(Area, snapshot=snapshot, name=slug)
@@ -641,18 +641,20 @@ def edit_consequence(request, slug, cslug):
             return HttpResponseRedirect(
                 "/edit" + consequence.get_absolute_url())
         else:
-            return dict(consequence=consequence,
-                        edit_consequence_form=edit_consequence_form)
-    return dict(consequence=consequence,
-                edit_consequence_form=edit_consequence_form)
+            return render(request, 'law/edit_consequence.html',
+                          dict(consequence=consequence,
+                               edit_consequence_form=edit_consequence_form))
+    return render(request, 'law/edit_consequence.html',
+                  dict(consequence=consequence,
+                       edit_consequence_form=edit_consequence_form))
 
 
-@render_to('law/view_consequence.html')
 def view_consequence(request, slug, cslug):
     snapshot = public_snapshot()
     area = get_object_or_404(Area, snapshot=snapshot, name=slug)
     consequence = get_object_or_404(Consequence, area=area, name=cslug)
-    return dict(consequence=consequence)
+    return render(request, 'law/view_consequence.html',
+                  dict(consequence=consequence))
 
 
 @user_passes_test(lambda u: u.is_staff)
