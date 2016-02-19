@@ -153,10 +153,7 @@ class Snapshot(models.Model):
         if len(acc) > 0:
             parent = acc[-1]
             children = parent.children()
-            current = None
-            for child in children:
-                if child.name == slugs[0]:
-                    current = child
+            current = find_child(children, slugs[0])
             if current is None:
                 raise Http404
         else:
@@ -173,6 +170,14 @@ class Snapshot(models.Model):
             return current
         else:
             return self.get_charge_by_slugs(slugs[1:], acc.append(current))
+
+
+def find_child(children, name):
+    current = None
+    for child in children:
+        if child.name == name:
+            current = child
+    return current
 
 
 def public_snapshot():
