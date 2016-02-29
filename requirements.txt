@@ -13,7 +13,7 @@ coverage==4.0.3
 mccabe==0.4.0
 pyflakes==1.0.0
 pep8==1.7.0
-flake8==2.5.2
+flake8==2.5.4
 logilab-common==1.1.0
 logilab-astng==0.24.3
 pylint==1.5.4
