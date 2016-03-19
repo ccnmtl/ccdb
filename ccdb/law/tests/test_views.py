@@ -19,7 +19,7 @@ class SimpleViewTest(TestCase):
         self.assertEquals(response.status_code, 200)
 
     def test_feedback(self):
-        response = self.c.get("/")
+        response = self.c.get("/feedback/")
         self.assertEquals(response.status_code, 200)
 
     def test_smoke(self):
