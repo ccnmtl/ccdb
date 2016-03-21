@@ -2,6 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.conf import settings
 from django.views.generic import TemplateView
+import ccdb.law.views as views
 import os.path
 admin.autodiscover()
 
@@ -9,14 +10,14 @@ site_media_root = os.path.join(os.path.dirname(__file__), "../media")
 
 urlpatterns = patterns(
     '',
-    ('^$', 'ccdb.law.views.index'),
-    ('^charge/(?P<slugs>.+)/tips/$', 'ccdb.law.views.view_charge_tips'),
-    ('^charge/(?P<slugs>.+)/$', 'ccdb.law.views.view_charge'),
+    ('^$', views.IndexView.as_view()),
+    ('^charge/(?P<slugs>.+)/tips/$', views.ChargeTipsView.as_view()),
+    ('^charge/(?P<slugs>.+)/$', views.ChargeView.as_view()),
     ('^classification/(?P<slug>[^\/]+)/$',
-     'ccdb.law.views.view_classification'),
-    ('^area/(?P<slug>[^\/]+)/$', 'ccdb.law.views.view_area'),
+     views.ClassificationView.as_view()),
+    ('^area/(?P<slug>[^\/]+)/$', views.AreaView.as_view()),
     ('^area/(?P<slug>[^\/]+)/(?P<cslug>[^\/]+)/$',
-     'ccdb.law.views.view_consequence'),
+     views.ConsequenceView.as_view()),
 
     ('^edit/$', 'ccdb.law.views.edit_index'),
     ('^edit/graph/$', 'ccdb.law.views.graph'),
@@ -72,13 +73,13 @@ urlpatterns = patterns(
     ('^edit/search/$', 'ccdb.law.views.edit_search'),
 
     ('^search/$', 'ccdb.law.views.search'),
-    ('^autocomplete/$', 'ccdb.law.views.autocomplete'),
+    ('^autocomplete/$', views.AutocompleteView.as_view()),
 
     ('smoketest/', include('smoketest.urls')),
 
     ('^api/current/$', 'ccdb.law.views.api_current'),
 
-    ('^feedback/$', 'ccdb.law.views.feedback'),
+    ('^feedback/$', views.FeedbackView.as_view()),
     ('^accounts/', include('djangowind.urls')),
     (r'^admin/', include(admin.site.urls)),
     url(r'^impersonate/', include('impersonate.urls')),
