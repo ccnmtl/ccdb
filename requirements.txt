@@ -16,7 +16,7 @@ pep8==1.7.0
 flake8==2.5.4
 logilab-common==1.1.0
 logilab-astng==0.24.3
-pylint==1.5.4
+pylint==1.5.5
 sqlparse==0.1.19
 six==1.10.0
 boto==2.38.0
