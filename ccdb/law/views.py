@@ -34,7 +34,7 @@ class FeedbackView(View):
         if "Role:" not in request.POST.get("description", ""):
             # we know that the javascript was bypassed, so ignore it
             return dict()
-        POST("http://pmt.ccnmtl.columbia.edu/external_add_item.pl",
+        POST(settings.PMT_EXTERNAL_ADD_ITEM_URL,
              params=dict(pid=request.POST['pid'],
                          mid=request.POST['mid'],
                          description=request.POST['description']),
