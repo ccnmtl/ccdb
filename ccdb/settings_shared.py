@@ -49,6 +49,9 @@ TINYMCE_JS_ROOT = 'media/js/tiny_mce'
 TINYMCE_COMPRESSOR = False
 TINYMCE_SPELLCHECKER = True
 
+PMT_EXTERNAL_ADD_ITEM_URL = ("https://pmt.ccnmtl.columbia.edu"
+                             "/api/external_add_item/")
+
 TINYMCE_DEFAULT_CONFIG = {'cols': 80,
                           'rows': 30,
                           'plugins': 'table,spellchecker,paste,searchreplace',
