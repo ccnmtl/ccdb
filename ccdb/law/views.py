@@ -380,6 +380,8 @@ class AutocompleteView(View):
 
 
 class RemoveChargeClassificationView(StaffMixin, View):
+    template_name = "law/remove_charge_classification.html"
+
     def get(self, request, slugs="", classification_id=""):
         if slugs[-1] == "/":
             slugs = slugs[:-1]
@@ -388,7 +390,7 @@ class RemoveChargeClassificationView(StaffMixin, View):
         charge = snapshot.get_charge_by_slugs(slugs)
         classification = get_object_or_404(Classification,
                                            id=classification_id)
-        return render_to_response("law/remove_charge_classification.html",
+        return render_to_response(self.template_name,
                                   dict(charge=charge,
                                        classification=classification))
 
@@ -415,12 +417,14 @@ class RemoveChargeClassificationView(StaffMixin, View):
 
 
 class EditChargeView(StaffMixin, View):
+    template_name = 'law/edit_charge.html'
+
     def get(self, request, slugs):
         slugs = slugs.split("/")
         snapshot = working_snapshot()
         charge = snapshot.get_charge_by_slugs(slugs)
         edit_charge_form = EditChargeForm(instance=charge)
-        return render(request, 'law/edit_charge.html',
+        return render(request, self.template_name,
                       dict(charge=charge,
                            edit_charge_form=edit_charge_form,
                            add_charge_form=AddChargeForm()))
@@ -439,7 +443,7 @@ class EditChargeView(StaffMixin, View):
                 note=request.POST.get('comment', ''))
 
             return HttpResponseRedirect("/edit" + charge.get_absolute_url())
-        return render(request, 'law/edit_charge.html',
+        return render(request, self.template_name,
                       dict(charge=charge,
                            edit_charge_form=edit_charge_form,
                            add_charge_form=AddChargeForm()))
