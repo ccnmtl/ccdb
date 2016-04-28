@@ -62,6 +62,11 @@ class StaffMixin(object):
         return super(StaffMixin, self).dispatch(*args, **kwargs)
 
 
+class WorkingSnapshotMixin(object):
+    def snapshot(self):
+        return working_snapshot()
+
+
 class EditView(StaffMixin, TemplateView):
     template_name = 'law/edit_index.html'
 
@@ -181,22 +186,20 @@ def api_current(request):
     return HttpResponse(json, content_type="application/json")
 
 
-class EditChargesView(StaffMixin, TemplateView):
+class EditChargesView(StaffMixin, WorkingSnapshotMixin, TemplateView):
     template_name = 'law/edit_charge_index.html'
 
     def get_context_data(self, *args, **kwargs):
-        snapshot = working_snapshot()
-        return dict(working_snapshot=snapshot,
-                    charges=snapshot.top_level_charges(),
+        return dict(working_snapshot=self.snapshot(),
+                    charges=self.snapshot().top_level_charges(),
                     add_charge_form=AddChargeForm())
 
 
-class AddChargeView(StaffMixin, View):
+class AddChargeView(StaffMixin, WorkingSnapshotMixin, View):
     def post(self, request, slugs=""):
         if slugs != "" and slugs[-1] == "/":
             slugs = slugs[:-1]
         AddChargeForm(request.POST)
-        snapshot = working_snapshot()
         slug = slugify(request.POST['penal_code'] + " " +
                        request.POST['label'])[:50]
         # need to check for duplicate slugs and fix
@@ -208,34 +211,33 @@ class AddChargeView(StaffMixin, View):
             slug = slug[:-3] + "%03d" % (Charge.objects.count() % 1000)
             # any better ideas?
 
-        c = Charge.objects.create(snapshot=snapshot,
+        c = Charge.objects.create(snapshot=self.snapshot(),
                                   label=request.POST['label'],
                                   penal_code=request.POST['penal_code'],
                                   name=slug)
         slugs = slugs.split("/")
         description = "charge %s added" % str(c)
         if len(slugs) > 0 and slugs != ['']:
-            parent = snapshot.get_charge_by_slugs(slugs)
+            parent = self.snapshot().get_charge_by_slugs(slugs)
             ChargeChildren.objects.create(parent=parent, child=c)
             description = "charge **%s** added as child of **%s**" % (
                 str(c), str(parent))
-        Event.objects.create(snapshot=snapshot,
+        Event.objects.create(snapshot=self.snapshot(),
                              user=request.user,
                              description=description)
         if len(slugs) > 0 and slugs != ['']:
-            parent = snapshot.get_charge_by_slugs(slugs)
+            parent = self.snapshot().get_charge_by_slugs(slugs)
             return HttpResponseRedirect("/edit" + parent.get_absolute_url())
         else:
             return HttpResponseRedirect("/edit/charge/")
 
 
-class AddChargeClassificationView(StaffMixin, View):
+class AddChargeClassificationView(StaffMixin, WorkingSnapshotMixin, View):
     def post(self, request, slugs=""):
         if slugs[-1] == "/":
             slugs = slugs[:-1]
         slugs = slugs.split("/")
-        snapshot = working_snapshot()
-        charge = snapshot.get_charge_by_slugs(slugs)
+        charge = self.snapshot().get_charge_by_slugs(slugs)
         classification = get_object_or_404(
             Classification, id=request.POST['classification_id'])
         if ChargeClassification.objects.filter(
@@ -246,7 +248,7 @@ class AddChargeClassificationView(StaffMixin, View):
                 charge=charge, classification=classification,
                 certainty=request.POST['certainty'])
             Event.objects.create(
-                snapshot=snapshot,
+                snapshot=self.snapshot(),
                 user=request.user,
                 description=("charge **%s** classified as (%s) **%s**" %
                              (cc.charge.label, cc.certainty,
@@ -255,17 +257,16 @@ class AddChargeClassificationView(StaffMixin, View):
         return HttpResponseRedirect("/edit" + charge.get_absolute_url())
 
 
-class AddAreaToChargeView(StaffMixin, View):
+class AddAreaToChargeView(StaffMixin, WorkingSnapshotMixin, View):
     def post(self, request, slugs=""):
         if slugs[-1] == "/":
             slugs = slugs[:-1]
         slugs = slugs.split("/")
-        snapshot = working_snapshot()
-        charge = snapshot.get_charge_by_slugs(slugs)
+        charge = self.snapshot().get_charge_by_slugs(slugs)
         area = get_object_or_404(Area, id=request.POST['area_id'])
         ChargeArea.objects.create(charge=charge, area=area)
         Event.objects.create(
-            snapshot=snapshot,
+            snapshot=self.snapshot(),
             user=request.user,
             description="charge **%s** vetted for area **%s**" % (charge.label,
                                                                   area.label),
@@ -273,16 +274,15 @@ class AddAreaToChargeView(StaffMixin, View):
         return HttpResponseRedirect("/edit" + charge.get_absolute_url())
 
 
-class RemoveAreaFromChargeView(StaffMixin, View):
+class RemoveAreaFromChargeView(StaffMixin, WorkingSnapshotMixin, View):
     def post(self, request, slugs="", ca_id=""):
         if slugs[-1] == "/":
             slugs = slugs[:-1]
         slugs = slugs.split("/")
-        snapshot = working_snapshot()
-        charge = snapshot.get_charge_by_slugs(slugs)
+        charge = self.snapshot().get_charge_by_slugs(slugs)
         ca = get_object_or_404(ChargeArea, id=ca_id)
         Event.objects.create(
-            snapshot=snapshot,
+            snapshot=self.snapshot(),
             user=request.user,
             description=("charge **%s** vetting removed for area **%s**" %
                          (charge.label, ca.area.label)))
@@ -290,19 +290,18 @@ class RemoveAreaFromChargeView(StaffMixin, View):
         return HttpResponseRedirect("/edit" + charge.get_absolute_url())
 
 
-class ReparentChargeView(StaffMixin, View):
+class ReparentChargeView(StaffMixin, WorkingSnapshotMixin, View):
     def post(self, request, slugs=""):
         if slugs[-1] == "/":
             slugs = slugs[:-1]
         slugs = slugs.split("/")
-        snapshot = working_snapshot()
-        charge = snapshot.get_charge_by_slugs(slugs)
+        charge = self.snapshot().get_charge_by_slugs(slugs)
         new_parent = Charge.objects.get(id=request.POST['sibling_id'])
         cc = ChargeChildren.objects.filter(child=charge)
         cc.delete()
         ChargeChildren.objects.create(child=charge, parent=new_parent)
         Event.objects.create(
-            snapshot=snapshot,
+            snapshot=self.snapshot(),
             user=request.user,
             description="charge **%s** reparented to **%s**" % (
                 charge.label, new_parent.label),
@@ -310,13 +309,12 @@ class ReparentChargeView(StaffMixin, View):
         return HttpResponseRedirect("/edit" + charge.get_absolute_url())
 
 
-class DeleteChargeView(StaffMixin, View):
+class DeleteChargeView(StaffMixin, WorkingSnapshotMixin, View):
     def post(self, request, slugs=""):
         if slugs[-1] == "/":
             slugs = slugs[:-1]
         slugs = slugs.split("/")
-        snapshot = working_snapshot()
-        charge = snapshot.get_charge_by_slugs(slugs)
+        charge = self.snapshot().get_charge_by_slugs(slugs)
         redirect_to = "/edit/charge/"
         try:
             parent = charge.parents()[-1]
@@ -325,7 +323,7 @@ class DeleteChargeView(StaffMixin, View):
             # top level charge
             pass
         Event.objects.create(
-            snapshot=snapshot,
+            snapshot=self.snapshot(),
             user=request.user,
             description="charge **%s** deleted" % (charge.label),
             note='')
@@ -379,15 +377,14 @@ class AutocompleteView(View):
         return HttpResponse(json, content_type='application/json')
 
 
-class RemoveChargeClassificationView(StaffMixin, View):
+class RemoveChargeClassificationView(StaffMixin, WorkingSnapshotMixin, View):
     template_name = "law/remove_charge_classification.html"
 
     def get(self, request, slugs="", classification_id=""):
         if slugs[-1] == "/":
             slugs = slugs[:-1]
         slugs = slugs.split("/")
-        snapshot = working_snapshot()
-        charge = snapshot.get_charge_by_slugs(slugs)
+        charge = self.snapshot().get_charge_by_slugs(slugs)
         classification = get_object_or_404(Classification,
                                            id=classification_id)
         return render_to_response(self.template_name,
@@ -398,8 +395,7 @@ class RemoveChargeClassificationView(StaffMixin, View):
         if slugs[-1] == "/":
             slugs = slugs[:-1]
         slugs = slugs.split("/")
-        snapshot = working_snapshot()
-        charge = snapshot.get_charge_by_slugs(slugs)
+        charge = self.snapshot().get_charge_by_slugs(slugs)
         classification = get_object_or_404(Classification,
                                            id=classification_id)
 
@@ -407,7 +403,7 @@ class RemoveChargeClassificationView(StaffMixin, View):
                                               classification=classification)
         cc.delete()
         Event.objects.create(
-            snapshot=snapshot,
+            snapshot=self.snapshot(),
             user=request.user,
             description=("charge **%s** removed classification (%s) **%s**" %
                          (cc.charge.label, cc.certainty,
@@ -416,13 +412,12 @@ class RemoveChargeClassificationView(StaffMixin, View):
         return HttpResponseRedirect("/edit" + charge.get_absolute_url())
 
 
-class EditChargeView(StaffMixin, View):
+class EditChargeView(StaffMixin, WorkingSnapshotMixin, View):
     template_name = 'law/edit_charge.html'
 
     def get(self, request, slugs):
         slugs = slugs.split("/")
-        snapshot = working_snapshot()
-        charge = snapshot.get_charge_by_slugs(slugs)
+        charge = self.snapshot().get_charge_by_slugs(slugs)
         edit_charge_form = EditChargeForm(instance=charge)
         return render(request, self.template_name,
                       dict(charge=charge,
@@ -431,13 +426,12 @@ class EditChargeView(StaffMixin, View):
 
     def post(self, request, slugs):
         slugs = slugs.split("/")
-        snapshot = working_snapshot()
-        charge = snapshot.get_charge_by_slugs(slugs)
+        charge = self.snapshot().get_charge_by_slugs(slugs)
         edit_charge_form = EditChargeForm(request.POST, instance=charge)
         if edit_charge_form.is_valid():
             edit_charge_form.save()
             Event.objects.create(
-                snapshot=snapshot,
+                snapshot=self.snapshot(),
                 user=request.user,
                 description="charge **%s** edited" % (charge.label),
                 note=request.POST.get('comment', ''))
