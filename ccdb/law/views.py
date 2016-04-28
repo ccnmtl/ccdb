@@ -120,9 +120,8 @@ class ApproveSnapshotView(StaffMixin, View):
         snapshot.status = 'vetted'
         snapshot.save()
 
-        Event.objects.create(snapshot=snapshot,
-                             user=request.user,
-                             description="snapshot approved for production")
+        snapshot.add_event(user=request.user,
+                           description="snapshot approved for production")
         # clone it to make a new working snapshot
         n = datetime.now()
         snapshot.clone(label="%04d-%02d-%02d %02d:%02d" % (
@@ -238,9 +237,8 @@ class AddChargeView(StaffMixin, WorkingSnapshotMixin,
             ChargeChildren.objects.create(parent=parent, child=c)
             description = "charge **%s** added as child of **%s**" % (
                 str(c), str(parent))
-        Event.objects.create(snapshot=self.snapshot(),
-                             user=request.user,
-                             description=description)
+        self.snapshot().add_event(user=request.user,
+                                  description=description)
         if len(slugs) > 0 and slugs != ['']:
             parent = self.get_charge_by_slugs(slugs)
             return HttpResponseRedirect("/edit" + parent.get_absolute_url())
@@ -261,8 +259,7 @@ class AddChargeClassificationView(StaffMixin, WorkingSnapshotMixin,
             cc = ChargeClassification.objects.create(
                 charge=charge, classification=classification,
                 certainty=request.POST['certainty'])
-            Event.objects.create(
-                snapshot=self.snapshot(),
+            self.snapshot().add_event(
                 user=request.user,
                 description=("charge **%s** classified as (%s) **%s**" %
                              (cc.charge.label, cc.certainty,
@@ -277,8 +274,7 @@ class AddAreaToChargeView(StaffMixin, WorkingSnapshotMixin,
         charge = self.charge(slugs)
         area = get_object_or_404(Area, id=request.POST['area_id'])
         ChargeArea.objects.create(charge=charge, area=area)
-        Event.objects.create(
-            snapshot=self.snapshot(),
+        self.snapshot().add_event(
             user=request.user,
             description="charge **%s** vetted for area **%s**" % (charge.label,
                                                                   area.label),
@@ -291,8 +287,7 @@ class RemoveAreaFromChargeView(StaffMixin, WorkingSnapshotMixin,
     def post(self, request, slugs="", ca_id=""):
         charge = self.charge(slugs)
         ca = get_object_or_404(ChargeArea, id=ca_id)
-        Event.objects.create(
-            snapshot=self.snapshot(),
+        self.snapshot().add_event(
             user=request.user,
             description=("charge **%s** vetting removed for area **%s**" %
                          (charge.label, ca.area.label)))
@@ -308,8 +303,7 @@ class ReparentChargeView(StaffMixin, WorkingSnapshotMixin,
         cc = ChargeChildren.objects.filter(child=charge)
         cc.delete()
         ChargeChildren.objects.create(child=charge, parent=new_parent)
-        Event.objects.create(
-            snapshot=self.snapshot(),
+        self.snapshot().add_event(
             user=request.user,
             description="charge **%s** reparented to **%s**" % (
                 charge.label, new_parent.label),
@@ -328,8 +322,7 @@ class DeleteChargeView(StaffMixin, WorkingSnapshotMixin,
         except IndexError:
             # top level charge
             pass
-        Event.objects.create(
-            snapshot=self.snapshot(),
+        self.snapshot().add_event(
             user=request.user,
             description="charge **%s** deleted" % (charge.label),
             note='')
@@ -402,8 +395,7 @@ class RemoveChargeClassificationView(StaffMixin, WorkingSnapshotMixin,
         cc = ChargeClassification.objects.get(charge=charge,
                                               classification=classification)
         cc.delete()
-        Event.objects.create(
-            snapshot=self.snapshot(),
+        self.snapshot().add_event(
             user=request.user,
             description=("charge **%s** removed classification (%s) **%s**" %
                          (cc.charge.label, cc.certainty,
@@ -428,8 +420,7 @@ class EditChargeView(StaffMixin, WorkingSnapshotMixin, ChargeLocatorMixin,
         edit_charge_form = EditChargeForm(request.POST, instance=charge)
         if edit_charge_form.is_valid():
             edit_charge_form.save()
-            Event.objects.create(
-                snapshot=self.snapshot(),
+            self.snapshot().add_event(
                 user=request.user,
                 description="charge **%s** edited" % (charge.label),
                 note=request.POST.get('comment', ''))
@@ -499,9 +490,9 @@ def add_classification(request):
                                       description=request.POST['description'],
                                       name=slug,
                                       )
-    Event.objects.create(snapshot=snapshot,
-                         user=request.user,
-                         description="added classification **%s**" % c.label)
+    snapshot.add_event(
+        user=request.user,
+        description="added classification **%s**" % c.label)
 
     return HttpResponseRedirect("/edit/classification/%s/" % c.name)
 
@@ -519,8 +510,7 @@ def edit_classification(request, slug):
             instance=classification)
         if edit_classification_form.is_valid():
             edit_classification_form.save()
-            Event.objects.create(
-                snapshot=snapshot,
+            snapshot.add_event(
                 user=request.user,
                 description=("classification **%s** edited" %
                              (classification.label)),
@@ -557,8 +547,7 @@ def delete_classification(request, slug):
     snapshot = working_snapshot()
     classification = get_object_or_404(Classification, snapshot=snapshot,
                                        name=slug)
-    Event.objects.create(
-        snapshot=snapshot,
+    snapshot.add_event(
         user=request.user,
         description="deleted classification **%s**" % classification.label,
         note=request.POST.get('comment', ''))
@@ -581,9 +570,9 @@ def add_area(request):
                             label=request.POST['label'],
                             name=slugify(request.POST['label']),
                             )
-    Event.objects.create(snapshot=snapshot,
-                         user=request.user,
-                         description="added area **%s**" % a.label)
+    snapshot.add_event(
+        user=request.user,
+        description="added area **%s**" % a.label)
 
     return HttpResponseRedirect("/edit/area/")
 
@@ -598,8 +587,7 @@ def edit_area(request, slug):
         edit_area_form = EditAreaForm(request.POST, instance=area)
         if edit_area_form.is_valid():
             edit_area_form.save()
-            Event.objects.create(
-                snapshot=snapshot,
+            snapshot.add_event(
                 user=request.user,
                 description="area **%s** edited" % (area.label),
                 note=request.POST.get('comment', ''))
@@ -625,11 +613,11 @@ class AreaView(PublicSnapshotMixin, View):
 def delete_area(request, slug):
     snapshot = working_snapshot()
     area = get_object_or_404(Area, snapshot=snapshot, name=slug)
-    Event.objects.create(snapshot=snapshot,
-                         user=request.user,
-                         description="area **%s** deleted" % area.label,
-                         note=request.POST.get('comment', ''),
-                         )
+    snapshot.add_event(
+        user=request.user,
+        description="area **%s** deleted" % area.label,
+        note=request.POST.get('comment', ''),
+    )
     area.delete()
     return HttpResponseRedirect("/edit/area/")
 
@@ -657,8 +645,7 @@ def add_consequence(request, slug):
         label=request.POST['label'],
         description=request.POST.get('description', ''),
         name=name)
-    Event.objects.create(
-        snapshot=snapshot,
+    snapshot.add_event(
         user=request.user,
         description="consequence **%s** added to **%s**" % (consequence.label,
                                                             area.label))
@@ -677,8 +664,7 @@ def edit_consequence(request, slug, cslug):
             request.POST, instance=consequence)
         if edit_consequence_form.is_valid():
             edit_consequence_form.save()
-            Event.objects.create(
-                snapshot=snapshot,
+            snapshot.add_event(
                 user=request.user,
                 description="consequence **%s** edited" % (consequence.label),
                 note=request.POST.get('comment', ''))
@@ -708,8 +694,8 @@ def delete_consequence(request, slug, cslug):
     snapshot = working_snapshot()
     area = get_object_or_404(Area, snapshot=snapshot, name=slug)
     consequence = get_object_or_404(Consequence, area=area, name=cslug)
-    Event.objects.create(
-        snapshot=snapshot, user=request.user,
+    snapshot.add_event(
+        user=request.user,
         description="deleting consequence **%s**" % consequence.label,
         note=request.POST.get('comment', ''))
     consequence.delete()
