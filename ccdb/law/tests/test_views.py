@@ -1,7 +1,11 @@
-from django.test import TestCase
+import os
+
+from django.conf import settings
+from django.test import TestCase, override_settings
+from ..models import Snapshot
 from .factories import (
     ChargeFactory, SnapshotFactory, ClassificationFactory,
-    AreaFactory, ConsequenceFactory,
+    AreaFactory, ConsequenceFactory, UserFactory,
 )
 
 
@@ -84,3 +88,73 @@ class TestViewConsequence(TestCase):
         c = ConsequenceFactory(area=a)
         r = self.client.get(c.get_absolute_url())
         self.assertEqual(r.status_code, 200)
+
+
+class LoggedInViewTests(TestCase):
+    def setUp(self):
+        self.u = UserFactory(is_staff=True)
+        self.u.set_password('test')
+        self.u.save()
+        self.client.login(username=self.u.username, password='test')
+        self.public_snapshot = SnapshotFactory()
+        self.working_snapshot = SnapshotFactory(status="in progress")
+        self.qa_snapshot = SnapshotFactory(status="qa")
+
+    def test_edit_index(self):
+        r = self.client.get("/edit/")
+        self.assertEqual(r.status_code, 200)
+
+    def test_graph(self):
+        r = self.client.get("/edit/graph/")
+        self.assertEqual(r.status_code, 200)
+
+    def test_edit_snapshots(self):
+        r = self.client.get("/edit/snapshots/")
+        self.assertEqual(r.status_code, 200)
+
+    def test_edit_snapshot(self):
+        r = self.client.get("/edit/snapshots/{}/".format(
+            self.working_snapshot.pk))
+        self.assertEqual(r.status_code, 200)
+
+    def test_clone_snapshot(self):
+        snapshot_count = Snapshot.objects.all().count()
+        r = self.client.post("/edit/snapshots/{}/clone/".format(
+            self.working_snapshot.pk), data=dict(description='test'))
+        self.assertEqual(r.status_code, 302)
+        self.assertEqual(Snapshot.objects.all().count(), snapshot_count + 1)
+
+    @override_settings(MEDIA_ROOT="/tmp/")
+    def test_approve_snapshot(self):
+        # TODO: update app so this is easier to override
+        try:
+            os.makedirs(os.path.join(settings.MEDIA_ROOT, "dumps"))
+        except OSError:
+            pass
+        snapshot_count = Snapshot.objects.all().count()
+        r = self.client.post("/edit/snapshots/{}/approve/".format(
+            self.qa_snapshot.pk))
+        self.assertEqual(r.status_code, 302)
+
+        # qa snapshot is now vetted
+        self.qa_snapshot.refresh_from_db()
+        self.assertEqual(self.qa_snapshot.status, "vetted")
+
+        # and there's a new one to replace it
+        self.assertEqual(Snapshot.objects.all().count(), snapshot_count + 1)
+
+    def test_delete_snapshot(self):
+        snapshot_count = Snapshot.objects.all().count()
+        r = self.client.post("/edit/snapshots/{}/delete/".format(
+            self.qa_snapshot.pk), data=dict(description='test'))
+        self.assertEqual(r.status_code, 302)
+        self.assertEqual(Snapshot.objects.all().count(), snapshot_count - 1)
+
+    def test_delete_working_snapshot(self):
+        snapshot_count = Snapshot.objects.all().count()
+        r = self.client.post("/edit/snapshots/{}/delete/".format(
+            self.working_snapshot.pk), data=dict(description='test'))
+        self.assertEqual(r.status_code, 302)
+        # it automatically clones a replacement if you try to delete the
+        # current working snapshot
+        self.assertEqual(Snapshot.objects.all().count(), snapshot_count)
