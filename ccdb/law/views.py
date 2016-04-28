@@ -420,10 +420,7 @@ class EditChargeView(StaffMixin, WorkingSnapshotMixin, ChargeLocatorMixin,
         slugs = slugs.split("/")
         charge = self.get_charge_by_slugs(slugs)
         edit_charge_form = EditChargeForm(instance=charge)
-        return render(request, self.template_name,
-                      dict(charge=charge,
-                           edit_charge_form=edit_charge_form,
-                           add_charge_form=AddChargeForm()))
+        return self.render(request, charge, edit_charge_form)
 
     def post(self, request, slugs):
         slugs = slugs.split("/")
@@ -438,6 +435,9 @@ class EditChargeView(StaffMixin, WorkingSnapshotMixin, ChargeLocatorMixin,
                 note=request.POST.get('comment', ''))
 
             return HttpResponseRedirect("/edit" + charge.get_absolute_url())
+        return self.render(request, charge, edit_charge_form)
+
+    def render(self, request, charge, edit_charge_form):
         return render(request, self.template_name,
                       dict(charge=charge,
                            edit_charge_form=edit_charge_form,
