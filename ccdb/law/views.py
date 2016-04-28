@@ -6,11 +6,13 @@ from forms import AddChargeForm, EditChargeForm, AddClassificationForm
 from forms import EditClassificationForm, AddAreaForm, EditAreaForm
 from forms import AddConsequenceForm, EditConsequenceForm
 from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.decorators import user_passes_test, login_required
 from django.shortcuts import render_to_response, get_object_or_404, render
 from datetime import datetime
 from django.template.defaultfilters import slugify
+from django.utils.decorators import method_decorator
 from django.views.generic.base import TemplateView, View
+from django.views.generic.detail import DetailView
 from json import dumps
 from django.core.mail import send_mail
 from restclient import POST
@@ -53,99 +55,112 @@ class FeedbackView(View):
         return render(request, 'law/feedback.html', dict())
 
 
-@user_passes_test(lambda u: u.is_staff)
-def edit_index(request):
-    return render(request, 'law/edit_index.html',
-                  dict(snapshots=Snapshot.objects.all(),
-                       working_snapshot=working_snapshot(),
-                       public_snapshot=public_snapshot()))
+class StaffMixin(object):
+    @method_decorator(login_required)
+    @method_decorator(user_passes_test(lambda u: u.is_staff))
+    def dispatch(self, *args, **kwargs):
+        return super(StaffMixin, self).dispatch(*args, **kwargs)
 
 
-@user_passes_test(lambda u: u.is_staff)
-def edit_snapshots(request):
-    return render(request, 'law/edit_snapshots_index.html',
-                  dict(snapshots=Snapshot.objects.all().order_by("-created")))
+class EditView(StaffMixin, TemplateView):
+    template_name = 'law/edit_index.html'
+
+    def get_context_data(self, *args, **kwargs):
+        return dict(snapshots=Snapshot.objects.all(),
+                    working_snapshot=working_snapshot(),
+                    public_snapshot=public_snapshot())
 
 
-@user_passes_test(lambda u: u.is_staff)
-def edit_snapshot(request, id):
-    return render(request, 'law/edit_snapshot.html',
-                  dict(snapshot=get_object_or_404(Snapshot, id=id)))
+class EditSnapshotsView(StaffMixin, TemplateView):
+    template_name = 'law/edit_snapshots_index.html'
+
+    def get_context_data(self, *args, **kwargs):
+        return dict(snapshots=Snapshot.objects.all().order_by("-created"))
 
 
-@user_passes_test(lambda u: u.is_staff)
-def clone_snapshot(request, id):
-    snapshot = get_object_or_404(Snapshot, id=id)
-    snapshot.clone(label=request.POST.get('label', 'new snapshot'),
-                   user=request.user,
-                   description=request.POST.get('description', ''))
-    return HttpResponseRedirect("/edit/")
+class EditSnapshotView(StaffMixin, DetailView):
+    template_name = 'law/edit_snapshot.html'
+    model = Snapshot
+    context_object_name = 'snapshot'
 
 
-@user_passes_test(lambda u: u.is_staff)
-def approve_snapshot(request, id):
-    snapshot = get_object_or_404(Snapshot, id=id)
-    snapshot.status = 'vetted'
-    snapshot.save()
-
-    Event.objects.create(snapshot=snapshot,
-                         user=request.user,
-                         description="snapshot approved for production")
-    # clone it to make a new working snapshot
-    n = datetime.now()
-    snapshot.clone(label="%04d-%02d-%02d %02d:%02d" % (n.year, n.month, n.day,
-                                                       n.hour, n.minute),
-                   user=request.user,
-                   description="")
-
-    # make a static dump of the vetted one
-    data = dict()
-    data['snapshot'] = snapshot.to_json()
-    json = dumps(data)
-    media_dir = settings.MEDIA_ROOT
-    filename_base = snapshot.dump_filename_base()
-    json_full_path = os.path.join(media_dir, "dumps", filename_base + ".json")
-    zip_full_path = os.path.join(media_dir, "dumps", filename_base + ".zip")
-    with open(json_full_path, "w") as jsonfile:
-        jsonfile.write(json)
-
-    zipfile = ZipFile(zip_full_path, "w", ZIP_DEFLATED)
-    zipfile.writestr("snapshot.json", json)
-    zipfile.close()
-
-    return HttpResponseRedirect("/edit/snapshots/")
+class CloneSnapshotView(StaffMixin, View):
+    def post(self, request, id):
+        snapshot = get_object_or_404(Snapshot, id=id)
+        snapshot.clone(label=request.POST.get('label', 'new snapshot'),
+                       user=request.user,
+                       description=request.POST.get('description', ''))
+        return HttpResponseRedirect("/edit/")
 
 
-@user_passes_test(lambda u: u.is_staff)
-def delete_snapshot(request, id):
-    snapshot = get_object_or_404(Snapshot, id=id)
-    if request.method != "POST":
-        return HttpResponse("this MUST be a POST request")
-    if snapshot.is_current_working():
-        # create new working snapshot to replace it
-        # cloning the public snapshot
+class ApproveSnapshotView(StaffMixin, View):
+    def post(self, request, id):
+        snapshot = get_object_or_404(Snapshot, id=id)
+        snapshot.status = 'vetted'
+        snapshot.save()
+
+        Event.objects.create(snapshot=snapshot,
+                             user=request.user,
+                             description="snapshot approved for production")
+        # clone it to make a new working snapshot
         n = datetime.now()
-        snapshot.clone(label="%04d-%02d-%02d %02d:%02d" % (n.year, n.month,
-                                                           n.day, n.hour,
-                                                           n.minute),
+        snapshot.clone(label="%04d-%02d-%02d %02d:%02d" % (
+            n.year, n.month, n.day, n.hour, n.minute),
                        user=request.user,
                        description="")
-    else:
-        # there's actually nothing to do here,
-        # but keep in mind that if this was the current public
-        # snapshot, when it gets deleted, the previous
-        # vetted snapshot takes its place automatically.
-        pass
 
-    snapshot.delete()
-    return HttpResponseRedirect("/edit/snapshots/")
+        # make a static dump of the vetted one
+        data = dict()
+        data['snapshot'] = snapshot.to_json()
+        json = dumps(data)
+        media_dir = settings.MEDIA_ROOT
+        filename_base = snapshot.dump_filename_base()
+        json_full_path = os.path.join(media_dir, "dumps",
+                                      filename_base + ".json")
+        zip_full_path = os.path.join(media_dir, "dumps",
+                                     filename_base + ".zip")
+        with open(json_full_path, "w") as jsonfile:
+            jsonfile.write(json)
+
+        zipfile = ZipFile(zip_full_path, "w", ZIP_DEFLATED)
+        zipfile.writestr("snapshot.json", json)
+        zipfile.close()
+
+        return HttpResponseRedirect("/edit/snapshots/")
 
 
-def graph(request):
-    snapshot = public_snapshot()
-    return render(
-        request, 'law/graph.html',
-        dict(
+class DeleteSnapshotView(StaffMixin, View):
+    model = Snapshot
+    success_url = "/edit/snapshots/"
+
+    def post(self, request, pk):
+        snapshot = get_object_or_404(self.model, pk=pk)
+        if snapshot.is_current_working():
+            # create new working snapshot to replace it
+            # cloning the public snapshot
+            n = datetime.now()
+            snapshot.clone(label="%04d-%02d-%02d %02d:%02d" % (n.year, n.month,
+                                                               n.day, n.hour,
+                                                               n.minute),
+                           user=request.user,
+                           description="")
+        else:
+            # there's actually nothing to do here,
+            # but keep in mind that if this was the current public
+            # snapshot, when it gets deleted, the previous
+            # vetted snapshot takes its place automatically.
+            pass
+
+        snapshot.delete()
+        return HttpResponseRedirect(self.success_url)
+
+
+class GraphView(TemplateView):
+    template_name = 'law/graph.html'
+
+    def get_context_data(self, *args, **kwargs):
+        snapshot = public_snapshot()
+        return dict(
             snapshot=snapshot,
             charges=snapshot.top_level_charges(),
             all_charges=Charge.objects.filter(
@@ -153,7 +168,7 @@ def graph(request):
                                             "label"),
             all_classifications=Classification.objects.filter(
                 snapshot=snapshot),
-            all_areas=Area.objects.filter(snapshot=snapshot)))
+            all_areas=Area.objects.filter(snapshot=snapshot))
 
 
 def api_current(request):
