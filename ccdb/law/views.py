@@ -67,6 +67,11 @@ class WorkingSnapshotMixin(object):
         return working_snapshot()
 
 
+class PublicSnapshotMixin(object):
+    def snapshot(self):
+        return public_snapshot()
+
+
 class EditView(StaffMixin, TemplateView):
     template_name = 'law/edit_index.html'
 
@@ -160,20 +165,19 @@ class DeleteSnapshotView(StaffMixin, View):
         return HttpResponseRedirect(self.success_url)
 
 
-class GraphView(TemplateView):
+class GraphView(PublicSnapshotMixin, TemplateView):
     template_name = 'law/graph.html'
 
     def get_context_data(self, *args, **kwargs):
-        snapshot = public_snapshot()
         return dict(
-            snapshot=snapshot,
-            charges=snapshot.top_level_charges(),
+            snapshot=self.snapshot(),
+            charges=self.snapshot().top_level_charges(),
             all_charges=Charge.objects.filter(
-                snapshot=snapshot).order_by("numeric_penal_code", "penal_code",
-                                            "label"),
+                snapshot=self.snapshot()).order_by(
+                    "numeric_penal_code", "penal_code", "label"),
             all_classifications=Classification.objects.filter(
-                snapshot=snapshot),
-            all_areas=Area.objects.filter(snapshot=snapshot))
+                snapshot=self.snapshot()),
+            all_areas=Area.objects.filter(snapshot=self.snapshot()))
 
 
 def api_current(request):
@@ -358,7 +362,7 @@ def search(request):
     return render(request, 'law/search.html', dict(charges=charges))
 
 
-class AutocompleteView(View):
+class AutocompleteView(PublicSnapshotMixin, View):
     def get(self, request):
         q = request.GET.get('term', '')
         if q == '':
@@ -367,11 +371,10 @@ class AutocompleteView(View):
         # NYS criminal code always calls it "marihuana" so this is a
         # common issue when searching
         q = q.replace("marij", "marih")
-        snapshot = public_snapshot()
         charges = Charge.objects.filter(
-            snapshot=snapshot,
+            snapshot=self.snapshot(),
             label__icontains=q) | Charge.objects.filter(
-                snapshot=snapshot, penal_code__icontains=q)
+                snapshot=self.snapshot(), penal_code__icontains=q)
         charges = list(set([c.label for c in charges if c.is_leaf()]))
         json = dumps(charges)
         return HttpResponse(json, content_type='application/json')
@@ -443,31 +446,29 @@ class EditChargeView(StaffMixin, WorkingSnapshotMixin, View):
                            add_charge_form=AddChargeForm()))
 
 
-class ChargeView(View):
+class ChargeView(PublicSnapshotMixin, View):
     template_name = 'law/charge.html'
 
     def get(self, request, slugs):
         slugs = slugs.split("/")
-        snapshot = public_snapshot()
-        charge = snapshot.get_charge_by_slugs(slugs)
+        charge = self.snapshot().get_charge_by_slugs(slugs)
         charge2 = None
         if request.GET.get('charge2', ''):
             charge2_path = request.GET.get(
                 'charge2', '')[len("/charge/"):].strip("/")
             charge2_slugs = charge2_path.split("/")
-            charge2 = snapshot.get_charge_by_slugs(charge2_slugs)
+            charge2 = self.snapshot().get_charge_by_slugs(charge2_slugs)
         return render(request, self.template_name,
                       dict(charge=charge, charge2=charge2,
-                           charges=snapshot.top_level_charges()))
+                           charges=self.snapshot().top_level_charges()))
 
 
-class ChargeTipsView(View):
+class ChargeTipsView(PublicSnapshotMixin, View):
     template_name = 'law/charge_description.html'
 
     def get(self, request, slugs):
         slugs = slugs.split("/")
-        snapshot = public_snapshot()
-        charge = snapshot.get_charge_by_slugs(slugs)
+        charge = self.snapshot().get_charge_by_slugs(slugs)
         return render(request, self.template_name, dict(charge=charge))
 
 
@@ -535,13 +536,12 @@ def edit_classification(request, slug):
                        edit_classification_form=edit_classification_form))
 
 
-class ClassificationView(View):
+class ClassificationView(PublicSnapshotMixin, View):
     template_name = 'law/view_classification.html'
 
     def get(self, request, slug):
-        snapshot = public_snapshot()
-        classification = get_object_or_404(Classification, snapshot=snapshot,
-                                           name=slug)
+        classification = get_object_or_404(Classification,
+                                           snapshot=self.snapshot(), name=slug)
         return render(request, self.template_name,
                       dict(classification=classification))
 
@@ -613,12 +613,11 @@ def edit_area(request, slug):
                        edit_area_form=edit_area_form))
 
 
-class AreaView(View):
+class AreaView(PublicSnapshotMixin, View):
     template_name = 'law/view_area.html'
 
     def get(self, request, slug):
-        snapshot = public_snapshot()
-        area = get_object_or_404(Area, snapshot=snapshot, name=slug)
+        area = get_object_or_404(Area, snapshot=self.snapshot(), name=slug)
         return render(
             request, self.template_name,
             dict(area=area, add_consequence_form=AddConsequenceForm()))
@@ -696,12 +695,11 @@ def edit_consequence(request, slug, cslug):
                        edit_consequence_form=edit_consequence_form))
 
 
-class ConsequenceView(View):
+class ConsequenceView(PublicSnapshotMixin, View):
     template_name = 'law/view_consequence.html'
 
     def get(self, request, slug, cslug):
-        snapshot = public_snapshot()
-        area = get_object_or_404(Area, snapshot=snapshot, name=slug)
+        area = get_object_or_404(Area, snapshot=self.snapshot(), name=slug)
         consequence = get_object_or_404(Consequence, area=area, name=cslug)
         return render(request, self.template_name,
                       dict(consequence=consequence))
