@@ -390,8 +390,7 @@ def remove_charge_classification(request, slugs="", classification_id=""):
 
     cc = ChargeClassification.objects.get(charge=charge,
                                           classification=classification)
-
-    if request.POST:
+    if request.method == "POST":
         cc.delete()
         Event.objects.create(
             snapshot=snapshot,

@@ -2,7 +2,9 @@ import os
 
 from django.conf import settings
 from django.test import TestCase, override_settings
-from ..models import Snapshot
+from ..models import (
+    Snapshot, ChargeClassification, Charge, ChargeArea
+)
 from .factories import (
     ChargeFactory, SnapshotFactory, ClassificationFactory,
     AreaFactory, ConsequenceFactory, UserFactory,
@@ -158,3 +160,114 @@ class LoggedInViewTests(TestCase):
         # it automatically clones a replacement if you try to delete the
         # current working snapshot
         self.assertEqual(Snapshot.objects.all().count(), snapshot_count)
+
+    def test_edit_charge_index(self):
+        r = self.client.get("/edit/charge/")
+        self.assertEqual(r.status_code, 200)
+
+    def test_add_charge(self):
+        r = self.client.post(
+            "/edit/charge/add_charge/",
+            dict(penal_code='100.0', label='test')
+        )
+        # add a nested child to this one while we're in here
+        r = self.client.post(
+            "/edit/charge/1000-test/add_charge/",
+            dict(penal_code='100.1', label='test2')
+        )
+        self.assertEqual(r.status_code, 302)
+
+    def test_add_charge_classification(self):
+        c = ChargeFactory(snapshot=self.working_snapshot)
+        cs = ClassificationFactory(snapshot=self.working_snapshot)
+        r = self.client.post(
+            "/edit{}add_classification/".format(c.get_absolute_url()),
+            dict(classification_id=cs.id,
+                 certainty="yes"))
+        self.assertEqual(r.status_code, 302)
+        self.assertTrue(c.chargeclassification_set.count(), 1)
+
+        # repeating it should not create duplicates
+        r = self.client.post(
+            "/edit{}add_classification/".format(c.get_absolute_url()),
+            dict(classification_id=cs.id,
+                 certainty="yes"))
+        self.assertTrue(c.chargeclassification_set.count(), 1)
+
+    def test_remove_charge_classification_form(self):
+        c = ChargeFactory(snapshot=self.working_snapshot)
+        cs = ClassificationFactory(snapshot=self.working_snapshot)
+        ChargeClassification.objects.create(
+            charge=c, classification=cs, certainty="yes")
+
+        r = self.client.get(
+            "/edit{}remove_classification/{}/".format(c.get_absolute_url(),
+                                                      cs.id))
+        self.assertEqual(r.status_code, 200)
+
+    def test_remove_charge_classification(self):
+        c = ChargeFactory(snapshot=self.working_snapshot)
+        cs = ClassificationFactory(snapshot=self.working_snapshot)
+        ChargeClassification.objects.create(
+            charge=c, classification=cs, certainty="yes")
+
+        r = self.client.post(
+            "/edit{}remove_classification/{}/".format(c.get_absolute_url(),
+                                                      cs.id), dict())
+        self.assertEqual(r.status_code, 302)
+        self.assertEqual(c.chargeclassification_set.count(), 0)
+
+    def test_delete_charge(self):
+        c = ChargeFactory(snapshot=self.working_snapshot)
+        r = self.client.post("/edit{}delete/".format(c.get_absolute_url()),
+                             dict())
+        self.assertEqual(r.status_code, 302)
+        self.assertEqual(Charge.objects.all().count(), 0)
+
+    def test_edit_charge(self):
+        c = ChargeFactory(snapshot=self.working_snapshot)
+        r = self.client.post(
+            "/edit{}".format(c.get_absolute_url()),
+            dict(label="new label",
+                 penal_code=c.penal_code,
+                 name=c.name,
+                 description=c.description,))
+        self.assertEqual(r.status_code, 302)
+        c.refresh_from_db()
+        self.assertEqual(c.label, "new label")
+
+    def test_edit_charge_form(self):
+        c = ChargeFactory(snapshot=self.working_snapshot)
+        r = self.client.get(
+            "/edit{}".format(c.get_absolute_url()))
+        self.assertEqual(r.status_code, 200)
+
+    def test_add_charge_area(self):
+        c = ChargeFactory(snapshot=self.working_snapshot)
+        cs = AreaFactory(snapshot=self.working_snapshot)
+        r = self.client.post(
+            "/edit{}add_area/".format(c.get_absolute_url()),
+            dict(area_id=cs.id))
+        self.assertEqual(r.status_code, 302)
+        self.assertTrue(c.chargearea_set.count(), 1)
+
+    def test_remove_charge_area(self):
+        c = ChargeFactory(snapshot=self.working_snapshot)
+        cs = AreaFactory(snapshot=self.working_snapshot)
+        ChargeArea.objects.create(charge=c, area=cs)
+
+        r = self.client.post(
+            "/edit{}remove_area/{}/".format(c.get_absolute_url(),
+                                            cs.id), dict())
+        self.assertEqual(r.status_code, 302)
+        self.assertEqual(c.chargearea_set.count(), 0)
+
+    def test_reparent_charge(self):
+        c = ChargeFactory(snapshot=self.working_snapshot)
+        c2 = ChargeFactory(snapshot=self.working_snapshot)
+
+        r = self.client.post(
+            "/edit{}reparent/".format(c.get_absolute_url()),
+            dict(sibling_id=c2.id))
+        self.assertEqual(r.status_code, 302)
+        self.assertEqual(c.chargearea_set.count(), 0)
