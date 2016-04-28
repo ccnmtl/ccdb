@@ -76,6 +76,12 @@ class ChargeLocatorMixin(object):
     def get_charge_by_slugs(self, slugs):
         return self.snapshot().get_charge_by_slugs(slugs)
 
+    def charge(self, slugs):
+        if slugs[-1] == "/":
+            slugs = slugs[:-1]
+        slugs = slugs.split("/")
+        return self.get_charge_by_slugs(slugs)
+
 
 class EditView(StaffMixin, TemplateView):
     template_name = 'law/edit_index.html'
@@ -245,10 +251,7 @@ class AddChargeView(StaffMixin, WorkingSnapshotMixin,
 class AddChargeClassificationView(StaffMixin, WorkingSnapshotMixin,
                                   ChargeLocatorMixin, View):
     def post(self, request, slugs=""):
-        if slugs[-1] == "/":
-            slugs = slugs[:-1]
-        slugs = slugs.split("/")
-        charge = self.get_charge_by_slugs(slugs)
+        charge = self.charge(slugs)
         classification = get_object_or_404(
             Classification, id=request.POST['classification_id'])
         if ChargeClassification.objects.filter(
@@ -271,10 +274,7 @@ class AddChargeClassificationView(StaffMixin, WorkingSnapshotMixin,
 class AddAreaToChargeView(StaffMixin, WorkingSnapshotMixin,
                           ChargeLocatorMixin, View):
     def post(self, request, slugs=""):
-        if slugs[-1] == "/":
-            slugs = slugs[:-1]
-        slugs = slugs.split("/")
-        charge = self.get_charge_by_slugs(slugs)
+        charge = self.charge(slugs)
         area = get_object_or_404(Area, id=request.POST['area_id'])
         ChargeArea.objects.create(charge=charge, area=area)
         Event.objects.create(
@@ -289,10 +289,7 @@ class AddAreaToChargeView(StaffMixin, WorkingSnapshotMixin,
 class RemoveAreaFromChargeView(StaffMixin, WorkingSnapshotMixin,
                                ChargeLocatorMixin, View):
     def post(self, request, slugs="", ca_id=""):
-        if slugs[-1] == "/":
-            slugs = slugs[:-1]
-        slugs = slugs.split("/")
-        charge = self.get_charge_by_slugs(slugs)
+        charge = self.charge(slugs)
         ca = get_object_or_404(ChargeArea, id=ca_id)
         Event.objects.create(
             snapshot=self.snapshot(),
@@ -306,10 +303,7 @@ class RemoveAreaFromChargeView(StaffMixin, WorkingSnapshotMixin,
 class ReparentChargeView(StaffMixin, WorkingSnapshotMixin,
                          ChargeLocatorMixin, View):
     def post(self, request, slugs=""):
-        if slugs[-1] == "/":
-            slugs = slugs[:-1]
-        slugs = slugs.split("/")
-        charge = self.get_charge_by_slugs(slugs)
+        charge = self.charge(slugs)
         new_parent = Charge.objects.get(id=request.POST['sibling_id'])
         cc = ChargeChildren.objects.filter(child=charge)
         cc.delete()
@@ -326,10 +320,7 @@ class ReparentChargeView(StaffMixin, WorkingSnapshotMixin,
 class DeleteChargeView(StaffMixin, WorkingSnapshotMixin,
                        ChargeLocatorMixin, View):
     def post(self, request, slugs=""):
-        if slugs[-1] == "/":
-            slugs = slugs[:-1]
-        slugs = slugs.split("/")
-        charge = self.get_charge_by_slugs(slugs)
+        charge = self.charge(slugs)
         redirect_to = "/edit/charge/"
         try:
             parent = charge.parents()[-1]
@@ -396,10 +387,7 @@ class RemoveChargeClassificationView(StaffMixin, WorkingSnapshotMixin,
     template_name = "law/remove_charge_classification.html"
 
     def get(self, request, slugs="", classification_id=""):
-        if slugs[-1] == "/":
-            slugs = slugs[:-1]
-        slugs = slugs.split("/")
-        charge = self.get_charge_by_slugs(slugs)
+        charge = self.charge(slugs)
         classification = get_object_or_404(Classification,
                                            id=classification_id)
         return render_to_response(self.template_name,
@@ -407,10 +395,7 @@ class RemoveChargeClassificationView(StaffMixin, WorkingSnapshotMixin,
                                        classification=classification))
 
     def post(self, request, slugs="", classification_id=""):
-        if slugs[-1] == "/":
-            slugs = slugs[:-1]
-        slugs = slugs.split("/")
-        charge = self.get_charge_by_slugs(slugs)
+        charge = self.charge(slugs)
         classification = get_object_or_404(Classification,
                                            id=classification_id)
 
