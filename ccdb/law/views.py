@@ -82,6 +82,12 @@ class ChargeLocatorMixin(object):
         return self.snapshot().get_charge_by_slugs(slugs)
 
 
+class ClassificationLocatorMixin(object):
+    def classification(self, slug):
+        return get_object_or_404(
+            Classification, snapshot=self.snapshot(), name=slug)
+
+
 class EditView(StaffMixin, TemplateView):
     template_name = 'law/edit_index.html'
 
@@ -499,12 +505,9 @@ class AddClassificationView(StaffMixin, WorkingSnapshotMixin, View):
         return HttpResponseRedirect("/edit/classification/%s/" % c.name)
 
 
-class EditClassificationView(StaffMixin, WorkingSnapshotMixin, View):
+class EditClassificationView(StaffMixin, WorkingSnapshotMixin,
+                             ClassificationLocatorMixin, View):
     template_name = 'law/edit_classification.html'
-
-    def classification(self, slug):
-        return get_object_or_404(
-            Classification, snapshot=self.snapshot(), name=slug)
 
     def render(self, request, classification, edit_classification_form):
         return render(request, self.template_name,
@@ -536,34 +539,25 @@ class EditClassificationView(StaffMixin, WorkingSnapshotMixin, View):
         return self.render(request, classification, edit_classification_form)
 
 
-class ClassificationView(PublicSnapshotMixin, View):
+class ClassificationView(PublicSnapshotMixin, ClassificationLocatorMixin,
+                         View):
     template_name = 'law/view_classification.html'
-
-    def classification(self, slug):
-        return get_object_or_404(
-            Classification, snapshot=self.snapshot(), name=slug)
 
     def get(self, request, slug):
         return render(request, self.template_name,
                       dict(classification=self.classification(slug)))
 
 
-class PreviewClassificationView(WorkingSnapshotMixin, TemplateView):
+class PreviewClassificationView(
+        WorkingSnapshotMixin, ClassificationLocatorMixin, TemplateView):
     template_name = 'law/view_classification.html'
-
-    def classification(self, slug):
-        return get_object_or_404(
-            Classification, snapshot=self.snapshot(), name=slug)
 
     def get_context_data(self, slug):
         return dict(classification=self.classification(slug))
 
 
-class DeleteClassificationView(StaffMixin, WorkingSnapshotMixin, View):
-    def classification(self, slug):
-        return get_object_or_404(
-            Classification, snapshot=self.snapshot(), name=slug)
-
+class DeleteClassificationView(StaffMixin, WorkingSnapshotMixin,
+                               ClassificationLocatorMixin, View):
     def post(self, request, slug):
         classification = self.classification(slug)
         self.snapshot().add_event(
@@ -742,11 +736,7 @@ def add_classification_to_consequence(request, slug, cslug):
 
 
 class AddConsequenceToClassificationView(StaffMixin, WorkingSnapshotMixin,
-                                         View):
-    def classification(self, slug):
-        return get_object_or_404(
-            Classification, snapshot=self.snapshot(), name=slug)
-
+                                         ClassificationLocatorMixin, View):
     def post(self, request, slug):
         consequence = get_object_or_404(
             Consequence, id=request.POST['consequence_id'])
@@ -772,13 +762,9 @@ class AddConsequenceToClassificationView(StaffMixin, WorkingSnapshotMixin,
             "/edit" + classification.get_absolute_url())
 
 
-class RemoveConsequenceFromClassificationView(StaffMixin, WorkingSnapshotMixin,
-                                              View):
+class RemoveConsequenceFromClassificationView(
+        StaffMixin, WorkingSnapshotMixin, ClassificationLocatorMixin, View):
     template_name = "law/remove_classification_consequence.html"
-
-    def classification(self, slug):
-        return get_object_or_404(Classification, snapshot=self.snapshot(),
-                                 name=slug)
 
     def get(self, request, slug, consequence_id):
         consequence = get_object_or_404(Consequence, id=consequence_id)
