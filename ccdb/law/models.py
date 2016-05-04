@@ -171,6 +171,13 @@ class Snapshot(models.Model):
         else:
             return self.get_charge_by_slugs(slugs[1:], acc.append(current))
 
+    def add_event(self, user, description, note=""):
+        Event.objects.create(
+            snapshot=self,
+            user=user,
+            description=description,
+            note=note)
+
 
 def find_child(children, name):
     current = None
