@@ -88,6 +88,11 @@ class ClassificationLocatorMixin(object):
             Classification, snapshot=self.snapshot(), name=slug)
 
 
+class AreaLocatorMixin(object):
+    def area(self, slug):
+        return get_object_or_404(Area, snapshot=self.snapshot(), name=slug)
+
+
 class EditView(StaffMixin, TemplateView):
     template_name = 'law/edit_index.html'
 
@@ -589,11 +594,8 @@ class AddAreaView(StaffMixin, WorkingSnapshotMixin, View):
         return HttpResponseRedirect("/edit/area/")
 
 
-class EditAreaView(StaffMixin, WorkingSnapshotMixin, View):
+class EditAreaView(StaffMixin, WorkingSnapshotMixin, AreaLocatorMixin, View):
     template_name = 'law/edit_area.html'
-
-    def area(self, slug):
-        return get_object_or_404(Area, snapshot=self.snapshot(), name=slug)
 
     def render(self, request, area, edit_area_form):
         return render(
@@ -620,11 +622,8 @@ class EditAreaView(StaffMixin, WorkingSnapshotMixin, View):
         return self.render(request, area, edit_area_form)
 
 
-class AreaView(PublicSnapshotMixin, View):
+class AreaView(PublicSnapshotMixin, AreaLocatorMixin, View):
     template_name = 'law/view_area.html'
-
-    def area(self, slug):
-        return get_object_or_404(Area, snapshot=self.snapshot(), name=slug)
 
     def get(self, request, slug):
         return render(
@@ -633,10 +632,7 @@ class AreaView(PublicSnapshotMixin, View):
                  add_consequence_form=AddConsequenceForm()))
 
 
-class DeleteAreaView(StaffMixin, WorkingSnapshotMixin, View):
-    def area(self, slug):
-        return get_object_or_404(Area, snapshot=self.snapshot(), name=slug)
-
+class DeleteAreaView(StaffMixin, WorkingSnapshotMixin, AreaLocatorMixin, View):
     def post(self, request, slug):
         area = self.area(slug)
         self.snapshot().add_event(
@@ -648,10 +644,8 @@ class DeleteAreaView(StaffMixin, WorkingSnapshotMixin, View):
         return HttpResponseRedirect("/edit/area/")
 
 
-class AddConsequenceView(StaffMixin, WorkingSnapshotMixin, View):
-    def area(self, slug):
-        return get_object_or_404(Area, snapshot=self.snapshot(), name=slug)
-
+class AddConsequenceView(StaffMixin, WorkingSnapshotMixin, AreaLocatorMixin,
+                         View):
     def post(self, request, slug):
         area = self.area(slug)
         name = slugify(request.POST['label'])[:50]
@@ -680,11 +674,9 @@ class AddConsequenceView(StaffMixin, WorkingSnapshotMixin, View):
         return HttpResponseRedirect("/edit" + area.get_absolute_url())
 
 
-class EditConsequenceView(StaffMixin, WorkingSnapshotMixin, View):
+class EditConsequenceView(StaffMixin, WorkingSnapshotMixin,
+                          AreaLocatorMixin, View):
     template_name = 'law/edit_consequence.html'
-
-    def area(self, slug):
-        return get_object_or_404(Area, snapshot=self.snapshot(), name=slug)
 
     def consequence(self, area, cslug):
         return get_object_or_404(Consequence, area=area, name=cslug)
@@ -716,11 +708,8 @@ class EditConsequenceView(StaffMixin, WorkingSnapshotMixin, View):
         return self.render(request, consequence, edit_consequence_form)
 
 
-class ConsequenceView(PublicSnapshotMixin, View):
+class ConsequenceView(PublicSnapshotMixin, AreaLocatorMixin, View):
     template_name = 'law/view_consequence.html'
-
-    def area(self, slug):
-        return get_object_or_404(Area, snapshot=self.snapshot(), name=slug)
 
     def consequence(self, area, cslug):
         return get_object_or_404(Consequence, area=area, name=cslug)
@@ -732,10 +721,8 @@ class ConsequenceView(PublicSnapshotMixin, View):
                       dict(consequence=consequence))
 
 
-class DeleteConsequenceView(StaffMixin, WorkingSnapshotMixin, View):
-    def area(self, slug):
-        return get_object_or_404(Area, snapshot=self.snapshot(), name=slug)
-
+class DeleteConsequenceView(StaffMixin, WorkingSnapshotMixin,
+                            AreaLocatorMixin, View):
     def consequence(self, area, cslug):
         return get_object_or_404(Consequence, area=area, name=cslug)
 
@@ -750,10 +737,8 @@ class DeleteConsequenceView(StaffMixin, WorkingSnapshotMixin, View):
         return HttpResponseRedirect("/edit" + area.get_absolute_url())
 
 
-class AddClassificationToConsequence(StaffMixin, WorkingSnapshotMixin, View):
-    def area(self, slug):
-        return get_object_or_404(Area, snapshot=self.snapshot(), name=slug)
-
+class AddClassificationToConsequence(StaffMixin, WorkingSnapshotMixin,
+                                     AreaLocatorMixin, View):
     def consequence(self, area, cslug):
         return get_object_or_404(Consequence, area=area, name=cslug)
 
