@@ -4,7 +4,8 @@ from django.conf import settings
 from django.test import TestCase, override_settings
 from ..models import (
     Snapshot, ChargeClassification, Charge, ChargeArea,
-    Classification, ClassificationConsequence,
+    Classification, ClassificationConsequence, Area,
+    Consequence,
 )
 from .factories import (
     ChargeFactory, SnapshotFactory, ClassificationFactory,
@@ -338,3 +339,77 @@ class LoggedInViewTests(TestCase):
         )
         self.assertEqual(r.status_code, 302)
         self.assertEqual(ClassificationConsequence.objects.count(), 0)
+
+    def test_edit_area_index(self):
+        r = self.client.get("/edit/area/")
+        self.assertEqual(r.status_code, 200)
+
+    def test_add_aread(self):
+        r = self.client.post("/edit/area/add/", dict(label='test area'))
+        self.assertEqual(r.status_code, 302)
+        self.assertEqual(Area.objects.count(), 1)
+
+    def test_edit_area_form(self):
+        a = AreaFactory(snapshot=self.working_snapshot)
+        r = self.client.get("/edit{}".format(a.get_absolute_url()))
+        self.assertEqual(r.status_code, 200)
+
+    def test_edit_area(self):
+        a = AreaFactory(snapshot=self.working_snapshot)
+        r = self.client.post(
+            "/edit{}".format(a.get_absolute_url()),
+            dict(label=a.label, name=a.name)
+        )
+        self.assertEqual(r.status_code, 302)
+
+    def test_delete_area(self):
+        a = AreaFactory(snapshot=self.working_snapshot)
+        r = self.client.post(
+            "/edit{}delete/".format(a.get_absolute_url()),
+        )
+        self.assertEqual(r.status_code, 302)
+        self.assertEqual(Area.objects.count(), 0)
+
+    def test_add_consequence(self):
+        a = AreaFactory(snapshot=self.working_snapshot)
+        r = self.client.post(
+            "/edit{}add_consequence/".format(a.get_absolute_url()),
+            dict(label='new consequence', description='a description')
+        )
+        self.assertEqual(r.status_code, 302)
+        self.assertEqual(Consequence.objects.count(), 1)
+
+    def test_edit_consequence_form(self):
+        a = AreaFactory(snapshot=self.working_snapshot)
+        c = ConsequenceFactory(area=a)
+        r = self.client.get("/edit{}".format(c.get_absolute_url()))
+        self.assertEqual(r.status_code, 200)
+
+    def test_edit_consequence(self):
+        a = AreaFactory(snapshot=self.working_snapshot)
+        c = ConsequenceFactory(area=a)
+        r = self.client.post(
+            "/edit{}".format(c.get_absolute_url()),
+            dict(label=c.label, name=c.name, description="new description")
+        )
+        self.assertEqual(r.status_code, 302)
+
+    def test_delete_consequence(self):
+        a = AreaFactory(snapshot=self.working_snapshot)
+        c = ConsequenceFactory(area=a)
+        r = self.client.post(
+            "/edit{}delete/".format(c.get_absolute_url())
+        )
+        self.assertEqual(r.status_code, 302)
+        self.assertEqual(Consequence.objects.count(), 0)
+
+    def test_add_classification_to_consequence(self):
+        a = AreaFactory(snapshot=self.working_snapshot)
+        c = ConsequenceFactory(area=a)
+        cl = ClassificationFactory(snapshot=self.working_snapshot)
+        r = self.client.post(
+            "/edit{}add_classification/".format(c.get_absolute_url()),
+            dict(classification_id=cl.id)
+        )
+        self.assertEqual(r.status_code, 302)
+        self.assertEqual(ClassificationConsequence.objects.count(), 1)

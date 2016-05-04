@@ -1,4 +1,4 @@
-from models import Snapshot, public_snapshot, working_snapshot, Event
+from models import Snapshot, public_snapshot, working_snapshot
 from models import Charge, Classification, Area, ChargeChildren
 from models import ChargeClassification, ChargeArea, Consequence
 from models import ClassificationConsequence
@@ -568,171 +568,211 @@ class DeleteClassificationView(StaffMixin, WorkingSnapshotMixin,
         return HttpResponseRedirect("/edit/classification/")
 
 
-@user_passes_test(lambda u: u.is_staff)
-def edit_area_index(request):
-    snapshot = working_snapshot()
-    return render(request, 'law/edit_area_index.html',
-                  dict(areas=Area.objects.filter(snapshot=snapshot),
-                       add_area_form=AddAreaForm()))
+class EditAreaIndexView(StaffMixin, WorkingSnapshotMixin, TemplateView):
+    template_name = 'law/edit_area_index.html'
+
+    def get_context_data(self):
+        return dict(areas=Area.objects.filter(snapshot=self.snapshot()),
+                    add_area_form=AddAreaForm())
 
 
-@user_passes_test(lambda u: u.is_staff)
-def add_area(request):
-    snapshot = working_snapshot()
-    a = Area.objects.create(snapshot=snapshot,
-                            label=request.POST['label'],
-                            name=slugify(request.POST['label']),
-                            )
-    snapshot.add_event(
-        user=request.user,
-        description="added area **%s**" % a.label)
+class AddAreaView(StaffMixin, WorkingSnapshotMixin, View):
+    def post(self, request):
+        a = Area.objects.create(snapshot=self.snapshot(),
+                                label=request.POST['label'],
+                                name=slugify(request.POST['label']),
+                                )
+        self.snapshot().add_event(
+            user=request.user,
+            description="added area **%s**" % a.label)
 
-    return HttpResponseRedirect("/edit/area/")
+        return HttpResponseRedirect("/edit/area/")
 
 
-@user_passes_test(lambda u: u.is_staff)
-def edit_area(request, slug):
-    snapshot = working_snapshot()
-    area = get_object_or_404(Area, snapshot=snapshot, name=slug)
+class EditAreaView(StaffMixin, WorkingSnapshotMixin, View):
+    template_name = 'law/edit_area.html'
 
-    edit_area_form = EditAreaForm(instance=area)
-    if request.method == "POST":
+    def area(self, slug):
+        return get_object_or_404(Area, snapshot=self.snapshot(), name=slug)
+
+    def render(self, request, area, edit_area_form):
+        return render(
+            request, self.template_name,
+            dict(area=area, add_consequence_form=AddConsequenceForm(),
+                 edit_area_form=edit_area_form))
+
+    def get(self, request, slug):
+        area = self.area(slug)
+        edit_area_form = EditAreaForm(instance=area)
+        return self.render(request, area, edit_area_form)
+
+    def post(self, request, slug):
+        area = self.area(slug)
         edit_area_form = EditAreaForm(request.POST, instance=area)
         if edit_area_form.is_valid():
             edit_area_form.save()
-            snapshot.add_event(
+            self.snapshot().add_event(
                 user=request.user,
                 description="area **%s** edited" % (area.label),
                 note=request.POST.get('comment', ''))
 
             return HttpResponseRedirect("/edit" + area.get_absolute_url())
-
-    return render(request, 'law/edit_area.html',
-                  dict(area=area, add_consequence_form=AddConsequenceForm(),
-                       edit_area_form=edit_area_form))
+        return self.render(request, area, edit_area_form)
 
 
 class AreaView(PublicSnapshotMixin, View):
     template_name = 'law/view_area.html'
 
+    def area(self, slug):
+        return get_object_or_404(Area, snapshot=self.snapshot(), name=slug)
+
     def get(self, request, slug):
-        area = get_object_or_404(Area, snapshot=self.snapshot(), name=slug)
         return render(
             request, self.template_name,
-            dict(area=area, add_consequence_form=AddConsequenceForm()))
+            dict(area=self.area(slug),
+                 add_consequence_form=AddConsequenceForm()))
 
 
-@user_passes_test(lambda u: u.is_staff)
-def delete_area(request, slug):
-    snapshot = working_snapshot()
-    area = get_object_or_404(Area, snapshot=snapshot, name=slug)
-    snapshot.add_event(
-        user=request.user,
-        description="area **%s** deleted" % area.label,
-        note=request.POST.get('comment', ''),
-    )
-    area.delete()
-    return HttpResponseRedirect("/edit/area/")
+class DeleteAreaView(StaffMixin, WorkingSnapshotMixin, View):
+    def area(self, slug):
+        return get_object_or_404(Area, snapshot=self.snapshot(), name=slug)
+
+    def post(self, request, slug):
+        area = self.area(slug)
+        self.snapshot().add_event(
+            user=request.user,
+            description="area **%s** deleted" % area.label,
+            note=request.POST.get('comment', ''),
+        )
+        area.delete()
+        return HttpResponseRedirect("/edit/area/")
 
 
-@user_passes_test(lambda u: u.is_staff)
-def add_consequence(request, slug):
-    snapshot = working_snapshot()
-    area = get_object_or_404(Area, snapshot=snapshot, name=slug)
-    name = slugify(request.POST['label'])[:50]
-    # they really like naming consequences similarly so we have to
-    # work hard to keep slugs unique
-    i = 1
-    while 1:
-        r = Consequence.objects.filter(area=area, name=name)
-        if r.count() == 0:
-            break
-        else:
-            appendix = "-%d" % i
-            i += 1
-            lapp = len(appendix)
-            name = name[:-lapp] + appendix
+class AddConsequenceView(StaffMixin, WorkingSnapshotMixin, View):
+    def area(self, slug):
+        return get_object_or_404(Area, snapshot=self.snapshot(), name=slug)
 
-    consequence = Consequence.objects.create(
-        area=area,
-        label=request.POST['label'],
-        description=request.POST.get('description', ''),
-        name=name)
-    snapshot.add_event(
-        user=request.user,
-        description="consequence **%s** added to **%s**" % (consequence.label,
-                                                            area.label))
-    return HttpResponseRedirect("/edit" + area.get_absolute_url())
+    def post(self, request, slug):
+        area = self.area(slug)
+        name = slugify(request.POST['label'])[:50]
+        # they really like naming consequences similarly so we have to
+        # work hard to keep slugs unique
+        i = 1
+        while 1:
+            r = Consequence.objects.filter(area=area, name=name)
+            if r.count() == 0:
+                break
+            else:
+                appendix = "-%d" % i
+                i += 1
+                lapp = len(appendix)
+                name = name[:-lapp] + appendix
+
+        consequence = Consequence.objects.create(
+            area=area,
+            label=request.POST['label'],
+            description=request.POST.get('description', ''),
+            name=name)
+        self.snapshot().add_event(
+            user=request.user,
+            description="consequence **%s** added to **%s**" % (
+                consequence.label, area.label))
+        return HttpResponseRedirect("/edit" + area.get_absolute_url())
 
 
-@user_passes_test(lambda u: u.is_staff)
-def edit_consequence(request, slug, cslug):
-    snapshot = working_snapshot()
-    area = get_object_or_404(Area, snapshot=snapshot, name=slug)
-    consequence = get_object_or_404(Consequence, area=area, name=cslug)
+class EditConsequenceView(StaffMixin, WorkingSnapshotMixin, View):
+    template_name = 'law/edit_consequence.html'
 
-    edit_consequence_form = EditConsequenceForm(instance=consequence)
-    if request.method == "POST":
+    def area(self, slug):
+        return get_object_or_404(Area, snapshot=self.snapshot(), name=slug)
+
+    def consequence(self, area, cslug):
+        return get_object_or_404(Consequence, area=area, name=cslug)
+
+    def render(self, request, consequence, edit_consequence_form):
+        return render(request, self.template_name,
+                      dict(consequence=consequence,
+                           edit_consequence_form=edit_consequence_form))
+
+    def get(self, request, slug, cslug):
+        area = self.area(slug)
+        consequence = self.consequence(area, cslug)
+        edit_consequence_form = EditConsequenceForm(instance=consequence)
+        return self.render(request, consequence, edit_consequence_form)
+
+    def post(self, request, slug, cslug):
+        area = self.area(slug)
+        consequence = self.consequence(area, cslug)
         edit_consequence_form = EditConsequenceForm(
             request.POST, instance=consequence)
         if edit_consequence_form.is_valid():
             edit_consequence_form.save()
-            snapshot.add_event(
+            self.snapshot().add_event(
                 user=request.user,
                 description="consequence **%s** edited" % (consequence.label),
                 note=request.POST.get('comment', ''))
             return HttpResponseRedirect(
                 "/edit" + consequence.get_absolute_url())
-        else:
-            return render(request, 'law/edit_consequence.html',
-                          dict(consequence=consequence,
-                               edit_consequence_form=edit_consequence_form))
-    return render(request, 'law/edit_consequence.html',
-                  dict(consequence=consequence,
-                       edit_consequence_form=edit_consequence_form))
+        return self.render(request, consequence, edit_consequence_form)
 
 
 class ConsequenceView(PublicSnapshotMixin, View):
     template_name = 'law/view_consequence.html'
 
+    def area(self, slug):
+        return get_object_or_404(Area, snapshot=self.snapshot(), name=slug)
+
+    def consequence(self, area, cslug):
+        return get_object_or_404(Consequence, area=area, name=cslug)
+
     def get(self, request, slug, cslug):
-        area = get_object_or_404(Area, snapshot=self.snapshot(), name=slug)
-        consequence = get_object_or_404(Consequence, area=area, name=cslug)
+        area = self.area(slug)
+        consequence = self.consequence(area, cslug)
         return render(request, self.template_name,
                       dict(consequence=consequence))
 
 
-@user_passes_test(lambda u: u.is_staff)
-def delete_consequence(request, slug, cslug):
-    snapshot = working_snapshot()
-    area = get_object_or_404(Area, snapshot=snapshot, name=slug)
-    consequence = get_object_or_404(Consequence, area=area, name=cslug)
-    snapshot.add_event(
-        user=request.user,
-        description="deleting consequence **%s**" % consequence.label,
-        note=request.POST.get('comment', ''))
-    consequence.delete()
-    return HttpResponseRedirect("/edit" + area.get_absolute_url())
+class DeleteConsequenceView(StaffMixin, WorkingSnapshotMixin, View):
+    def area(self, slug):
+        return get_object_or_404(Area, snapshot=self.snapshot(), name=slug)
+
+    def consequence(self, area, cslug):
+        return get_object_or_404(Consequence, area=area, name=cslug)
+
+    def post(self, request, slug, cslug):
+        area = self.area(slug)
+        consequence = self.consequence(area, cslug)
+        self.snapshot().add_event(
+            user=request.user,
+            description="deleting consequence **%s**" % consequence.label,
+            note=request.POST.get('comment', ''))
+        consequence.delete()
+        return HttpResponseRedirect("/edit" + area.get_absolute_url())
 
 
-@user_passes_test(lambda u: u.is_staff)
-def add_classification_to_consequence(request, slug, cslug):
-    snapshot = working_snapshot()
-    area = get_object_or_404(Area, snapshot=snapshot, name=slug)
-    consequence = get_object_or_404(Consequence, area=area, name=cslug)
-    classification = get_object_or_404(
-        Classification, id=request.POST['classification_id'])
-    ClassificationConsequence.objects.create(
-        consequence=consequence,
-        classification=classification,
-        certainty=request.POST.get('certainty', 'yes'))
-    Event.objects.create(
-        snapshot=snapshot, user=request.user,
-        description=(
-            "consequence **%s** associated with classification **%s**" %
-            (consequence.label, classification.label)),
-        note=request.POST.get('comment', ''))
-    return HttpResponseRedirect("/edit" + consequence.get_absolute_url())
+class AddClassificationToConsequence(StaffMixin, WorkingSnapshotMixin, View):
+    def area(self, slug):
+        return get_object_or_404(Area, snapshot=self.snapshot(), name=slug)
+
+    def consequence(self, area, cslug):
+        return get_object_or_404(Consequence, area=area, name=cslug)
+
+    def post(self, request, slug, cslug):
+        area = self.area(slug)
+        consequence = self.consequence(area, cslug)
+        classification = get_object_or_404(
+            Classification, id=request.POST['classification_id'])
+        ClassificationConsequence.objects.create(
+            consequence=consequence,
+            classification=classification,
+            certainty=request.POST.get('certainty', 'yes'))
+        self.snapshot().add_event(
+            user=request.user,
+            description=(
+                "consequence **%s** associated with classification **%s**" %
+                (consequence.label, classification.label)),
+            note=request.POST.get('comment', ''))
+        return HttpResponseRedirect("/edit" + consequence.get_absolute_url())
 
 
 class AddConsequenceToClassificationView(StaffMixin, WorkingSnapshotMixin,
