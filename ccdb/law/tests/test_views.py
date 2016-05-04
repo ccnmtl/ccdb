@@ -3,7 +3,8 @@ import os
 from django.conf import settings
 from django.test import TestCase, override_settings
 from ..models import (
-    Snapshot, ChargeClassification, Charge, ChargeArea
+    Snapshot, ChargeClassification, Charge, ChargeArea,
+    Classification,
 )
 from .factories import (
     ChargeFactory, SnapshotFactory, ClassificationFactory,
@@ -271,3 +272,36 @@ class LoggedInViewTests(TestCase):
             dict(sibling_id=c2.id))
         self.assertEqual(r.status_code, 302)
         self.assertEqual(c.chargearea_set.count(), 0)
+
+    def test_edit_classification_index(self):
+        r = self.client.get("/edit/classification/")
+        self.assertEqual(r.status_code, 200)
+
+    def test_add_classification(self):
+        r = self.client.post(
+            "/edit/classification/add/",
+            dict(label='new classification', description='a description')
+        )
+        self.assertEqual(r.status_code, 302)
+        self.assertEqual(Classification.objects.count(), 1)
+
+    def test_edit_classification_form(self):
+        c = ClassificationFactory(snapshot=self.working_snapshot)
+
+        r = self.client.get("/edit{}".format(c.get_absolute_url()))
+        self.assertEqual(r.status_code, 200)
+
+    def test_edit_classification(self):
+        c = ClassificationFactory(snapshot=self.working_snapshot)
+
+        r = self.client.post(
+            "/edit{}".format(c.get_absolute_url()),
+            dict(label=c.label, name=c.name,
+                 description="new description")
+        )
+        self.assertEqual(r.status_code, 302)
+
+    def test_preview_classification(self):
+        c = ClassificationFactory(snapshot=self.working_snapshot)
+        r = self.client.get("/edit{}preview/".format(c.get_absolute_url()))
+        self.assertEqual(r.status_code, 200)

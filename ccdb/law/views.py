@@ -79,7 +79,7 @@ class ChargeLocatorMixin(object):
         if slugs[-1] == "/":
             slugs = slugs[:-1]
         slugs = slugs.split("/")
-        return self.get_charge_by_slugs(slugs)
+        return self.snapshot().get_charge_by_slugs(slugs)
 
 
 class EditView(StaffMixin, TemplateView):
