@@ -4,7 +4,7 @@ from django.conf import settings
 from django.test import TestCase, override_settings
 from ..models import (
     Snapshot, ChargeClassification, Charge, ChargeArea,
-    Classification,
+    Classification, ClassificationConsequence,
 )
 from .factories import (
     ChargeFactory, SnapshotFactory, ClassificationFactory,
@@ -305,3 +305,36 @@ class LoggedInViewTests(TestCase):
         c = ClassificationFactory(snapshot=self.working_snapshot)
         r = self.client.get("/edit{}preview/".format(c.get_absolute_url()))
         self.assertEqual(r.status_code, 200)
+
+    def test_delete_classification(self):
+        c = ClassificationFactory(snapshot=self.working_snapshot)
+        r = self.client.post("/edit{}delete/".format(c.get_absolute_url()))
+        self.assertEqual(r.status_code, 302)
+        self.assertEqual(Classification.objects.count(), 0)
+
+    def test_add_consequence_to_classification(self):
+        c = ClassificationFactory(snapshot=self.working_snapshot)
+        a = AreaFactory(snapshot=self.working_snapshot)
+        cq = ConsequenceFactory(area=a)
+        r = self.client.post(
+            "/edit{}add_consequence/".format(c.get_absolute_url()),
+            dict(consequence_id=cq.id),
+        )
+        self.assertEqual(r.status_code, 302)
+        self.assertEqual(ClassificationConsequence.objects.count(), 1)
+
+    def test_remove_consequence_from_classification(self):
+        c = ClassificationFactory(snapshot=self.working_snapshot)
+        a = AreaFactory(snapshot=self.working_snapshot)
+        cq = ConsequenceFactory(area=a)
+        ClassificationConsequence.objects.create(
+            consequence=cq, classification=c,
+            certainty='yes',
+        )
+        r = self.client.post(
+            "/edit{}remove_consequence/{}/".format(
+                c.get_absolute_url(), cq.id),
+            dict(consequence_id=cq.id),
+        )
+        self.assertEqual(r.status_code, 302)
+        self.assertEqual(ClassificationConsequence.objects.count(), 0)

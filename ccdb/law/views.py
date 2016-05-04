@@ -460,56 +460,72 @@ class ChargeTipsView(PublicSnapshotMixin, ChargeLocatorMixin, View):
         return render(request, self.template_name, dict(charge=charge))
 
 
-@user_passes_test(lambda u: u.is_staff)
-def edit_classification_index(request):
-    snapshot = working_snapshot()
-    return render(request, 'law/edit_classification_index.html', dict(
-        classifications=Classification.objects.filter(snapshot=snapshot),
-        add_classification_form=AddClassificationForm()))
+class EditClassificationIndexView(StaffMixin, WorkingSnapshotMixin,
+                                  TemplateView):
+    template_name = 'law/edit_classification_index.html'
+
+    def get_context_data(self):
+        return dict(
+            classifications=Classification.objects.filter(
+                snapshot=self.snapshot()),
+            add_classification_form=AddClassificationForm())
 
 
-@user_passes_test(lambda u: u.is_staff)
-def add_classification(request):
-    snapshot = working_snapshot()
-    slug = slugify(request.POST['label'])[:50]
-    # need to check for duplicate slugs and fix
-    try:
-        Classification.objects.filter(name=slug)
-        # uh oh. there's already a charge with that slug
-        # need to come up with a relatively unique new one
-        # this is the most reasonable approach I can think of
-        slug = slug[:-3] + "%03d" % (Classification.objects.count() % 1000)
-        # any better ideas?
-    except Classification.DoesNotExist:
-        # that's good
-        pass
+class AddClassificationView(StaffMixin, WorkingSnapshotMixin, View):
+    def post(self, request):
+        slug = slugify(request.POST['label'])[:50]
+        # need to check for duplicate slugs and fix
+        try:
+            Classification.objects.filter(name=slug)
+            # uh oh. there's already a charge with that slug
+            # need to come up with a relatively unique new one
+            # this is the most reasonable approach I can think of
+            slug = slug[:-3] + "%03d" % (Classification.objects.count() % 1000)
+            # any better ideas?
+        except Classification.DoesNotExist:
+            # that's good
+            pass
 
-    c = Classification.objects.create(snapshot=snapshot,
-                                      label=request.POST['label'],
-                                      description=request.POST['description'],
-                                      name=slug,
-                                      )
-    snapshot.add_event(
-        user=request.user,
-        description="added classification **%s**" % c.label)
+        c = Classification.objects.create(
+            snapshot=self.snapshot(),
+            label=request.POST['label'],
+            description=request.POST['description'],
+            name=slug,
+        )
+        self.snapshot().add_event(
+            user=request.user,
+            description="added classification **%s**" % c.label)
 
-    return HttpResponseRedirect("/edit/classification/%s/" % c.name)
+        return HttpResponseRedirect("/edit/classification/%s/" % c.name)
 
 
-@user_passes_test(lambda u: u.is_staff)
-def edit_classification(request, slug):
-    snapshot = working_snapshot()
-    classification = get_object_or_404(Classification, snapshot=snapshot,
-                                       name=slug)
+class EditClassificationView(StaffMixin, WorkingSnapshotMixin, View):
+    template_name = 'law/edit_classification.html'
 
-    edit_classification_form = EditClassificationForm(instance=classification)
-    if request.method == "POST":
+    def classification(self, slug):
+        return get_object_or_404(
+            Classification, snapshot=self.snapshot(), name=slug)
+
+    def render(self, request, classification, edit_classification_form):
+        return render(request, self.template_name,
+                      dict(classification=classification,
+                           edit_classification_form=edit_classification_form))
+
+    def get(self, request, slug):
+        classification = self.classification(slug)
+
+        edit_classification_form = EditClassificationForm(
+            instance=classification)
+        return self.render(request, classification, edit_classification_form)
+
+    def post(self, request, slug):
+        classification = self.classification(slug)
         edit_classification_form = EditClassificationForm(
             request.POST,
             instance=classification)
         if edit_classification_form.is_valid():
             edit_classification_form.save()
-            snapshot.add_event(
+            self.snapshot().add_event(
                 user=request.user,
                 description=("classification **%s** edited" %
                              (classification.label)),
@@ -517,41 +533,45 @@ def edit_classification(request, slug):
 
             return HttpResponseRedirect(
                 "/edit" + classification.get_absolute_url())
-
-    return render(request, 'law/edit_classification.html',
-                  dict(classification=classification,
-                       edit_classification_form=edit_classification_form))
+        return self.render(request, classification, edit_classification_form)
 
 
 class ClassificationView(PublicSnapshotMixin, View):
     template_name = 'law/view_classification.html'
 
+    def classification(self, slug):
+        return get_object_or_404(
+            Classification, snapshot=self.snapshot(), name=slug)
+
     def get(self, request, slug):
-        classification = get_object_or_404(Classification,
-                                           snapshot=self.snapshot(), name=slug)
         return render(request, self.template_name,
-                      dict(classification=classification))
+                      dict(classification=self.classification(slug)))
 
 
-def preview_classification(request, slug):
-    snapshot = working_snapshot()
-    classification = get_object_or_404(Classification, snapshot=snapshot,
-                                       name=slug)
-    return render(request, 'law/view_classification.html',
-                  dict(classification=classification))
+class PreviewClassificationView(WorkingSnapshotMixin, TemplateView):
+    template_name = 'law/view_classification.html'
+
+    def classification(self, slug):
+        return get_object_or_404(
+            Classification, snapshot=self.snapshot(), name=slug)
+
+    def get_context_data(self, slug):
+        return dict(classification=self.classification(slug))
 
 
-@user_passes_test(lambda u: u.is_staff)
-def delete_classification(request, slug):
-    snapshot = working_snapshot()
-    classification = get_object_or_404(Classification, snapshot=snapshot,
-                                       name=slug)
-    snapshot.add_event(
-        user=request.user,
-        description="deleted classification **%s**" % classification.label,
-        note=request.POST.get('comment', ''))
-    classification.delete()
-    return HttpResponseRedirect("/edit/classification/")
+class DeleteClassificationView(StaffMixin, WorkingSnapshotMixin, View):
+    def classification(self, slug):
+        return get_object_or_404(
+            Classification, snapshot=self.snapshot(), name=slug)
+
+    def post(self, request, slug):
+        classification = self.classification(slug)
+        self.snapshot().add_event(
+            user=request.user,
+            description="deleted classification **%s**" % classification.label,
+            note=request.POST.get('comment', ''))
+        classification.delete()
+        return HttpResponseRedirect("/edit/classification/")
 
 
 @user_passes_test(lambda u: u.is_staff)
@@ -721,45 +741,60 @@ def add_classification_to_consequence(request, slug, cslug):
     return HttpResponseRedirect("/edit" + consequence.get_absolute_url())
 
 
-@user_passes_test(lambda u: u.is_staff)
-def add_consequence_to_classification(request, slug):
-    snapshot = working_snapshot()
-    consequence = get_object_or_404(Consequence,
-                                    id=request.POST['consequence_id'])
-    classification = get_object_or_404(Classification, snapshot=snapshot,
-                                       name=slug)
-    # first, check if one already exists
-    if ClassificationConsequence.objects.filter(
+class AddConsequenceToClassificationView(StaffMixin, WorkingSnapshotMixin,
+                                         View):
+    def classification(self, slug):
+        return get_object_or_404(
+            Classification, snapshot=self.snapshot(), name=slug)
+
+    def post(self, request, slug):
+        consequence = get_object_or_404(
+            Consequence, id=request.POST['consequence_id'])
+        classification = self.classification(slug)
+        # first, check if one already exists
+        if ClassificationConsequence.objects.filter(
+                consequence=consequence,
+                classification=classification).count() > 0:
+            return HttpResponse(
+                ("this consequence is already associated "
+                 "with this classification"))
+        ClassificationConsequence.objects.create(
             consequence=consequence,
-            classification=classification).count() > 0:
-        return HttpResponse(
-            "this consequence is already associated with this classification")
-    ClassificationConsequence.objects.create(
-        consequence=consequence,
-        classification=classification,
-        certainty=request.POST.get('certainty', 'yes'))
-    Event.objects.create(
-        snapshot=snapshot, user=request.user,
-        description=(
-            "consequence **%s** associated with classification **%s**" %
-            (consequence.label, classification.label)),
-        note=request.POST.get('comment', ''))
-    return HttpResponseRedirect("/edit" + classification.get_absolute_url())
+            classification=classification,
+            certainty=request.POST.get('certainty', 'yes'))
+        self.snapshot().add_event(
+            user=request.user,
+            description=(
+                "consequence **%s** associated with classification **%s**" %
+                (consequence.label, classification.label)),
+            note=request.POST.get('comment', ''))
+        return HttpResponseRedirect(
+            "/edit" + classification.get_absolute_url())
 
 
-@user_passes_test(lambda u: u.is_staff)
-def remove_consequence_from_classification(request, slug, consequence_id):
-    snapshot = working_snapshot()
-    consequence = get_object_or_404(Consequence, id=consequence_id)
-    classification = get_object_or_404(Classification, snapshot=snapshot,
-                                       name=slug)
-    ccs = ClassificationConsequence.objects.filter(
-        consequence=consequence, classification=classification)
-    if request.POST:
+class RemoveConsequenceFromClassificationView(StaffMixin, WorkingSnapshotMixin,
+                                              View):
+    template_name = "law/remove_classification_consequence.html"
+
+    def classification(self, slug):
+        return get_object_or_404(Classification, snapshot=self.snapshot(),
+                                 name=slug)
+
+    def get(self, request, slug, consequence_id):
+        consequence = get_object_or_404(Consequence, id=consequence_id)
+        classification = self.classification(slug)
+        return render_to_response(self.template_name,
+                                  dict(consequence=consequence,
+                                       classification=classification))
+
+    def post(self, request, slug, consequence_id):
+        consequence = get_object_or_404(Consequence, id=consequence_id)
+        classification = self.classification(slug)
+        ccs = ClassificationConsequence.objects.filter(
+            consequence=consequence, classification=classification)
         for cc in ccs:
             cc.delete()
-            Event.objects.create(
-                snapshot=snapshot,
+            self.snapshot().add_event(
                 user=request.user,
                 description=(
                     "consequence **%s** removed from classification **%s**" %
@@ -767,6 +802,3 @@ def remove_consequence_from_classification(request, slug, consequence_id):
                 note=request.POST.get('comment', ''))
         return HttpResponseRedirect(
             "/edit" + classification.get_absolute_url())
-    return render_to_response("law/remove_classification_consequence.html",
-                              dict(consequence=consequence,
-                                   classification=classification))
