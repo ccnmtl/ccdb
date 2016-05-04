@@ -15,10 +15,10 @@ from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
 from json import dumps
 from django.core.mail import send_mail
-from restclient import POST
 from zipfile import ZipFile, ZIP_DEFLATED
 from django.conf import settings
 import os.path
+import requests
 
 
 class IndexView(TemplateView):
@@ -36,11 +36,10 @@ class FeedbackView(View):
         if "Role:" not in request.POST.get("description", ""):
             # we know that the javascript was bypassed, so ignore it
             return dict()
-        POST(settings.PMT_EXTERNAL_ADD_ITEM_URL,
-             params=dict(pid=request.POST['pid'],
-                         mid=request.POST['mid'],
-                         description=request.POST['description']),
-             async=True)
+        requests.post(settings.PMT_EXTERNAL_ADD_ITEM_URL,
+                      dict(pid=request.POST['pid'],
+                           mid=request.POST['mid'],
+                           description=request.POST['description']))
 
         body = """%s\n\nFrom %s (%s)""" % (request.POST.get('description', ''),
                                            request.POST.get('name'),
