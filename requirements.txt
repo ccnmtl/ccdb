@@ -1,6 +1,6 @@
 --index-url https://pypi.ccnmtl.columbia.edu/
 Django==1.9.6
-unittest2==0.5.1
+unittest2==1.1.0
 feedparser==5.2.1
 Markdown==2.6.6
 pyenchant==1.6.6
