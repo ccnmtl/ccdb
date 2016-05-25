@@ -19,7 +19,8 @@ six==1.10.0
 boto==2.40.0
 python-dateutil==2.5.3
 gunicorn==19.5.0
-fake-factory==0.5.3
+ipaddress==1.0.16
+fake-factory==0.5.7
 factory_boy==2.6.1
 pyasn1==0.1.9
 pyOpenSSL==16.0.0
