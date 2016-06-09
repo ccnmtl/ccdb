@@ -46,6 +46,6 @@ django-impersonate==1.0.1
 django-markwhat==1.5
 django-storages-redux==1.3.2
 django-cacheds3storage==0.1.2
-opbeat==3.3.2
+opbeat==3.3.3
 
 ccnmtlsettings==0.2.0
