@@ -21,7 +21,7 @@ boto==2.41.0
 python-dateutil==2.5.3
 gunicorn==19.6.0
 ipaddress==1.0.16
-fake-factory==0.5.8
+fake-factory==0.5.9
 factory_boy==2.7.0
 pyasn1==0.1.9
 pyOpenSSL==16.0.0
