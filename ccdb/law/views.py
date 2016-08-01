@@ -46,8 +46,8 @@ class FeedbackView(View):
                                            request.POST.get('email'))
         send_mail(
             'Collateral Consequences Web Feedback', body,
-            'ccnmtl-cckc@columbia.edu',
-            ['ccnmtl-cckc@columbia.edu'], fail_silently=False)
+            settings.SERVER_EMAIL,
+            [settings.SERVER_EMAIL], fail_silently=False)
         return HttpResponseRedirect("/thanks/")
 
     def get(self, request):
