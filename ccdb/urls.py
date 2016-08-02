@@ -1,9 +1,11 @@
+import ccdb.law.views as views
+import django.views.static
+import os.path
+
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf import settings
 from django.views.generic import TemplateView
-import ccdb.law.views as views
-import os.path
 admin.autodiscover()
 
 site_media_root = os.path.join(os.path.dirname(__file__), "../media")
@@ -89,8 +91,9 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^impersonate/', include('impersonate.urls')),
     url(r'^stats/$', TemplateView.as_view(template_name="law/stats.html")),
-    url(r'^site_media/(?P<path>.*)$',
-        'django.views.static.serve', {'document_root': site_media_root}),
-    url(r'^uploads/(?P<path>.*)$',
-        'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
+
+    url(r'^site_media/(?P<path>.*)$', django.views.static.serve,
+        {'document_root': site_media_root}),
+    url(r'^uploads/(?P<path>.*)$', django.views.static.serve,
+        {'document_root': settings.MEDIA_ROOT}),
 ]
