@@ -2,7 +2,7 @@
 Django==1.9.9
 feedparser==5.2.1
 Markdown==2.6.6
-pyenchant==1.6.7
+pyenchant==1.6.8
 uuid==1.30
 psycopg2==2.6.2
 statsd==3.2.1
