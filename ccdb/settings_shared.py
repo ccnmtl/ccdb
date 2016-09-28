@@ -19,9 +19,9 @@ CACHES = {
     )
 }
 
-TEMPLATE_CONTEXT_PROCESSORS += [  # noqa
-    'ccdb.law.contextprocessors.add_public_snapshot',
-]
+TEMPLATES[0]['OPTIONS']['context_processors'].append(  # noqa
+    'ccdb.law.contextprocessors.add_public_snapshot'
+)
 
 
 INSTALLED_APPS += [  # noqa
