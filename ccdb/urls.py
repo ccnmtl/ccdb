@@ -6,6 +6,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf import settings
 from django.views.generic import TemplateView
+
 admin.autodiscover()
 
 site_media_root = os.path.join(os.path.dirname(__file__), "../media")
@@ -77,14 +78,14 @@ urlpatterns = [
     url('^edit/area/(?P<slug>[^\/]+)/(?P<cslug>[^\/]+)/delete/$',
         views.DeleteConsequenceView.as_view()),
 
-    url('^edit/search/$', 'ccdb.law.views.edit_search'),
+    url('^edit/search/$', views.edit_search),
 
-    url('^search/$', 'ccdb.law.views.search'),
+    url('^search/$', views.search),
     url('^autocomplete/$', views.AutocompleteView.as_view()),
 
     url('smoketest/', include('smoketest.urls')),
 
-    url('^api/current/$', 'ccdb.law.views.api_current'),
+    url('^api/current/$', views.api_current),
 
     url('^feedback/$', views.FeedbackView.as_view()),
     url('^accounts/', include('djangowind.urls')),
