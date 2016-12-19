@@ -24,7 +24,7 @@ python-dateutil==2.6.0
 gunicorn==19.6.0
 ipaddress==1.0.17
 fake-factory==0.7.2
-factory_boy==2.7.0
+factory_boy==2.8.1
 pyasn1==0.1.9
 pyOpenSSL==16.2.0
 ndg-httpsclient==0.4.2
