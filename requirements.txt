@@ -52,6 +52,6 @@ django-cacheds3storage==0.1.2
 django-smtp-ssl==1.0
 urllib3==1.19.1
 certifi==2016.9.26
-opbeat==3.5.1
+opbeat==3.5.2
 
 ccnmtlsettings==1.2.0
