@@ -90,6 +90,15 @@ class Snapshot(models.Model):
                 ChargeChildren.objects.create(parent=newparent,
                                               child=newchild)
 
+    def build_classification_map(self, new_snapshot):
+        classification_map = dict()
+
+        for classification in self.classification_set.all():
+            nc = classification.clone_to(new_snapshot)
+            classification_map[classification.id] = nc
+
+        return classification_map
+
     def clone(self, label, user, description=""):
         new_snapshot = Snapshot.objects.create(label=label,
                                                description=description)
@@ -98,11 +107,7 @@ class Snapshot(models.Model):
 
         charge_map = self.clone_charges(new_snapshot)
         area_map, consequence_map = self.clone_areas(new_snapshot)
-        classification_map = dict()
-
-        for classification in self.classification_set.all():
-            nc = classification.clone_to(new_snapshot)
-            classification_map[classification.id] = nc
+        classification_map = self.build_classification_map(new_snapshot)
 
         self.clone_parent_child_relationships(charge_map)
 
