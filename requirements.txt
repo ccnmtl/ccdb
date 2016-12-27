@@ -2,7 +2,6 @@
 Django==1.10.4
 feedparser==5.2.1
 Markdown==2.6.7
-pyenchant==1.6.7
 uuid==1.30
 psycopg2==2.6.2
 statsd==3.2.1
@@ -34,7 +33,6 @@ rjsmin==1.0.12
 requests==2.12.4
 
 djangowind==0.16.1
-django-tinymce==2.4.0
 django-appconf==1.0.2
 django-compressor==2.1
 django-statsd-mozilla==0.3.16
