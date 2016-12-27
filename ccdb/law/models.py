@@ -602,6 +602,12 @@ class Charge(models.Model):
                            x['certainty']))
         return all_consequences
 
+    def initial_area_results(self, area, certainties):
+        area_results = dict(area=area)
+        for c in certainties:
+            area_results[c] = []
+        return area_results
+
     def all_consequences_by_area(self):
         """ return all consequences for the charge, organized by
         Area -> Certainty. for ease of template display.
@@ -613,9 +619,7 @@ class Charge(models.Model):
 
         results = []
         for area in all_areas:
-            area_results = dict(area=area)
-            for c in certainties:
-                area_results[c] = []
+            area_results = self.initial_area_results(area, certainties)
 
             for c in all_consequences:
                 if c['consequence'].consequence.area == area:
