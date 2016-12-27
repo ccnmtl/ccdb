@@ -39,23 +39,7 @@ WIND_STAFF_MAPPER_GROUPS += [  # noqa
     'caj5', 'av2285', 'alm2165', 'pld2109', 'kac2160'
 ]
 
-# TinyMCE settings
-
-TINYMCE_JS_URL = '/site_media/js/tiny_mce/tiny_mce.js'
-TINYMCE_JS_ROOT = 'media/js/tiny_mce'
-
-# if you set this to True, you may have to
-# override TINYMCE_JS_ROOT with the full path on production
-TINYMCE_COMPRESSOR = False
-TINYMCE_SPELLCHECKER = True
-
 PMT_EXTERNAL_ADD_ITEM_URL = ("https://pmt.ccnmtl.columbia.edu"
                              "/api/external_add_item/")
-
-TINYMCE_DEFAULT_CONFIG = {'cols': 80,
-                          'rows': 30,
-                          'plugins': 'table,spellchecker,paste,searchreplace',
-                          'theme': 'simple',
-                          }
 
 SERVER_EMAIL = 'ccdb@ccnmtl.columbia.edu'
