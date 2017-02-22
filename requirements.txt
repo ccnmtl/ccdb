@@ -18,7 +18,7 @@ logilab-astng==0.24.3
 pylint==1.6.5
 sqlparse==0.2.2
 six==1.10.0
-boto==2.45.0
+boto==2.46.1
 python-dateutil==2.6.0
 gunicorn==19.6.0
 ipaddress==1.0.18
