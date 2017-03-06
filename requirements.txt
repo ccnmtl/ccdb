@@ -20,7 +20,7 @@ sqlparse==0.2.3
 six==1.10.0
 boto==2.46.1
 python-dateutil==2.6.0
-gunicorn==19.6.0
+gunicorn==19.7.0
 ipaddress==1.0.18
 Faker==0.7.9
 factory_boy==2.8.1
