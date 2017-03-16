@@ -1,3 +1,4 @@
+/*eslint no-unused-vars: ["error", { "varsIgnorePattern": "saveStateCookie" }]*/
 var hs_controls = [];
 var HS_COOKIE_PREFIX = 'hsstate_';
 var url_params = window.location.href.split('&');
@@ -18,7 +19,7 @@ if (url_params[0] === undefined) {
     //console.log('url params is already defined');
 }
 
-function cookie_name(el) {
+function cookie_name() {
     var name =  HS_COOKIE_PREFIX + document.location;
     return name.replace(/\W/g,'_');
 }
