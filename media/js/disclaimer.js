@@ -1,3 +1,4 @@
+/*eslint no-unused-vars: ["error", { "varsIgnorePattern": "enableButton" }]*/
 function hideDisclaimer() {
     var d = document.getElementById('disclaimer');
     d.style.display = 'none';
