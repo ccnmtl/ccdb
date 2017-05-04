@@ -50,7 +50,7 @@ django-markwhat==1.5.1
 django-storages==1.5.2
 django-cacheds3storage==0.1.2
 django-smtp-ssl==1.0
-urllib3==1.21
+urllib3==1.21.1
 certifi==2017.4.17
 opbeat==3.5.2
 
