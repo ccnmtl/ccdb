@@ -18,11 +18,6 @@ CACHES = {
     )
 }
 
-INSTALLED_APPS += [
-    'opbeat',
-]
-MIDDLEWARE_CLASSES.insert(0, 'opbeat.contrib.django.middleware.OpbeatAPMMiddleware')
-
 
 try:
     from local_settings import *
