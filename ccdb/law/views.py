@@ -265,6 +265,7 @@ class AddChargeClassificationView(StaffMixin, WorkingSnapshotMixin,
                                   ChargeLocatorMixin, View):
     def post(self, request, slugs=""):
         charge = self.charge(slugs)
+
         classification = get_object_or_404(
             Classification, id=request.POST['classification_id'])
         if ChargeClassification.objects.filter(
@@ -396,6 +397,7 @@ class RemoveChargeClassificationView(StaffMixin, WorkingSnapshotMixin,
 
     def get(self, request, slugs="", classification_id=""):
         charge = self.charge(slugs)
+
         classification = get_object_or_404(Classification,
                                            id=classification_id)
         return render_to_response(self.template_name,
@@ -404,6 +406,7 @@ class RemoveChargeClassificationView(StaffMixin, WorkingSnapshotMixin,
 
     def post(self, request, slugs="", classification_id=""):
         charge = self.charge(slugs)
+
         classification = get_object_or_404(Classification,
                                            id=classification_id)
 
@@ -574,6 +577,7 @@ class DeleteClassificationView(StaffMixin, WorkingSnapshotMixin,
             user=request.user,
             description="deleted classification **%s**" % classification.label,
             note=request.POST.get('comment', ''))
+
         classification.delete()
         return HttpResponseRedirect("/edit/classification/")
 
@@ -740,6 +744,7 @@ class AddClassificationToConsequence(
     def post(self, request, slug, cslug):
         area = self.area(slug)
         consequence = self.consequence(area, cslug)
+
         classification = get_object_or_404(
             Classification, id=request.POST['classification_id'])
         ClassificationConsequence.objects.create(
@@ -760,6 +765,7 @@ class AddConsequenceToClassificationView(StaffMixin, WorkingSnapshotMixin,
     def post(self, request, slug):
         consequence = get_object_or_404(
             Consequence, id=request.POST['consequence_id'])
+
         classification = self.classification(slug)
         # first, check if one already exists
         if ClassificationConsequence.objects.filter(
@@ -788,6 +794,7 @@ class RemoveConsequenceFromClassificationView(
 
     def get(self, request, slug, consequence_id):
         consequence = get_object_or_404(Consequence, id=consequence_id)
+
         classification = self.classification(slug)
         return render_to_response(self.template_name,
                                   dict(consequence=consequence,
@@ -795,6 +802,7 @@ class RemoveConsequenceFromClassificationView(
 
     def post(self, request, slug, consequence_id):
         consequence = get_object_or_404(Consequence, id=consequence_id)
+
         classification = self.classification(slug)
         ccs = ClassificationConsequence.objects.filter(
             consequence=consequence, classification=classification)

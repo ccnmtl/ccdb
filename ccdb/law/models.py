@@ -95,6 +95,7 @@ class Snapshot(models.Model):
 
         for classification in self.classification_set.all():
             nc = classification.clone_to(new_snapshot)
+
             classification_map[classification.id] = nc
 
         return classification_map
@@ -107,6 +108,7 @@ class Snapshot(models.Model):
 
         charge_map = self.clone_charges(new_snapshot)
         area_map, consequence_map = self.clone_areas(new_snapshot)
+
         classification_map = self.build_classification_map(new_snapshot)
 
         self.clone_parent_child_relationships(charge_map)
@@ -442,33 +444,39 @@ class Charge(models.Model):
     def all_yes(self):
         """ include parents """
         results = self.yes()
+
         classifications = [cc.classification for cc in results]
         for p in self.parents():
             for cc in p.yes():
                 if cc.classification not in classifications:
                     results.append(cc)
+
                     classifications.append(cc.classification)
         return results
 
     def all_probably(self):
         """ include parents """
         results = self.probably()
+
         classifications = [cc.classification for cc in results]
         for p in self.parents():
             for cc in p.probably():
                 if cc.classification not in classifications:
                     results.append(cc)
+
                     classifications.append(cc.classification)
         return results
 
     def all_maybe(self):
         """ include parents """
         results = self.maybe()
+
         classifications = [cc.classification for cc in results]
         for p in self.parents():
             for cc in p.maybe():
                 if cc.classification not in classifications:
                     results.append(cc)
+
                     classifications.append(cc.classification)
         return results
 
@@ -855,6 +863,7 @@ class Consequence(models.Model):
 
 class ChargeClassification(models.Model):
     charge = models.ForeignKey(Charge)
+
     classification = models.ForeignKey(Classification)
     certainty = models.CharField(max_length=16,
                                  choices=(('yes', 'Yes'),
