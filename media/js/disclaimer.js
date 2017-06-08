@@ -2,7 +2,7 @@
 function hideDisclaimer() {
     var d = document.getElementById('disclaimer');
     d.style.display = 'none';
-    setCookie('disclaimerviewed','true');
+    setCookie('disclaimerviewed', 'true');
     document.getElementById('alloffenses').style.display = 'block';
     document.getElementById('cckc_disclaimer').style.display = 'block';
 }
