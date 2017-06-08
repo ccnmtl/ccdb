@@ -30,6 +30,11 @@ ndg-httpsclient==0.4.2
 contextlib2==0.5.5
 rcssmin==1.0.6
 rjsmin==1.0.12
+
+chardet==3.0.3
+idna==2.5
+urllib3==1.21.1
+
 requests==2.17.3
 pytz==2017.2
 
