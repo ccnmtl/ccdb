@@ -21,7 +21,7 @@ if (url_params[0] === undefined) {
 
 function cookie_name() {
     var name =  HS_COOKIE_PREFIX + document.location;
-    return name.replace(/\W/g,'_');
+    return name.replace(/\W/g, '_');
 }
 
 function path() {
@@ -104,7 +104,7 @@ function clearCookies(prefix) {
 
 function hs_saveCookie() {
     var cookie_val = serializeJSON(window.hsIds);
-    if (mallocCookie(cookie_val.length,HS_COOKIE_PREFIX)) {
+    if (mallocCookie(cookie_val.length, HS_COOKIE_PREFIX)) {
         setCookie(cookie_name(), cookie_val, futureDate(), path());
     }
 }
@@ -113,7 +113,7 @@ function hs_addControlCallback(a) {
     //log('adding callback to ' + a);
     a.onclick = hs_toggle;
     hs_controls[hs_getTarget(a).id] = a;
-    addElementClass(a,'hs-control-show');
+    addElementClass(a, 'hs-control-show');
 }
 
 function hs_getState(el) {
@@ -143,38 +143,38 @@ function hs_getTarget(a) {
 
 function hs_toggle() {
     var target = hs_getTarget(this);
-    if (hasElementClass(target,'hs-hide')) {
+    if (hasElementClass(target, 'hs-hide')) {
         hs_show(target);
-        hs_setState(target,1);
+        hs_setState(target, 1);
     } else {
         hs_hide(target);
-        hs_setState(target,0);
+        hs_setState(target, 0);
     }
     return false;
 }
 
 function hs_hide(e) {
     //log('hiding ' + e);
-    removeElementClass(e,'hs-show');
-    addElementClass(e,'hs-hide');
+    removeElementClass(e, 'hs-show');
+    addElementClass(e, 'hs-hide');
 
     var control = hs_controls[e.id];
-    removeElementClass(control,'hs-control-show');
-    addElementClass(control,'hs-control-hide');
+    removeElementClass(control, 'hs-control-show');
+    addElementClass(control, 'hs-control-hide');
 }
 
 function hs_show(e) {
     //log('showing ' + e);
-    removeElementClass(e,'hs-hide');
-    addElementClass(e,'hs-show');
+    removeElementClass(e, 'hs-hide');
+    addElementClass(e, 'hs-show');
 
     var control = hs_controls[e.id];
-    removeElementClass(control,'hs-control-hide');
-    addElementClass(control,'hs-control-show');
+    removeElementClass(control, 'hs-control-hide');
+    addElementClass(control, 'hs-control-show');
 }
 
 function hs_expand_all(dontreset) {
-    forEach(getElementsByTagAndClassName('*','hs-hide'), hs_show);
+    forEach(getElementsByTagAndClassName('*', 'hs-hide'), hs_show);
     if (!dontreset) {
         window.hsIds = {'*all': 'expand'};
         hs_saveCookie();
@@ -182,7 +182,7 @@ function hs_expand_all(dontreset) {
 }
 
 function hs_collapse_all(dontreset) {
-    forEach(getElementsByTagAndClassName('*','hs-show'), hs_hide);
+    forEach(getElementsByTagAndClassName('*', 'hs-show'), hs_hide);
     if (!dontreset) {
         window.hsIds = {'*all': 'collapse'};
         hs_saveCookie();
@@ -196,7 +196,7 @@ function hs_init() {
     forEach(getElementsByTagAndClassName('a', 'hs-control'),
             hs_addControlCallback);
     log('hiding any divs that need to be initially hidden');
-    forEach(getElementsByTagAndClassName('*','hs-init-hide'), hs_hide);
+    forEach(getElementsByTagAndClassName('*', 'hs-init-hide'), hs_hide);
     if ('*all' in window.hsIds) {
         //this is done after the above so any hs-init-hides
         if (window.hsIds['*all'] === 'expand') {
@@ -206,7 +206,7 @@ function hs_init() {
         }
     }
     log('check for cookies setting the state for any...');
-    forEach(getElementsByTagAndClassName('a','hs-control'),hs_lookForSetting);
+    forEach(getElementsByTagAndClassName('a', 'hs-control'), hs_lookForSetting);
 
     if (window.location.href.split('#')[1] === 'fb') {
         // If #fb anchor is specified, hide the instructions,
