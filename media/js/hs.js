@@ -194,7 +194,7 @@ function hs_init() {
     hs_loadCookie();
     log('adding callbacks to controls');
     forEach(getElementsByTagAndClassName('a', 'hs-control'),
-            hs_addControlCallback);
+        hs_addControlCallback);
     log('hiding any divs that need to be initially hidden');
     forEach(getElementsByTagAndClassName('*', 'hs-init-hide'), hs_hide);
     if ('*all' in window.hsIds) {
