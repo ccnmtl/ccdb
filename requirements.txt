@@ -25,7 +25,7 @@ ipaddress==1.0.18
 Faker==0.7.17
 factory_boy==2.8.1
 pyasn1==0.2.3
-pyOpenSSL==17.0.0
+pyOpenSSL==17.1.0
 ndg-httpsclient==0.4.2
 contextlib2==0.5.5
 rcssmin==1.0.6
