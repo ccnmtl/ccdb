@@ -24,7 +24,7 @@ gunicorn==19.7.1
 ipaddress==1.0.18
 Faker==0.7.18
 factory_boy==2.8.1
-pyasn1==0.2.3
+pyasn1==0.3.1
 pyOpenSSL==17.2.0
 ndg-httpsclient==0.4.2
 contextlib2==0.5.5
