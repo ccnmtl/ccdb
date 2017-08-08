@@ -32,7 +32,7 @@ rcssmin==1.0.6
 rjsmin==1.0.12
 
 chardet==3.0.4
-idna==2.5
+idna==2.6
 urllib3==1.22
 
 requests==2.18.3
