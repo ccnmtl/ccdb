@@ -10,3 +10,6 @@ cover/
 reports/
 node_modules
 wheelhouse
+.project
+.pydevproject
+package-lock.json

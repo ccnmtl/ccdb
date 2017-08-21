@@ -227,6 +227,7 @@ function hs_init() {
             }
             //create the new url string with the compare attribute.
             var urlStr = loc + '?start=1&' + jQuery.param(window.hsIds2);
+            // eslint-disable-next-line security/detect-non-literal-fs-filename
             window.open(urlStr, '_self', false);
         });
     });
@@ -235,6 +236,7 @@ function hs_init() {
         jQuery(this).click(function() {
             var loc = jQuery(this).children().attr('href');
             var urlStr = loc + '&' + jQuery.param(window.hsIds);
+            // eslint-disable-next-line security/detect-non-literal-fs-filename
             window.open(urlStr, '_self', false);
         });
     });
