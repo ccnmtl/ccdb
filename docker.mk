@@ -1,3 +1,4 @@
+# VERSION=1.0.0
 # Docker related stuff
 # use wheelhouse/requirements.txt as the sentinal so make
 # knows whether it needs to rebuild the wheel directory or not
@@ -29,6 +30,7 @@ $(WHEELHOUSE)/requirements.txt: $(REQUIREMENTS)
 	cp $(REQUIREMENTS) $@
 	touch $@
 
+# Run this target to rebuild the django image
 build: $(WHEELHOUSE)/requirements.txt
 	docker build -t $(IMAGE) .
 
