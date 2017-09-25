@@ -128,7 +128,7 @@ class LoggedInViewTests(TestCase):
         self.assertEqual(r.status_code, 302)
         self.assertEqual(Snapshot.objects.all().count(), snapshot_count + 1)
 
-    @override_settings(MEDIA_ROOT="/tmp/")
+    @override_settings(MEDIA_ROOT="/tmp/")  # nosec
     def test_approve_snapshot(self):
         # TODO: update app so this is easier to override
         try:
