@@ -23,7 +23,7 @@ python-dateutil==2.6.1
 gunicorn==19.7.1
 ipaddress==1.0.18
 text-unidecode==1.1
-Faker==0.8.6
+Faker==0.8.7
 factory_boy==2.9.2
 pyasn1==0.3.7
 pyOpenSSL==17.3.0
