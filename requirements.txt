@@ -3,7 +3,7 @@ feedparser==5.2.1
 Markdown==2.6.10
 uuid==1.30
 psycopg2==2.7.3.2
-statsd==3.2.1
+statsd==3.2.2
 coverage==4.4.2
 mccabe==0.6.1
 pyflakes==1.6.0
