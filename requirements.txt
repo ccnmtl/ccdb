@@ -4,7 +4,7 @@ Markdown==2.6.11
 uuid==1.30
 psycopg2==2.7.4
 statsd==3.2.2
-coverage==4.5
+coverage==4.5.1
 mccabe==0.6.1
 pyflakes==1.6.0
 pep8==1.7.1
