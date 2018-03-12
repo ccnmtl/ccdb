@@ -19,7 +19,7 @@ pylint==1.8.2
 sqlparse==0.2.4
 six==1.11.0
 boto==2.48.0
-python-dateutil==2.6.1
+python-dateutil==2.7.0
 gunicorn==19.7.1
 ipaddress==1.0.19
 text-unidecode==1.2
