@@ -1,5 +1,5 @@
 # flake8: noqa
-from settings_shared import *
+from ccdb.settings_shared import *
 from ccnmtlsettings.staging import common
 
 locals().update(
@@ -19,6 +19,6 @@ CACHES = {
 }
 
 try:
-    from local_settings import *
+    from ccdb.local_settings import *
 except ImportError:
     pass
