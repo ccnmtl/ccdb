@@ -2,7 +2,8 @@ language: python
 dist: trusty
 sudo: false
 python:
-  - "2.7"
+  - "2.7.6"
+  - "3.5"
 script:
   - make
 notifications:
