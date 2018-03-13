@@ -1,11 +1,15 @@
+from __future__ import unicode_literals
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.http import Http404
 from django.shortcuts import get_object_or_404
+from django.utils.encoding import python_2_unicode_compatible
 from django import forms
 import re
 
 
+@python_2_unicode_compatible
 class Snapshot(models.Model):
     label = models.CharField(max_length=256)
     description = models.TextField(default="", blank=True)
@@ -17,7 +21,7 @@ class Snapshot(models.Model):
     created = models.DateTimeField(auto_now=True)
     modified = models.DateTimeField(auto_now=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.label
 
     def dump_filename_base(self):
@@ -219,6 +223,7 @@ class Event(models.Model):
     note = models.TextField(default="", blank=True)
 
 
+@python_2_unicode_compatible
 class Charge(models.Model):
     label = models.CharField(max_length=256)
     # maybe rename this, as some charges will be non penal code:
@@ -246,7 +251,7 @@ class Charge(models.Model):
         # Call the "real" save() method.
         return super(Charge, self).save(*args, **kwargs)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.label
 
     def get_absolute_url(self):
@@ -675,13 +680,14 @@ class ChargeChildren(models.Model):
     # ordering is always by penal_code
 
 
+@python_2_unicode_compatible
 class Classification(models.Model):
     snapshot = models.ForeignKey(Snapshot, editable=False)
     label = models.CharField(max_length=256)
     name = models.SlugField()
     description = models.TextField()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.label
 
     def display_label(self):
@@ -786,6 +792,7 @@ class Classification(models.Model):
         return in_all
 
 
+@python_2_unicode_compatible
 class Area(models.Model):
     snapshot = models.ForeignKey(Snapshot, editable=False)
     label = models.CharField(max_length=256)
@@ -794,7 +801,7 @@ class Area(models.Model):
         """must be less than 50 characters long """
         """and no two areas can have the same name""")
 
-    def __unicode__(self):
+    def __str__(self):
         return self.label
 
     def get_absolute_url(self):
@@ -810,13 +817,14 @@ class Area(models.Model):
                     id=self.id)
 
 
+@python_2_unicode_compatible
 class Consequence(models.Model):
     label = models.CharField(max_length=256)
     description = models.TextField(blank=True)
     area = models.ForeignKey(Area, editable=False)
     name = models.SlugField()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.label
 
     def display_label(self):
