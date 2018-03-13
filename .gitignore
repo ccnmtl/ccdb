@@ -1,4 +1,5 @@
 local_settings.py
+local.mk
 n3
 pip-log.txt
 *.pyc
@@ -12,4 +13,4 @@ node_modules
 wheelhouse
 .project
 .pydevproject
-package-lock.json
+.DS_Store
