@@ -55,7 +55,6 @@ django-markwhat==1.6.0
 django-storages==1.6.5
 django-cacheds3storage==0.1.2
 django-smtp-ssl==1.0
-urllib3==1.22
 certifi==2018.1.18
 
 ccnmtlsettings==1.4.0
