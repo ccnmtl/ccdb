@@ -239,6 +239,14 @@ a:hover { color: #36F; }
 	display: block;
 	padding-top: 5px;
 	font-size: 10px;
+	margin-right: 10px;
+}
+
+.videoCaption {
+	display: block;
+	padding-top: 5px;
+	min-width: 400px !important;
+	text-align: center;
 }
 
 #alloffenses
