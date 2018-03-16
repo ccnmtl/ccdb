@@ -1,10 +1,10 @@
-from models import Snapshot, public_snapshot, working_snapshot
-from models import Charge, Classification, Area, ChargeChildren
-from models import ChargeClassification, ChargeArea, Consequence
-from models import ClassificationConsequence
-from forms import AddChargeForm, EditChargeForm, AddClassificationForm
-from forms import EditClassificationForm, AddAreaForm, EditAreaForm
-from forms import AddConsequenceForm, EditConsequenceForm
+from ccdb.law.models import Snapshot, public_snapshot, working_snapshot
+from ccdb.law.models import Charge, Classification, Area, ChargeChildren
+from ccdb.law.models import ChargeClassification, ChargeArea, Consequence
+from ccdb.law.models import ClassificationConsequence
+from ccdb.law.forms import AddChargeForm, EditChargeForm, AddClassificationForm
+from ccdb.law.forms import EditClassificationForm, AddAreaForm, EditAreaForm
+from ccdb.law.forms import AddConsequenceForm, EditConsequenceForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.shortcuts import render_to_response, get_object_or_404, render

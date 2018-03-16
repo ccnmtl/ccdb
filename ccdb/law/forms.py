@@ -1,4 +1,4 @@
-from models import Charge, Area, Classification, Consequence
+from ccdb.law.models import Charge, Area, Classification, Consequence
 from django import forms
 from django.forms import ModelForm
 

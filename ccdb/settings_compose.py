@@ -1,5 +1,5 @@
 # flake8: noqa
-from settings_shared import *
+from ccdb.settings_shared import *
 
 DEBUG = True
 DATABASES = {
@@ -16,6 +16,6 @@ DATABASES = {
 EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
 
 try:
-    from local_settings import *
+    from ccdb.local_settings import *
 except ImportError:
     pass

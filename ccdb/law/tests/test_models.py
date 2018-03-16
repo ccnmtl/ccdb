@@ -11,7 +11,7 @@ from django.test import TestCase
 class SnapshotModelTest(TestCase):
     def test_unicode(self):
         s = SnapshotFactory()
-        self.assertTrue(unicode(s).startswith("test snapshot"))
+        self.assertTrue(str(s).startswith("test snapshot"))
 
     def test_dump_filename_base(self):
         s = SnapshotFactory()

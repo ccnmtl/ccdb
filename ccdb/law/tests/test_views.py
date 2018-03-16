@@ -42,7 +42,7 @@ class TestAutoComplete(TestCase):
         self.s = SnapshotFactory()
         r = self.client.get("/autocomplete/?term=nothing")
         self.assertEquals(r.status_code, 200)
-        self.assertEquals(r.content, '[]')
+        self.assertEquals(r.content, b'[]')
 
 
 class TestViewCharge(TestCase):
