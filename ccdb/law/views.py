@@ -26,7 +26,12 @@ class IndexView(TemplateView):
 
     def get_context_data(self, **kwargs):
         snapshot = public_snapshot()
-        return dict(charges=snapshot.top_level_charges())
+
+        charges = []
+        if snapshot:
+            charges = snapshot.top_level_charges()
+
+        return dict(charges=charges)
 
 
 class FeedbackView(View):
