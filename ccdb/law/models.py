@@ -199,7 +199,8 @@ def find_child(children, name):
 
 
 def public_snapshot():
-    return Snapshot.objects.filter(status='vetted').order_by("-modified")[0]
+    return Snapshot.objects.filter(status='vetted').order_by(
+        "-modified").first()
 
 
 def working_snapshot():
@@ -212,7 +213,7 @@ def is_working_snapshot():
 
 
 def qa_snapshot():
-    return Snapshot.objects.filter(status="qa")[0]
+    return Snapshot.objects.filter(status="qa").first()
 
 
 class Event(models.Model):
