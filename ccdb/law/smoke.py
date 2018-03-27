@@ -1,6 +1,6 @@
 from django.conf import settings
 from smoketest import SmokeTest
-from models import Snapshot
+from ccdb.law.models import Snapshot
 
 
 class DBConnectivity(SmokeTest):
