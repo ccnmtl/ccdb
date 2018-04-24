@@ -25,7 +25,7 @@ Faker==0.8.13
 factory_boy==2.10.0
 pyasn1==0.4.2
 pyOpenSSL==17.5.0
-ndg-httpsclient==0.4.4
+ndg-httpsclient==0.5.0
 contextlib2==0.5.5
 rcssmin==1.0.6
 rjsmin==1.0.12
