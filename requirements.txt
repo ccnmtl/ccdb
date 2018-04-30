@@ -18,7 +18,7 @@ sqlparse==0.2.4
 six==1.11.0
 boto==2.48.0
 python-dateutil==2.7.2
-gunicorn==19.8.0
+gunicorn==19.8.1
 ipaddress==1.0.21
 text-unidecode==1.2
 Faker==0.8.13
