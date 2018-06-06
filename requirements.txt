@@ -13,7 +13,7 @@ flake8==3.5.0
 logilab-common==1.4.1
 logilab-astng==0.24.3
 editdistance==0.4
-pylint==1.9.1
+pylint==1.9.2
 sqlparse==0.2.4
 six==1.11.0
 boto==2.48.0
