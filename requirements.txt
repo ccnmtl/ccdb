@@ -34,7 +34,7 @@ chardet==3.0.4
 idna==2.7
 urllib3==1.22
 
-requests==2.19.0
+requests==2.19.1
 pytz==2018.4
 
 djangowind==1.1.0
