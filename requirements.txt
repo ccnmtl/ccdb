@@ -35,7 +35,7 @@ idna==2.7
 urllib3==1.24
 
 requests==2.20.0
-pytz==2018.5
+pytz==2018.6
 
 djangowind==1.2.1
 django-appconf==1.0.2
