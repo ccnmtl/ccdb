@@ -17,7 +17,7 @@ pylint==1.9.3 # pyup: <2.0.0
 sqlparse==0.2.4
 six==1.11.0
 boto==2.49.0
-python-dateutil==2.7.3
+python-dateutil==2.7.5
 gunicorn==19.9.0
 ipaddress==1.0.22
 text-unidecode==1.2
