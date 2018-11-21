@@ -57,7 +57,7 @@ certifi==2018.10.15
 
 ccnmtlsettings==1.4.0
 
-cryptography==2.4.1
+cryptography==2.4.2
 
 pbr==5.1.1
 PyYAML>=3.10.0 # MIT
