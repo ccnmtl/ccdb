@@ -23,7 +23,7 @@ ipaddress==1.0.22
 text-unidecode==1.2
 Faker==1.0.1
 factory_boy==2.11.1
-pyasn1==0.4.4
+pyasn1==0.4.5
 pyOpenSSL==18.0.0
 ndg-httpsclient==0.5.1
 contextlib2==0.5.5
