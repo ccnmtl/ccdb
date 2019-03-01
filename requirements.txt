@@ -57,7 +57,7 @@ certifi==2018.11.29
 
 ccnmtlsettings==1.5.0
 
-cryptography==2.5
+cryptography==2.6.1
 
 pbr==5.1.2
 pyyaml==5.1b1
