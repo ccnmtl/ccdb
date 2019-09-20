@@ -37,7 +37,7 @@ rjsmin==1.1.0
 
 chardet==3.0.4
 idna==2.8
-urllib3==1.25.4
+urllib3==1.25.5
 
 requests==2.22.0
 pytz==2019.2
