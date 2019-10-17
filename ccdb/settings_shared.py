@@ -19,6 +19,12 @@ CACHES = {
     )
 }
 
+MIDDLEWARE += [  # noqa
+    'django.middleware.security.SecurityMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware'
+]
+
 TEMPLATES[0]['OPTIONS']['context_processors'].append(  # noqa
     'ccdb.law.contextprocessors.add_public_snapshot'
 )
@@ -43,3 +49,9 @@ PMT_EXTERNAL_ADD_ITEM_URL = ("https://pmt.ccnmtl.columbia.edu"
                              "/api/external_add_item/")
 
 SERVER_EMAIL = 'ccdb@ccnmtl.columbia.edu'
+
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
+SESSION_COOKIE_HTTPONLY = True
+CSRF_COOKIE_HTTPONLY = True
