@@ -62,7 +62,7 @@ certifi==2019.9.11
 
 ccnmtlsettings==1.5.0
 
-cryptography==2.7
+cryptography==2.8
 
 pbr==5.4.3
 pyyaml==5.1.2
