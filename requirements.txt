@@ -1,7 +1,7 @@
 Django==1.11.25 # pyup: <2.0
 feedparser==5.2.1
 Markdown==2.6.11 # pyup: < 3
-psycopg2==2.8.3
+psycopg2==2.8.4
 statsd==3.3.0
 coverage==4.5.4
 mccabe==0.6.1
