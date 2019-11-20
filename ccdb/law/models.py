@@ -217,8 +217,8 @@ def qa_snapshot():
 
 
 class Event(models.Model):
-    snapshot = models.ForeignKey(Snapshot)
-    user = models.ForeignKey(User)
+    snapshot = models.ForeignKey(Snapshot, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     description = models.TextField()
     created = models.DateTimeField(auto_now=True)
     note = models.TextField(default="", blank=True)
@@ -229,7 +229,8 @@ class Charge(models.Model):
     label = models.CharField(max_length=256)
     # maybe rename this, as some charges will be non penal code:
     penal_code = models.CharField(max_length=256)
-    snapshot = models.ForeignKey(Snapshot, editable=False)
+    snapshot = models.ForeignKey(Snapshot, editable=False,
+                                 on_delete=models.CASCADE)
     name = models.SlugField(
         help_text="""unique identifier that appears in the URL. """
         """must be less than 50 characters long """
@@ -676,14 +677,17 @@ def cluster_by(f, lst):
 
 
 class ChargeChildren(models.Model):
-    parent = models.ForeignKey(Charge, related_name="parent")
-    child = models.ForeignKey(Charge, related_name="child")
+    parent = models.ForeignKey(Charge, related_name="parent",
+                               on_delete=models.CASCADE)
+    child = models.ForeignKey(Charge, related_name="child",
+                              on_delete=models.CASCADE)
     # ordering is always by penal_code
 
 
 @python_2_unicode_compatible
 class Classification(models.Model):
-    snapshot = models.ForeignKey(Snapshot, editable=False)
+    snapshot = models.ForeignKey(Snapshot, editable=False,
+                                 on_delete=models.CASCADE)
     label = models.CharField(max_length=256)
     name = models.SlugField()
     description = models.TextField()
@@ -795,7 +799,8 @@ class Classification(models.Model):
 
 @python_2_unicode_compatible
 class Area(models.Model):
-    snapshot = models.ForeignKey(Snapshot, editable=False)
+    snapshot = models.ForeignKey(Snapshot, editable=False,
+                                 on_delete=models.CASCADE)
     label = models.CharField(max_length=256)
     name = models.SlugField(
         help_text="""unique identifier that appears in the URL. """
@@ -822,7 +827,8 @@ class Area(models.Model):
 class Consequence(models.Model):
     label = models.CharField(max_length=256)
     description = models.TextField(blank=True)
-    area = models.ForeignKey(Area, editable=False)
+    area = models.ForeignKey(Area, editable=False,
+                             on_delete=models.CASCADE)
     name = models.SlugField()
 
     def __str__(self):
@@ -871,9 +877,11 @@ class Consequence(models.Model):
 
 
 class ChargeClassification(models.Model):
-    charge = models.ForeignKey(Charge)
+    charge = models.ForeignKey(Charge,
+                               on_delete=models.CASCADE)
 
-    classification = models.ForeignKey(Classification)
+    classification = models.ForeignKey(Classification,
+                                       on_delete=models.CASCADE)
     certainty = models.CharField(max_length=16,
                                  choices=(('yes', 'Yes'),
                                           ('probably', 'Probably'),
@@ -881,8 +889,10 @@ class ChargeClassification(models.Model):
 
 
 class ClassificationChild(models.Model):
-    parent = models.ForeignKey(Classification, related_name="parent")
-    child = models.ForeignKey(Classification, related_name="child")
+    parent = models.ForeignKey(Classification, related_name="parent",
+                               on_delete=models.CASCADE)
+    child = models.ForeignKey(Classification, related_name="child",
+                              on_delete=models.CASCADE)
     ordinality = models.IntegerField(default=1)
 
 
@@ -893,8 +903,10 @@ def effective_certainty(ch_cl_certainty, cl_co_certainty):
 
 
 class ClassificationConsequence(models.Model):
-    classification = models.ForeignKey(Classification)
-    consequence = models.ForeignKey(Consequence)
+    classification = models.ForeignKey(Classification,
+                                       on_delete=models.CASCADE)
+    consequence = models.ForeignKey(Consequence,
+                                    on_delete=models.CASCADE)
     ordinality = models.IntegerField(default=1)
     certainty = models.CharField(max_length=16,
                                  choices=(('yes', 'Yes'),
@@ -906,5 +918,7 @@ class ClassificationConsequence(models.Model):
 class ChargeArea(models.Model):
     """ if one of these exists, the specified charge
     will show consequences in the specified area """
-    charge = models.ForeignKey(Charge)
-    area = models.ForeignKey(Area)
+    charge = models.ForeignKey(Charge,
+                               on_delete=models.CASCADE)
+    area = models.ForeignKey(Area,
+                             on_delete=models.CASCADE)

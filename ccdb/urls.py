@@ -89,7 +89,7 @@ urlpatterns = [
 
     url('^feedback/$', views.FeedbackView.as_view()),
     url('^accounts/', include('djangowind.urls')),
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', admin.site.urls),
     url(r'^impersonate/', include('impersonate.urls')),
     url(r'^stats/$', TemplateView.as_view(template_name="law/stats.html")),
 
