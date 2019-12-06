@@ -46,7 +46,7 @@ djangowind==1.2.2
 django-appconf==1.0.3
 django-compressor==2.3
 django-statsd-mozilla==0.4.0
-sentry-sdk==0.13.4
+sentry-sdk==0.13.5
 django-smoketest==1.1.0
 django-debug-toolbar==2.1
 django-jenkins==0.110.0
