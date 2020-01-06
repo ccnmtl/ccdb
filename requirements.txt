@@ -3,7 +3,7 @@ feedparser==5.2.1
 Markdown==2.6.11 # pyup: < 3
 psycopg2==2.8.4
 statsd==3.3.0
-coverage==4.5.4
+coverage==5.0.2
 mccabe==0.6.1
 pyflakes==2.1.1
 pep8==1.7.1
