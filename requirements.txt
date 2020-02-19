@@ -39,7 +39,7 @@ chardet==3.0.4
 idna==2.8
 urllib3==1.25.8  # sentry-sdk
 
-requests==2.22.0
+requests==2.23.0
 pytz==2019.2
 
 djangowind==1.2.3
