@@ -14,10 +14,10 @@ locals().update(
     ))
 
 CACHES = {
-    'default': dict(
-        BACKEND='django.core.cache.backends.filebased.FileBasedCache',
-        LOCATION='file:///var/www/ccdb/cache/',
-    )
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
+        'LOCATION': '127.0.0.1:11211',
+    }
 }
 
 try:
