@@ -70,3 +70,6 @@ stevedore>=1.20.0 # Apache-2.0
 bandit==1.6.2
 
 entrypoints==0.3
+
+# memcached
+pylibmc==1.6.1
