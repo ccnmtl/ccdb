@@ -1,24 +1,32 @@
-from ccdb.law.models import Snapshot, public_snapshot, working_snapshot
+from datetime import datetime
+import os.path
+
+from ccdb.law.forms import AddChargeForm, EditChargeForm, AddClassificationForm
+from ccdb.law.forms import AddConsequenceForm, EditConsequenceForm
+from ccdb.law.forms import EditClassificationForm, AddAreaForm, EditAreaForm
 from ccdb.law.models import Charge, Classification, Area, ChargeChildren
 from ccdb.law.models import ChargeClassification, ChargeArea, Consequence
 from ccdb.law.models import ClassificationConsequence
-from ccdb.law.forms import AddChargeForm, EditChargeForm, AddClassificationForm
-from ccdb.law.forms import EditClassificationForm, AddAreaForm, EditAreaForm
-from ccdb.law.forms import AddConsequenceForm, EditConsequenceForm
-from django.http import HttpResponse, HttpResponseRedirect
+from ccdb.law.models import Snapshot, public_snapshot, working_snapshot
+from django.conf import settings
 from django.contrib.auth.decorators import user_passes_test, login_required
+from django.core.mail import send_mail
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404, render
-from datetime import datetime
 from django.template.defaultfilters import slugify
 from django.utils.decorators import method_decorator
 from django.views.generic.base import TemplateView, View
 from django.views.generic.detail import DetailView
+from django.utils.html import escape
 from json import dumps
-from django.core.mail import send_mail
-from zipfile import ZipFile, ZIP_DEFLATED
-from django.conf import settings
-import os.path
 import requests
+from zipfile import ZipFile, ZIP_DEFLATED
+
+
+def sanitize(s):
+    if s and '\0' not in s and '\x00' not in s:
+        return escape(s)
+    return ''
 
 
 class IndexView(TemplateView):
@@ -354,6 +362,7 @@ class DeleteChargeView(StaffMixin, WorkingSnapshotMixin,
 @user_passes_test(lambda u: u.is_staff)
 def edit_search(request):
     q = request.GET.get('q', '')
+    q = sanitize(q)
     if q == '':
         return HttpResponseRedirect("/")
     snapshot = working_snapshot()
@@ -366,9 +375,9 @@ def edit_search(request):
 
 def search(request):
     q = request.GET.get('q', '')
+    q = sanitize(q)
     if q == '':
         return HttpResponseRedirect("/")
-
     snapshot = public_snapshot()
     charges = Charge.objects.filter(
         snapshot=snapshot,
@@ -381,6 +390,7 @@ def search(request):
 class AutocompleteView(PublicSnapshotMixin, View):
     def get(self, request):
         q = request.GET.get('term', '')
+        q = sanitize(q)
         if q == '':
             return HttpResponseRedirect("/")
         q = q.lower()
@@ -401,6 +411,8 @@ class RemoveChargeClassificationView(StaffMixin, WorkingSnapshotMixin,
     template_name = "law/remove_charge_classification.html"
 
     def get(self, request, slugs="", classification_id=""):
+        slugs = sanitize(slugs)
+        classification_id = sanitize(classification_id)
         charge = self.charge(slugs)
 
         classification = get_object_or_404(Classification,
@@ -432,6 +444,7 @@ class EditChargeView(StaffMixin, WorkingSnapshotMixin, ChargeLocatorMixin,
     template_name = 'law/edit_charge.html'
 
     def get(self, request, slugs):
+        slugs = sanitize(slugs)
         slugs = slugs.split("/")
         charge = self.get_charge_by_slugs(slugs)
         edit_charge_form = EditChargeForm(instance=charge)
@@ -462,6 +475,7 @@ class ChargeView(PublicSnapshotMixin, ChargeLocatorMixin, View):
     template_name = 'law/charge.html'
 
     def get(self, request, slugs):
+        slugs = sanitize(slugs)
         slugs = slugs.split("/")
         charge = self.get_charge_by_slugs(slugs)
         charge2 = None
@@ -479,6 +493,7 @@ class ChargeTipsView(PublicSnapshotMixin, ChargeLocatorMixin, View):
     template_name = 'law/charge_description.html'
 
     def get(self, request, slugs):
+        slugs = sanitize(slugs)
         slugs = slugs.split("/")
         charge = self.get_charge_by_slugs(slugs)
         return render(request, self.template_name, dict(charge=charge))
@@ -533,6 +548,7 @@ class EditClassificationView(StaffMixin, WorkingSnapshotMixin,
                            edit_classification_form=edit_classification_form))
 
     def get(self, request, slug):
+        slug = sanitize(slug)
         classification = self.classification(slug)
 
         edit_classification_form = EditClassificationForm(
@@ -562,6 +578,7 @@ class ClassificationView(PublicSnapshotMixin, ClassificationLocatorMixin,
     template_name = 'law/view_classification.html'
 
     def get(self, request, slug):
+        slug = sanitize(slug)
         return render(request, self.template_name,
                       dict(classification=self.classification(slug)))
 
@@ -618,6 +635,7 @@ class EditAreaView(StaffMixin, WorkingSnapshotMixin, AreaLocatorMixin, View):
                  edit_area_form=edit_area_form))
 
     def get(self, request, slug):
+        slug = sanitize(slug)
         area = self.area(slug)
         edit_area_form = EditAreaForm(instance=area)
         return self.render(request, area, edit_area_form)
@@ -640,6 +658,7 @@ class AreaView(PublicSnapshotMixin, AreaLocatorMixin, View):
     template_name = 'law/view_area.html'
 
     def get(self, request, slug):
+        slug = sanitize(slug)
         return render(
             request, self.template_name,
             dict(area=self.area(slug),
@@ -698,6 +717,8 @@ class EditConsequenceView(StaffMixin, WorkingSnapshotMixin,
                            edit_consequence_form=edit_consequence_form))
 
     def get(self, request, slug, cslug):
+        slug = sanitize(slug)
+        cslug = sanitize(cslug)
         area = self.area(slug)
         consequence = self.consequence(area, cslug)
         edit_consequence_form = EditConsequenceForm(instance=consequence)
@@ -724,6 +745,8 @@ class ConsequenceView(PublicSnapshotMixin, AreaLocatorMixin,
     template_name = 'law/view_consequence.html'
 
     def get(self, request, slug, cslug):
+        slug = sanitize(slug)
+        cslug = sanitize(cslug)
         area = self.area(slug)
         consequence = self.consequence(area, cslug)
         return render(request, self.template_name,
@@ -798,6 +821,8 @@ class RemoveConsequenceFromClassificationView(
     template_name = "law/remove_classification_consequence.html"
 
     def get(self, request, slug, consequence_id):
+        slug = sanitize(slug)
+        consequence_id = sanitize(consequence_id)
         consequence = get_object_or_404(Consequence, id=consequence_id)
 
         classification = self.classification(slug)
