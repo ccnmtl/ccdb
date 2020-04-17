@@ -37,7 +37,7 @@ rjsmin==1.1.0
 
 chardet==3.0.4
 idna==2.9
-urllib3==1.25.8  # sentry-sdk
+urllib3==1.25.9  # sentry-sdk
 
 requests==2.23.0
 pytz==2019.2
