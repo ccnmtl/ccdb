@@ -10,7 +10,7 @@ pep8==1.7.1
 pycodestyle==2.5.0
 configparser==4.0.2 # pyup: < 5.0
 flake8==3.7.9
-logilab-common==1.5.2
+logilab-common==1.6.0
 logilab-astng==0.24.3
 editdistance==0.5.3
 pylint==1.9.4 # pyup: <2.0.0
