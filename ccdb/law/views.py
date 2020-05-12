@@ -15,9 +15,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404, render
 from django.template.defaultfilters import slugify
 from django.utils.decorators import method_decorator
-from django.views.generic.base import TemplateView, View
-from django.views.generic.detail import DetailView
 from django.utils.html import escape
+from django.views.generic.base import TemplateView, View, RedirectView
+from django.views.generic.detail import DetailView
 from json import dumps
 import requests
 from zipfile import ZipFile, ZIP_DEFLATED
@@ -40,6 +40,11 @@ class IndexView(TemplateView):
             charges = snapshot.top_level_charges()
 
         return dict(charges=charges)
+
+
+class RedirectIndexView(RedirectView):
+    url = '/'
+    permanent = False
 
 
 class FeedbackView(View):
