@@ -1,3 +1,4 @@
+/* global getCookie: true, setCookie: true */
 /*eslint no-unused-vars: ["error", { "varsIgnorePattern": "enableButton" }]*/
 function hideDisclaimer() {
     var d = document.getElementById('disclaimer');
