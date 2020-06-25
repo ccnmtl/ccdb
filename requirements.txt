@@ -12,7 +12,7 @@ configparser==5.0.0
 importlib-metadata==1.6.1  # for flake8
 zipp==3.1.0  # for flake8
 flake8==3.8.3
-logilab-common==1.7.1
+logilab-common==1.7.2
 astroid==2.4.2
 editdistance==0.5.3
 pylint==2.5.3
