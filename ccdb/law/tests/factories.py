@@ -6,14 +6,14 @@ from ccdb.law.models import (
 )
 
 
-class UserFactory(factory.DjangoModelFactory):
+class UserFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = User
 
     username = factory.Sequence(lambda n: "user{0}".format(n))
 
 
-class SnapshotFactory(factory.DjangoModelFactory):
+class SnapshotFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Snapshot
 
@@ -21,7 +21,7 @@ class SnapshotFactory(factory.DjangoModelFactory):
     status = "vetted"
 
 
-class AreaFactory(factory.DjangoModelFactory):
+class AreaFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Area
 
@@ -30,7 +30,7 @@ class AreaFactory(factory.DjangoModelFactory):
     snapshot = factory.SubFactory(SnapshotFactory)
 
 
-class ConsequenceFactory(factory.DjangoModelFactory):
+class ConsequenceFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Consequence
 
@@ -39,7 +39,7 @@ class ConsequenceFactory(factory.DjangoModelFactory):
     name = "test"
 
 
-class ClassificationFactory(factory.DjangoModelFactory):
+class ClassificationFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Classification
 
@@ -48,7 +48,7 @@ class ClassificationFactory(factory.DjangoModelFactory):
     name = "test"
 
 
-class ChargeFactory(factory.DjangoModelFactory):
+class ChargeFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Charge
 
@@ -60,7 +60,7 @@ class ChargeFactory(factory.DjangoModelFactory):
     description = "a description"
 
 
-class ChargeChildrenFactory(factory.DjangoModelFactory):
+class ChargeChildrenFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = ChargeChildren
 
