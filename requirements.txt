@@ -1,6 +1,6 @@
 Django>=2.2.13,<3
 feedparser==6.0.1
-Markdown==3.3.1 # pyup: < 3
+Markdown==3.3.2 # pyup: < 3
 psycopg2==2.8.6
 statsd==3.3.0
 coverage==5.3
@@ -10,7 +10,7 @@ pep8==1.7.1
 pycodestyle==2.6.0
 configparser==5.0.1
 importlib-metadata==2.0.0  # for flake8
-zipp==3.3.0  # for flake8
+zipp==3.3.1  # for flake8
 flake8==3.8.4
 logilab-common==1.7.3
 astroid==2.4.2
@@ -22,7 +22,7 @@ s3transfer==0.3.3
 jmespath==0.10.0
 
 
-botocore>=1.15.0,<1.19.0
+botocore>=1.15.0,<1.20.0
 boto3>=1.12.0,<1.17.0
 
 python-dateutil==2.8.1
@@ -40,7 +40,7 @@ rjsmin==1.1.0
 
 chardet==3.0.4
 idna==2.10
-urllib3==1.25.10  # sentry-sdk
+urllib3==1.25.11  # sentry-sdk
 
 requests==2.24.0
 pytz==2020.1
@@ -49,7 +49,7 @@ djangowind==1.2.3
 django-appconf==1.0.4
 django-compressor==2.4
 django-statsd-mozilla==0.4.0
-sentry-sdk==0.19.0
+sentry-sdk==0.19.1
 django-smoketest==1.1.2
 django-debug-toolbar==3.1.1
 
@@ -67,7 +67,7 @@ ccnmtlsettings==1.9.0
 
 cryptography==3.1.1
 
-pbr==5.5.0
+pbr==5.5.1
 pyyaml==5.3.1
 stevedore>=1.20.0 # Apache-2.0
 bandit==1.6.2
