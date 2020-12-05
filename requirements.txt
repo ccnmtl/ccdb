@@ -61,7 +61,7 @@ django-markwhat==1.6.2
 django-storages==1.10.1
 django-cacheds3storage==0.2.2
 django-smtp-ssl==1.0
-certifi==2020.11.8  # sentry-sdk
+certifi==2020.12.5  # sentry-sdk
 
 ccnmtlsettings==1.9.0
 
