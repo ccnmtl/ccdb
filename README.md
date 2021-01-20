@@ -1,6 +1,6 @@
-Collateral Consequences Calculator
+[![Actions Status](https://github.com/ccnmtl/ccdb/workflows/build-and-test/badge.svg)](https://github.com/ccnmtl/ccdb/actions)
 
-[![Build Status](https://travis-ci.org/ccnmtl/ccdb.png)](https://travis-ci.org/ccnmtl/ccdb)
+Collateral Consequences Calculator
 
 ## docker-compose setup
 
