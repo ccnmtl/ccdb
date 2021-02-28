@@ -14,7 +14,7 @@ typing_extensions==3.7.4.3
 zipp==3.4.0  # for flake8
 flake8==3.8.4
 logilab-common==1.8.1
-astroid==2.5
+astroid==2.5.1
 editdistance==0.5.3
 pylint==2.7.1
 sqlparse==0.4.1
