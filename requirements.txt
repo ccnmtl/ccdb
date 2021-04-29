@@ -16,7 +16,8 @@ flake8==3.9.1
 logilab-common==1.8.1
 astroid==2.5.6
 editdistance==0.5.3
-pylint==2.8.1
+
+pylint==2.8.2
 sqlparse==0.4.1
 six==1.15.0
 s3transfer==0.4.2
