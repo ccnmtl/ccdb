@@ -65,7 +65,7 @@ django-cacheds3storage==0.2.2
 django-smtp-ssl==1.0
 certifi==2021.5.30  # sentry-sdk
 
-ccnmtlsettings==1.9.0
+ccnmtlsettings==1.9.1
 
 cryptography==3.4.7
 
