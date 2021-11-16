@@ -16,7 +16,6 @@ if (document.getElementById('compare_auto_complete') !== null) {
     compare.click(function() {
         var compareVal = jQuery('#list').val();
         //need to add the cookie (url) params from the hs.js ui implementation
-        // eslint-disable-next-line scanjs-rules/assign_to_location
         window.location = compareVal + '&' + jQuery.param(window.hsIds);
     });
 }
