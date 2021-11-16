@@ -1,17 +1,24 @@
 import ccdb.law.views as views
 import django.views.static
 import os.path
-
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf import settings
+from django.urls import path
 from django.views.generic import TemplateView
+from django_cas_ng import views as cas_views
 
 admin.autodiscover()
 
 site_media_root = os.path.join(os.path.dirname(__file__), "../media")
 
 urlpatterns = [
+    url(r'^accounts/', include('django.contrib.auth.urls')),
+    path('cas/login', cas_views.LoginView.as_view(),
+         name='cas_ng_login'),
+    path('cas/logout', cas_views.LogoutView.as_view(),
+         name='cas_ng_logout'),
+
     url('^$', views.IndexView.as_view()),
     url('^charge/(?P<slugs>.+)/tips/$', views.RedirectIndexView.as_view()),
     url('^charge/(?P<slugs>.+)/$',  views.RedirectIndexView.as_view()),
@@ -88,7 +95,6 @@ urlpatterns = [
     url('^api/current/$', views.RedirectIndexView.as_view()),
 
     url('^feedback/$', views.RedirectIndexView.as_view()),
-    url('^accounts/', include('djangowind.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^impersonate/', include('impersonate.urls')),
     url(r'^stats/$', TemplateView.as_view(template_name="law/stats.html")),
