@@ -77,4 +77,4 @@ bandit==1.7.1
 entrypoints==0.3
 
 # memcached
-pylibmc==1.6.1
+pylibmc==1.6.1; sys_platform == 'linux'

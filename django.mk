@@ -23,7 +23,7 @@ REQUIREMENTS ?= requirements.txt
 SYS_PYTHON ?= python3
 PY_SENTINAL ?= $(VE)/sentinal
 WHEEL_VERSION ?= 0.36.2
-PIP_VERSION ?= 21.0.1
+PIP_VERSION ?= 21.2.4
 MAX_COMPLEXITY ?= 10
 INTERFACE ?= localhost
 RUNSERVER_PORT ?= 8000
@@ -55,7 +55,7 @@ $(PY_SENTINAL): $(REQUIREMENTS)
 	touch $@
 
 test: $(PY_SENTINAL)
-	$(COVERAGE) run --source='.' --omit=$(VE)/* $(MANAGE) test $(APP)
+	$(COVERAGE) run --source='.' --omit=$(VE)/* $(MANAGE) test $(PY_DIRS)
 	$(COVERAGE) xml -o reports/coverage.xml
 
 parallel-tests: $(PY_SENTINAL)
