@@ -37,7 +37,7 @@ pyasn1==0.4.8
 pyOpenSSL==21.0.0
 ndg-httpsclient==0.5.1
 contextlib2==21.6.0
-rcssmin==1.0.6
+rcssmin==1.1.0
 rjsmin==1.2.0
 
 chardet==4.0.0
