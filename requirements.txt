@@ -79,5 +79,5 @@ entrypoints==0.3
 pylibmc==1.6.1; sys_platform == 'linux'
 
 lxml==4.6.4
-python-cas==1.5.0
+python-cas==1.6.0
 requirements/src/django_cas_ng-4.2.2ctl-py2.py3-none-any.whl
