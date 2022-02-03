@@ -20,7 +20,7 @@ editdistance==0.6.0
 pylint==2.12.2
 sqlparse==0.4.2
 six==1.16.0
-s3transfer==0.5.0
+s3transfer==0.5.1
 jmespath==0.10.0
 
 
