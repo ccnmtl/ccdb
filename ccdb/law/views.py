@@ -12,7 +12,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.core.mail import send_mail
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render_to_response, get_object_or_404, render
+from django.shortcuts import get_object_or_404, render
 from django.template.defaultfilters import slugify
 from django.utils.decorators import method_decorator
 from django.utils.html import escape
@@ -422,9 +422,10 @@ class RemoveChargeClassificationView(StaffMixin, WorkingSnapshotMixin,
 
         classification = get_object_or_404(Classification,
                                            id=classification_id)
-        return render_to_response(self.template_name,
-                                  dict(charge=charge,
-                                       classification=classification))
+        return render(self.request,
+                      self.template_name,
+                      dict(charge=charge,
+                           classification=classification))
 
     def post(self, request, slugs="", classification_id=""):
         charge = self.charge(slugs)
@@ -831,9 +832,10 @@ class RemoveConsequenceFromClassificationView(
         consequence = get_object_or_404(Consequence, id=consequence_id)
 
         classification = self.classification(slug)
-        return render_to_response(self.template_name,
-                                  dict(consequence=consequence,
-                                       classification=classification))
+        return render(self.request,
+                      self.template_name,
+                      dict(consequence=consequence,
+                           classification=classification))
 
     def post(self, request, slug, consequence_id):
         consequence = get_object_or_404(Consequence, id=consequence_id)

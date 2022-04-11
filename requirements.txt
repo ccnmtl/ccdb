@@ -1,4 +1,4 @@
-Django>=2.2.13,<3
+Django==3.2.12
 feedparser==6.0.8
 Markdown==3.3.6 # pyup: < 3
 psycopg2<2.9
@@ -81,3 +81,4 @@ pylibmc==1.6.1; sys_platform == 'linux'
 lxml==4.8.0
 python-cas==1.6.0
 requirements/src/django_cas_ng-4.2.2ctl-py2.py3-none-any.whl
+asgiref==3.4.1
