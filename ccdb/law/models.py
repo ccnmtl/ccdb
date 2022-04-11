@@ -4,12 +4,10 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.http import Http404
 from django.shortcuts import get_object_or_404
-from django.utils.encoding import python_2_unicode_compatible
 from django import forms
 import re
 
 
-@python_2_unicode_compatible
 class Snapshot(models.Model):
     label = models.CharField(max_length=256)
     description = models.TextField(default="", blank=True)
@@ -224,7 +222,6 @@ class Event(models.Model):
     note = models.TextField(default="", blank=True)
 
 
-@python_2_unicode_compatible
 class Charge(models.Model):
     label = models.CharField(max_length=256)
     # maybe rename this, as some charges will be non penal code:
@@ -684,7 +681,6 @@ class ChargeChildren(models.Model):
     # ordering is always by penal_code
 
 
-@python_2_unicode_compatible
 class Classification(models.Model):
     snapshot = models.ForeignKey(Snapshot, editable=False,
                                  on_delete=models.CASCADE)
@@ -797,7 +793,6 @@ class Classification(models.Model):
         return in_all
 
 
-@python_2_unicode_compatible
 class Area(models.Model):
     snapshot = models.ForeignKey(Snapshot, editable=False,
                                  on_delete=models.CASCADE)
@@ -823,7 +818,6 @@ class Area(models.Model):
                     id=self.id)
 
 
-@python_2_unicode_compatible
 class Consequence(models.Model):
     label = models.CharField(max_length=256)
     description = models.TextField(blank=True)
