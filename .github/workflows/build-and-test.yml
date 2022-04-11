@@ -8,5 +8,7 @@ jobs:
           python-version: [3.8]
     steps:
       - uses: actions/checkout@v2
+      - name: install memcached headers
+        run: sudo apt install -y libmemcached-dev
       - name: Build with Makefile
         run: make
