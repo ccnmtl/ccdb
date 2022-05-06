@@ -1,6 +1,6 @@
 Django==3.2.13
 feedparser==6.0.8
-Markdown==3.3.6 # pyup: < 3
+Markdown==3.3.7 # pyup: < 3
 psycopg2<2.9
 statsd==3.3.0
 coverage==6.2
