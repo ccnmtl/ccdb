@@ -17,7 +17,7 @@ logilab-common==1.9.5
 astroid==2.11.5
 editdistance==0.6.0
 
-pylint==2.13.8
+pylint==2.13.9
 sqlparse==0.4.2
 six==1.16.0
 s3transfer==0.5.2
