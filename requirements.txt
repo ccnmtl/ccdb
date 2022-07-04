@@ -1,4 +1,4 @@
-Django==3.2.14
+Django>=3.2.14,<4
 feedparser==6.0.10
 Markdown==3.3.7 # pyup: < 3
 psycopg2<2.9
